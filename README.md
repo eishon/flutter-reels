@@ -21,6 +21,7 @@ Visit the [flutter_reels](./flutter_reels) directory for detailed integration in
 - [iOS Integration Guide](./flutter_reels/README.md#for-ios-native)
 - [Gradle Integration Guide](./GRADLE_INTEGRATION.md) (Android Dependency)
 - [CocoaPods Integration Guide](./COCOAPODS_INTEGRATION.md) (iOS Dependency)
+- [GitHub Packages Setup](./GITHUB_PACKAGES_SETUP.md) (For Private Repository Access)
 
 ### For Development
 
@@ -36,12 +37,29 @@ flutter pub get
 flutter run
 ```
 
-## 📦 Releases
+## 📦 Releases & Distribution
 
-Pre-built releases are available on the [Releases](https://github.com/eishon/flutter-reels/releases) page, including:
+### For Private Repository Access
 
-- **Android AAR**: Ready-to-use Android Archive files
-- **iOS Frameworks**: XCFramework bundles for iOS integration
+This repository is currently **private**. To use it in your projects:
+
+1. **GitHub Packages** (Recommended for Private Repos)
+   - See [GitHub Packages Setup Guide](./GITHUB_PACKAGES_SETUP.md)
+   - Requires Personal Access Token (PAT)
+   - Works with Gradle (Android) and CocoaPods (iOS)
+
+2. **Direct Downloads**
+   - Pre-built releases available on [Releases](https://github.com/eishon/flutter-reels/releases) page
+   - Requires repository access
+   - **Android AAR**: Ready-to-use Android Archive files
+   - **iOS Frameworks**: XCFramework bundles for iOS integration
+
+### For Public Repository
+
+If you make this repository public, users can use simple dependency management:
+- **Android**: One-line Gradle dependency
+- **iOS**: One-line CocoaPods dependency
+- No authentication required
 
 ### Creating a New Release
 

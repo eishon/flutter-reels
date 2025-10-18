@@ -13,7 +13,10 @@ flutter-reels/
 │       ├── ci.yml              # Continuous integration
 │       ├── build-android.yml   # Android AAR builds
 │       ├── build-ios.yml       # iOS framework builds
-│       └── release.yml         # Automated releases
+│       ├── release.yml         # Automated releases
+│       ├── publish-aar.yml     # Maven repository publishing
+│       ├── publish-cocoapods.yml  # CocoaPods publishing
+│       └── publish-github-packages.yml  # GitHub Packages
 │
 ├── flutter_reels/               # The Flutter module (renamed from flutter_reels_module)
 │   ├── .android/               # Android platform files
@@ -31,7 +34,11 @@ flutter-reels/
 │
 ├── .gitignore                   # Git ignore rules
 ├── CHANGELOG.md                 # Version history
+├── COCOAPODS_INTEGRATION.md     # CocoaPods guide
 ├── CONTRIBUTING.md              # Contribution guidelines
+├── FlutterReels.podspec         # CocoaPods specification
+├── GITHUB_PACKAGES_SETUP.md     # GitHub Packages guide (for private repo)
+├── GRADLE_INTEGRATION.md        # Gradle dependency guide
 ├── LICENSE                      # MIT License
 ├── QUICKSTART.md                # 5-minute quick start guide
 └── README.md                    # Main project documentation
@@ -49,11 +56,11 @@ flutter-reels/
 
 ### 🤖 Automated CI/CD
 
-Four GitHub Actions workflows configured:
+Seven GitHub Actions workflows configured:
 
 1. **CI Workflow** (`ci.yml`)
    - Runs on: Every push and PR
-   - Actions: Format check, analyze, test, coverage
+   - Actions: Format check, analyze, test, AAR build
    - Status: ✅ Ready
 
 2. **Build Android** (`build-android.yml`)
@@ -71,32 +78,54 @@ Four GitHub Actions workflows configured:
    - Triggered: On version tags (e.g., `v1.0.0`)
    - Status: ✅ Ready
 
+5. **Publish AAR** (`publish-aar.yml`)
+   - Publishes Android AAR to Maven repository (releases branch)
+   - Triggered: On version tags
+   - Status: ✅ Ready
+
+6. **Publish CocoaPods** (`publish-cocoapods.yml`)
+   - Publishes iOS frameworks via CocoaPods (cocoapods-specs branch)
+   - Triggered: On version tags
+   - Status: ✅ Ready
+
+7. **Publish GitHub Packages** (`publish-github-packages.yml`)
+   - Publishes to GitHub Packages for private repo access
+   - Triggered: On version tags
+   - Status: ✅ Ready
+
 ### 📱 Integration Ready
 
 **For Android:**
-- AAR distribution method documented
-- Source integration method documented
-- Kotlin and Java examples provided
-- Jetpack Compose integration included
+- ✅ Method A: Gradle dependency (Maven repository - recommended)
+- ✅ Method B: AAR distribution
+- ✅ Method C: Source integration
+- ✅ Kotlin and Java examples provided
+- ✅ Jetpack Compose integration included
+- ✅ GitHub Packages support (for private repo)
 
 **For iOS:**
-- XCFramework distribution method documented
-- CocoaPods integration method documented
-- Swift and Objective-C examples provided
-- SwiftUI integration included
+- ✅ Method A: CocoaPods dependency (recommended)
+- ✅ Method B: XCFramework distribution
+- ✅ Method C: Source integration
+- ✅ Swift and Objective-C examples provided
+- ✅ SwiftUI integration included
+- ✅ GitHub Packages support (for private repo)
 
 ### 📚 Documentation
 
-All documentation has been updated to reflect the new `flutter_reels` name:
+Comprehensive documentation available:
 
 - ✅ Main README.md
 - ✅ Module README.md (flutter_reels/README.md)
-- ✅ QUICKSTART.md
-- ✅ CONTRIBUTING.md
-- ✅ CHANGELOG.md
-- ✅ Android integration examples
-- ✅ iOS integration examples
-- ✅ All GitHub Actions workflows
+- ✅ QUICKSTART.md (5-minute quick start)
+- ✅ GRADLE_INTEGRATION.md (Android dependency guide)
+- ✅ COCOAPODS_INTEGRATION.md (iOS dependency guide)
+- ✅ GITHUB_PACKAGES_SETUP.md (Private repo access)
+- ✅ CONTRIBUTING.md (Contribution guidelines)
+- ✅ CHANGELOG.md (Version history)
+- ✅ examples/android-integration.md
+- ✅ examples/ios-integration.md
+- ✅ All GitHub Actions workflows documented
 
 ### ✅ Quality Checks
 
@@ -141,13 +170,23 @@ Follow the comprehensive guides:
 
 Or check the detailed examples in the `examples/` directory.
 
-### 📦 Distribution
+### 📦 Distribution Methods
 
-Once you push a version tag, users can:
+Once you push a version tag, users can integrate using multiple methods:
 
-1. Download pre-built binaries from GitHub Releases
-2. Integrate using source code
-3. Follow platform-specific integration guides
+**For Public Repository:**
+1. **Gradle dependency** (Android) - Add one line to build.gradle
+2. **CocoaPods** (iOS) - Add one line to Podfile
+3. Download pre-built binaries from GitHub Releases
+4. Integrate using source code
+
+**For Private Repository (Current):**
+1. **GitHub Packages** - Authenticated access with Personal Access Token
+   - See [GITHUB_PACKAGES_SETUP.md](./GITHUB_PACKAGES_SETUP.md) for complete guide
+   - Requires PAT with `read:packages` and `repo` permissions
+   - Works with Gradle (Android) and CocoaPods (iOS)
+2. Download releases (requires repository access)
+3. Source integration (requires repository access)
 
 ### 🎨 Customization
 
