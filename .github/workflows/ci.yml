@@ -49,7 +49,8 @@ jobs:
           files: flutter_reels/coverage/lcov.info
           flags: unittests
           name: codecov-flutter-reels
+        continue-on-error: true
 
-      - name: Check for build issues
+      - name: Check AAR build
         working-directory: flutter_reels
-        run: flutter build apk --debug
+        run: flutter build aar --debug
