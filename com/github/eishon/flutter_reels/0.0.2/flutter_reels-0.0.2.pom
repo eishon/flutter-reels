@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  
+  <groupId>com.github.eishon</groupId>
+  <artifactId>flutter_reels</artifactId>
+  <version>0.0.2</version>
+  <packaging>aar</packaging>
+  
+  <name>Flutter Reels</name>
+  <description>A Flutter module for displaying reels/stories that can be integrated into native Android and iOS apps</description>
+  <url>https://github.com/eishon/flutter-reels</url>
+  
+  <licenses>
+    <license>
+      <name>MIT License</name>
+      <url>https://github.com/eishon/flutter-reels/blob/master/LICENSE</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  
+  <scm>
+    <url>https://github.com/eishon/flutter-reels</url>
+    <connection>scm:git:git://github.com/eishon/flutter-reels.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/eishon/flutter-reels.git</developerConnection>
+  </scm>
+  
+  <dependencies>
+    <dependency>
+      <groupId>io.flutter</groupId>
+      <artifactId>flutter_embedding_release</artifactId>
+      <version>1.0.0-0fdb562ac8069a8b4e3c9344b6d3dcff8961e6d9</version>
+      <type>aar</type>
+    </dependency>
+  </dependencies>
+</project>
