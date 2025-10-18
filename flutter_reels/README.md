@@ -21,9 +21,62 @@ A Flutter module that can be integrated into native Android and iOS applications
 
 #### Step 1: Add Flutter Module as Dependency
 
-There are two methods to integrate the Flutter module:
+There are three methods to integrate the Flutter module:
 
-##### Method A: Using AAR (Recommended for Release)
+##### Method A: Using Gradle Dependency (Recommended - Easiest)
+
+1. Update your `settings.gradle` (or `settings.gradle.kts`):
+   ```gradle
+   dependencyResolutionManagement {
+       repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+       repositories {
+           google()
+           mavenCentral()
+           
+           // Flutter repository
+           maven {
+               url 'https://storage.googleapis.com/download.flutter.io'
+           }
+           
+           // Flutter Reels repository
+           maven {
+               url 'https://raw.githubusercontent.com/eishon/flutter-reels/releases/'
+           }
+       }
+   }
+   ```
+
+2. Update your `app/build.gradle`:
+   ```gradle
+   android {
+       compileSdkVersion 33
+       
+       defaultConfig {
+           minSdkVersion 21
+           targetSdkVersion 33
+       }
+       
+       compileOptions {
+           sourceCompatibility JavaVersion.VERSION_1_8
+           targetCompatibility JavaVersion.VERSION_1_8
+       }
+   }
+
+   dependencies {
+       // Flutter Reels module
+       implementation 'com.github.eishon:flutter_reels:0.0.1'
+       
+       // Required for Flutter
+       implementation 'androidx.appcompat:appcompat:1.6.1'
+       implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
+   }
+   ```
+
+3. Sync your project with Gradle files
+
+That's it! The AAR will be automatically downloaded and integrated.
+
+##### Method B: Using AAR File Manually
 
 1. Download the latest AAR from the [Releases](https://github.com/eishon/flutter-reels/releases) page
 
@@ -54,10 +107,6 @@ There are two methods to integrate the Flutter module:
    dependencies {
        implementation fileTree(dir: 'libs', include: ['*.aar'])
        
-       // Flutter dependencies
-       debugImplementation 'com.facebook.flipper:flipper:0.182.0'
-       debugImplementation 'com.facebook.flipper:flipper-network-plugin:0.182.0'
-       
        // Required for Flutter
        implementation 'androidx.appcompat:appcompat:1.6.1'
        implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
@@ -78,7 +127,7 @@ There are two methods to integrate the Flutter module:
    }
    ```
 
-##### Method B: Using Source (For Development)
+##### Method C: Using Source (For Development)
 
 1. Clone this repository next to your Android project:
    ```

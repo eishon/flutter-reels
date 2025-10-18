@@ -4,6 +4,81 @@ This directory contains example code for integrating the Flutter Reels module in
 
 ## Quick Start Example
 
+### Method 1: Gradle Dependency (Recommended - Easiest)
+
+This is the simplest method - just add a dependency!
+
+#### settings.gradle
+
+```gradle
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        
+        // Flutter repository
+        maven {
+            url 'https://storage.googleapis.com/download.flutter.io'
+        }
+        
+        // Flutter Reels Maven repository
+        maven {
+            url 'https://raw.githubusercontent.com/eishon/flutter-reels/releases/'
+        }
+    }
+}
+```
+
+#### app/build.gradle
+
+```gradle
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'com.example.myapp'
+    compileSdk 33
+
+    defaultConfig {
+        applicationId "com.example.myapp"
+        minSdk 21
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.10.0'
+    
+    // Flutter Reels module - just one line!
+    implementation 'com.github.eishon:flutter_reels:0.0.1'
+}
+```
+
+Then sync Gradle and you're ready to use it!
+
 ### MainActivity.kt
 
 ```kotlin
