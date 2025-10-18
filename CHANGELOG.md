@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.2] - 2025-10-19
+
+### Added
+- CocoaPods support for iOS dependency management
+- GitHub Packages setup for private repository access
+- Comprehensive integration guides:
+  - GRADLE_INTEGRATION.md for Android
+  - COCOAPODS_INTEGRATION.md for iOS
+  - GITHUB_PACKAGES_SETUP.md for private repo access
+  - GITHUB_PACKAGES_SUMMARY.md for quick reference
+- Maven repository publishing workflow (releases branch)
+- CocoaPods publishing workflow (cocoapods-specs branch)
+- GitHub Packages publishing workflow
+
+### Changed
+- Updated iOS integration to use CocoaPods as Method A (recommended)
+- Updated Android integration to use Gradle dependency as Method A (recommended)
+- Enhanced documentation with authentication guides for private repository
+
+### Documentation
+- Added detailed troubleshooting sections
+- Added security best practices
+- Added CI/CD configuration examples
+- Updated all integration examples
+
 ## [0.0.1] - 2025-10-19
 
 ### Added
@@ -26,5 +51,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - MIT License
 - Repository-level documentation
 
-[Unreleased]: https://github.com/eishon/flutter-reels/compare/v0.0.1...HEAD
+[Unreleased]: https://github.com/eishon/flutter-reels/compare/v0.0.2...HEAD
+[0.0.2]: https://github.com/eishon/flutter-reels/compare/v0.0.1...v0.0.2
 [0.0.1]: https://github.com/eishon/flutter-reels/releases/tag/v0.0.1

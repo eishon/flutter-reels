@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'FlutterReels'
-  s.version          = '0.0.1'
+  s.version          = '0.0.2'
   s.summary          = 'A Flutter module for displaying reels/stories that can be integrated into native iOS apps'
   s.description      = <<-DESC
 Flutter Reels is a Flutter module that provides reels/stories functionality 
