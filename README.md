@@ -19,6 +19,8 @@ Visit the [flutter_reels](./flutter_reels) directory for detailed integration in
 **Quick Links:**
 - [Android Integration Guide](./flutter_reels/README.md#for-android-native)
 - [iOS Integration Guide](./flutter_reels/README.md#for-ios-native)
+- [Gradle Integration Guide](./GRADLE_INTEGRATION.md) (Android Dependency)
+- [CocoaPods Integration Guide](./COCOAPODS_INTEGRATION.md) (iOS Dependency)
 
 ### For Development
 

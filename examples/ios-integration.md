@@ -2,6 +2,36 @@
 
 This directory contains example code for integrating the Flutter Reels module into a native iOS app.
 
+## Installation Methods
+
+### Method A: Using CocoaPods (Recommended)
+
+Add the following to your `Podfile`:
+
+```ruby
+source 'https://github.com/eishon/flutter-reels.git'
+source 'https://cdn.cocoapods.org/'
+
+platform :ios, '12.0'
+
+target 'YourApp' do
+  use_frameworks!
+  
+  # Flutter Reels module
+  pod 'FlutterReels', '~> 0.0.1'
+end
+```
+
+Then run:
+
+```bash
+pod install
+```
+
+### Method B: Using Framework Files Manually
+
+Download the latest iOS framework from the [Releases](https://github.com/eishon/flutter-reels/releases) page and follow the manual integration steps in the main README.
+
 ## Quick Start Example
 
 ### ViewController.swift (UIKit)

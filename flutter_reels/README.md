@@ -231,9 +231,47 @@ Add the Flutter activity to your `AndroidManifest.xml`:
 
 #### Step 1: Add Flutter Module
 
-There are two methods to integrate the Flutter module:
+There are three methods to integrate the Flutter module:
 
-##### Method A: Using Framework (Recommended for Release)
+##### Method A: Using CocoaPods (Recommended - Easiest)
+
+1. Add to your `Podfile`:
+   ```ruby
+   # Add Flutter Reels specs source
+   source 'https://github.com/eishon/flutter-reels.git'
+   source 'https://cdn.cocoapods.org/'
+   
+   platform :ios, '12.0'
+
+   target 'YourApp' do
+     use_frameworks!
+     
+     # Flutter Reels module - just one line!
+     pod 'FlutterReels', '~> 0.0.1'
+   end
+   
+   post_install do |installer|
+     installer.pods_project.targets.each do |target|
+       target.build_configurations.each do |config|
+         config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '12.0'
+       end
+     end
+   end
+   ```
+
+2. Install the pod:
+   ```bash
+   pod install
+   ```
+
+3. Open the `.xcworkspace` file (not `.xcodeproj`):
+   ```bash
+   open YourApp.xcworkspace
+   ```
+
+That's it! The frameworks will be automatically downloaded and integrated.
+
+##### Method B: Using Framework Files Manually
 
 1. Download the latest iOS framework from the [Releases](https://github.com/eishon/flutter-reels/releases) page
 
