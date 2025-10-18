@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.1] - 2025-10-19
+
 ### Added
 - Initial Flutter module setup
 - Hello World screen implementation
@@ -24,21 +26,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - MIT License
 - Repository-level documentation
 
-## [1.0.0] - 2025-10-19
-
-### Added
-- Initial release of Flutter Reels module
-- Basic "Hello World" screen with video library icon
-- Support for native Android integration via AAR
-- Support for native iOS integration via XCFramework
-- Automated builds via GitHub Actions
-- Complete integration documentation
-
-### Features
-- Simple, clean UI with Material Design
-- Easy integration into existing native apps
-- Pre-built releases for quick adoption
-- Source code integration support for development
-
-[Unreleased]: https://github.com/eishon/flutter-reels/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/eishon/flutter-reels/releases/tag/v1.0.0
+[Unreleased]: https://github.com/eishon/flutter-reels/compare/v0.0.1...HEAD
+[0.0.1]: https://github.com/eishon/flutter-reels/releases/tag/v0.0.1
