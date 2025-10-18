@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+    branches: [ master, main, develop ]
+  pull_request:
+    branches: [ master, main, develop ]
+
+jobs:
+  analyze-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.16.5'
+          channel: 'stable'
+          cache: true
+
+      - name: Get Flutter dependencies
+        working-directory: flutter_reels
+        run: flutter pub get
+
+      - name: Verify Flutter formatting
+        working-directory: flutter_reels
+        run: dart format --set-exit-if-changed lib test
+
+      - name: Analyze Flutter code
+        working-directory: flutter_reels
+        run: flutter analyze
+
+      - name: Run Flutter tests
+        working-directory: flutter_reels
+        run: flutter test --coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          files: flutter_reels/coverage/lcov.info
+          flags: unittests
+          name: codecov-flutter-reels
+
+      - name: Check for build issues
+        working-directory: flutter_reels
+        run: flutter build apk --debug
