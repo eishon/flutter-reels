@@ -1,0 +1,136 @@
+{
+  "videos": [
+    {
+      "id": "1",
+      "url": "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_fmp4/master.m3u8",
+      "title": "Apple HLS Advanced",
+      "description": "This is an amazing premium HLS streaming technology demonstration that showcases the latest in video delivery technology. Experience crystal clear quality with adaptive bitrate streaming that automatically adjusts to your connection speed for the best possible viewing experience. #apple #hls #streaming #verified #technology #innovation #quality",
+      "userName": "apple_dev",
+      "userAvatar": "https://picsum.photos/50/50?random=1",
+      "likes": 15234,
+      "comments": 892,
+      "shares": 445,
+      "isLiked": false,
+      "category": "tech",
+      "duration": "00:30",
+      "quality": "1080p",
+      "format": "HLS",
+      "products": [
+        {
+          "id": "p1",
+          "name": "iPhone 16 Pro",
+          "description": "The latest iPhone with advanced camera system",
+          "price": 999.99,
+          "currency": "$",
+          "imageUrl": "https://picsum.photos/300/300?random=101",
+          "category": "Electronics",
+          "rating": 4.8,
+          "isAvailable": true,
+          "discountPrice": "899.99"
+        },
+        {
+          "id": "p2",
+          "name": "MacBook Air M3",
+          "description": "Powerful laptop for professionals",
+          "price": 1299.99,
+          "currency": "$",
+          "imageUrl": "https://picsum.photos/300/300?random=102",
+          "category": "Electronics",
+          "rating": 4.9,
+          "isAvailable": true
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "url": "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8",
+      "title": "Apple 4x3 HLS",
+      "description": "4:3 aspect ratio HLS streaming demo #apple #hls #4x3 #verified",
+      "userName": "apple_dev",
+      "userAvatar": "https://picsum.photos/50/50?random=2",
+      "likes": 12456,
+      "comments": 678,
+      "shares": 234,
+      "isLiked": false,
+      "category": "animation",
+      "duration": "00:25",
+      "quality": "720p",
+      "format": "HLS"
+    },
+    {
+      "id": "3",
+      "url": "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8",
+      "title": "Apple 16x9 HLS",
+      "description": "Widescreen 16:9 HLS streaming demo #apple #hls #16x9 #verified",
+      "userName": "apple_dev",
+      "userAvatar": "https://picsum.photos/50/50?random=3",
+      "likes": 18956,
+      "comments": 1234,
+      "shares": 567,
+      "isLiked": false,
+      "category": "premium",
+      "duration": "00:35",
+      "quality": "1080p",
+      "format": "HLS"
+    },
+    {
+      "id": "4",
+      "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+      "title": "Big Buck Bunny",
+      "description": "Classic open-source 3D animated short film #bigbuckbunny #animation #blender #mux",
+      "userName": "blender_foundation",
+      "userAvatar": "https://picsum.photos/50/50?random=4",
+      "likes": 28456,
+      "comments": 1567,
+      "shares": 892,
+      "isLiked": false,
+      "category": "animation",
+      "duration": "10:34",
+      "quality": "1080p",
+      "format": "HLS",
+      "products": [
+        {
+          "id": "p3",
+          "name": "Blender Pro Course",
+          "description": "Learn 3D animation like Big Buck Bunny",
+          "price": 49.99,
+          "currency": "$",
+          "imageUrl": "https://picsum.photos/300/300?random=103",
+          "category": "Education",
+          "rating": 4.7,
+          "isAvailable": true
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "url": "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8",
+      "title": "Tears of Steel",
+      "description": "Sci-fi live action + CGI film from Blender Institute #tearsofsteel #scifi #blender #live",
+      "userName": "blender_institute",
+      "userAvatar": "https://picsum.photos/50/50?random=5",
+      "likes": 32145,
+      "comments": 1823,
+      "shares": 1245,
+      "isLiked": false,
+      "category": "live",
+      "duration": "12:14",
+      "quality": "1080p",
+      "format": "HLS",
+      "products": [
+        {
+          "id": "p4",
+          "name": "VFX Masterclass",
+          "description": "Master visual effects like Tears of Steel",
+          "price": 199.99,
+          "currency": "$",
+          "imageUrl": "https://picsum.photos/300/300?random=104",
+          "category": "Education",
+          "rating": 4.9,
+          "isAvailable": true,
+          "discountPrice": "149.99"
+        }
+      ]
+    }
+  ]
+}
