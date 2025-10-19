@@ -270,10 +270,12 @@ void main() {
         // Assert
         final refreshButton = find.byIcon(Icons.refresh);
         expect(refreshButton, findsOneWidget);
-        expect(tester.widget<IconButton>(find.ancestor(
-          of: refreshButton,
-          matching: find.byType(IconButton),
-        )), isNotNull);
+        expect(
+            tester.widget<IconButton>(find.ancestor(
+              of: refreshButton,
+              matching: find.byType(IconButton),
+            )),
+            isNotNull);
       });
     });
 

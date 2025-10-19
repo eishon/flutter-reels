@@ -26,7 +26,8 @@ void main() {
     test('should toggle like from false to true', () async {
       // Arrange
       const videoId = 'video-123';
-      final unlikedVideo = createTestVideo(id: videoId, isLiked: false, likes: 100);
+      final unlikedVideo =
+          createTestVideo(id: videoId, isLiked: false, likes: 100);
       final likedVideo = unlikedVideo.copyWith(isLiked: true, likes: 101);
 
       when(mockRepository.toggleLike(videoId))
@@ -46,7 +47,8 @@ void main() {
     test('should toggle like from true to false', () async {
       // Arrange
       const videoId = 'video-123';
-      final likedVideo = createTestVideo(id: videoId, isLiked: true, likes: 101);
+      final likedVideo =
+          createTestVideo(id: videoId, isLiked: true, likes: 101);
       final unlikedVideo = likedVideo.copyWith(isLiked: false, likes: 100);
 
       when(mockRepository.toggleLike(videoId))

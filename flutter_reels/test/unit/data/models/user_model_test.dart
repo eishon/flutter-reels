@@ -241,7 +241,8 @@ void main() {
 
         // Assert
         expect(entity.name, '👤 Special User @test');
-        expect(entity.avatarUrl, 'https://example.com/avatar.jpg?size=large&v=2');
+        expect(
+            entity.avatarUrl, 'https://example.com/avatar.jpg?size=large&v=2');
       });
     });
 
@@ -277,7 +278,9 @@ void main() {
         expect(model.avatarUrl, 'https://example.com/avatar.jpg');
       });
 
-      test('should maintain data through full cycle: JSON -> Model -> Entity -> Model -> JSON', () {
+      test(
+          'should maintain data through full cycle: JSON -> Model -> Entity -> Model -> JSON',
+          () {
         // Arrange
         final originalJson = testUserJson;
 

@@ -100,8 +100,7 @@ void main() {
 
       test('should handle errors and set error message', () async {
         // Arrange
-        when(mockGetVideosUseCase())
-            .thenThrow(Exception('Network error'));
+        when(mockGetVideosUseCase()).thenThrow(Exception('Network error'));
 
         // Act
         await provider.loadVideos();
@@ -116,8 +115,7 @@ void main() {
 
       test('should clear previous error on new load', () async {
         // Arrange - first load fails
-        when(mockGetVideosUseCase())
-            .thenThrow(Exception('Error'));
+        when(mockGetVideosUseCase()).thenThrow(Exception('Error'));
         await provider.loadVideos();
         expect(provider.hasError, true);
 

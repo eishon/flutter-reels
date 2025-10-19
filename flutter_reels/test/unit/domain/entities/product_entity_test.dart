@@ -65,7 +65,8 @@ void main() {
         expect(product1.hashCode == product2.hashCode, true);
       });
 
-      test('should return false when comparing entities with different ids', () {
+      test('should return false when comparing entities with different ids',
+          () {
         // Arrange
         final product1 = createTestProduct(id: 'id-1');
         final product2 = createTestProduct(id: 'id-2');

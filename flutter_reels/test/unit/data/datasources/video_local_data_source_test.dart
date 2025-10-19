@@ -177,8 +177,8 @@ void main() {
       test('should toggle like from false to true', () async {
         // Arrange
         final videos = await dataSource.getVideos();
-        final unlikedVideo = videos.firstWhere((v) => !v.isLiked,
-            orElse: () => videos.first);
+        final unlikedVideo =
+            videos.firstWhere((v) => !v.isLiked, orElse: () => videos.first);
         final originalLikes = unlikedVideo.likes;
 
         // Act
@@ -387,7 +387,8 @@ void main() {
         // Assert - Verify each video is properly formed
         for (final video in videos) {
           expect(video.id, isNotEmpty, reason: 'Video id should not be empty');
-          expect(video.url, isNotEmpty, reason: 'Video url should not be empty');
+          expect(video.url, isNotEmpty,
+              reason: 'Video url should not be empty');
           expect(video.title, isNotEmpty,
               reason: 'Video title should not be empty');
           expect(video.likes, isNonNegative,

@@ -12,10 +12,10 @@ void main() {
   test('Dependency injection initializes correctly', () async {
     // Verify DI can be initialized
     await initializeDependencies();
-    
+
     // Verify dependencies are registered
     expect(sl.isRegistered, isNotNull);
-    
+
     // Clean up
     await resetDependencies();
   });

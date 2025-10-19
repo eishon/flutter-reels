@@ -110,31 +110,32 @@ void main() {
 
       test('should parse multiple products correctly', () {
         // Arrange
-        final jsonWithMultipleProducts = Map<String, dynamic>.from(testVideoJson)
-          ..['products'] = [
-            {
-              'id': 'product-1',
-              'name': 'Product 1',
-              'description': 'Description 1',
-              'price': 99.99,
-              'currency': 'USD',
-              'imageUrl': 'url1',
-              'category': 'Cat1',
-              'rating': 4.5,
-              'isAvailable': true,
-            },
-            {
-              'id': 'product-2',
-              'name': 'Product 2',
-              'description': 'Description 2',
-              'price': 199.99,
-              'currency': 'EUR',
-              'imageUrl': 'url2',
-              'category': 'Cat2',
-              'rating': 5.0,
-              'isAvailable': false,
-            },
-          ];
+        final jsonWithMultipleProducts =
+            Map<String, dynamic>.from(testVideoJson)
+              ..['products'] = [
+                {
+                  'id': 'product-1',
+                  'name': 'Product 1',
+                  'description': 'Description 1',
+                  'price': 99.99,
+                  'currency': 'USD',
+                  'imageUrl': 'url1',
+                  'category': 'Cat1',
+                  'rating': 4.5,
+                  'isAvailable': true,
+                },
+                {
+                  'id': 'product-2',
+                  'name': 'Product 2',
+                  'description': 'Description 2',
+                  'price': 199.99,
+                  'currency': 'EUR',
+                  'imageUrl': 'url2',
+                  'category': 'Cat2',
+                  'rating': 5.0,
+                  'isAvailable': false,
+                },
+              ];
 
         // Act
         final model = VideoModel.fromJson(jsonWithMultipleProducts);
@@ -245,7 +246,8 @@ void main() {
         // Assert
         expect(json['userName'], 'Test User');
         expect(json['userAvatar'], 'https://example.com/avatar.jpg');
-        expect(json.containsKey('user'), false); // Should not have 'user' object
+        expect(
+            json.containsKey('user'), false); // Should not have 'user' object
       });
 
       test('should serialize products array correctly', () {
@@ -485,7 +487,8 @@ void main() {
 
       test('should use entity equality rules', () {
         // Arrange
-        final json1 = Map<String, dynamic>.from(testVideoJson)..['id'] = 'same-id';
+        final json1 = Map<String, dynamic>.from(testVideoJson)
+          ..['id'] = 'same-id';
         final json2 = Map<String, dynamic>.from(testVideoJson)
           ..['id'] = 'same-id'
           ..['title'] = 'Different Title'

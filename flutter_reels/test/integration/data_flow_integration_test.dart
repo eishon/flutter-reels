@@ -58,15 +58,18 @@ void main() {
 
         // Assert - All should use same repository instance
         expect(
-          identical(getVideosUseCase.repository, getVideoByIdUseCase.repository),
+          identical(
+              getVideosUseCase.repository, getVideoByIdUseCase.repository),
           true,
         );
         expect(
-          identical(getVideoByIdUseCase.repository, toggleLikeUseCase.repository),
+          identical(
+              getVideoByIdUseCase.repository, toggleLikeUseCase.repository),
           true,
         );
         expect(
-          identical(toggleLikeUseCase.repository, incrementShareUseCase.repository),
+          identical(
+              toggleLikeUseCase.repository, incrementShareUseCase.repository),
           true,
         );
       });
@@ -112,7 +115,7 @@ void main() {
 
         // Assert - Should have same count
         expect(repoVideos.length, sourceVideos.length);
-        
+
         // Should have same IDs
         expect(repoVideos.first.id, sourceVideos.first.id);
         expect(repoVideos.first.title, sourceVideos.first.title);

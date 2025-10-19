@@ -84,8 +84,7 @@ void main() {
 
       test('should propagate exception from data source', () async {
         // Arrange
-        when(mockDataSource.getVideos())
-            .thenThrow(Exception('Data error'));
+        when(mockDataSource.getVideos()).thenThrow(Exception('Data error'));
 
         // Act & Assert
         expect(() => repository.getVideos(), throwsA(isA<Exception>()));
@@ -123,8 +122,7 @@ void main() {
 
       test('should propagate exception from data source', () async {
         // Arrange
-        when(mockDataSource.getVideoById('id'))
-            .thenThrow(Exception('Error'));
+        when(mockDataSource.getVideoById('id')).thenThrow(Exception('Error'));
 
         // Act & Assert
         expect(() => repository.getVideoById('id'), throwsA(isA<Exception>()));
