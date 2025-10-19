@@ -1,0 +1,17 @@
+name: Branch Protection Check
+
+on:
+  push:
+    branches:
+      - master
+      - main
+
+jobs:
+  prevent-direct-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if push is from PR merge
+        run: |
+          echo "::error::Direct pushes to master/main branch are not allowed!"
+          echo "::error::Please create a pull request for your changes."
+          exit 1
