@@ -67,16 +67,8 @@ class _EngagementButtonsState extends State<EngagementButtons>
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        // User profile avatar
-        _buildProfileAvatar(),
-        const SizedBox(height: 24),
-
         // Like button
         _buildLikeButton(),
-        const SizedBox(height: 24),
-
-        // Comment button
-        _buildCommentButton(),
         const SizedBox(height: 24),
 
         // Share button
@@ -92,34 +84,6 @@ class _EngagementButtonsState extends State<EngagementButtons>
         // More options button
         _buildMoreButton(),
       ],
-    );
-  }
-
-  Widget _buildProfileAvatar() {
-    return Container(
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        gradient: LinearGradient(
-          colors: [
-            Colors.purple.shade400,
-            Colors.pink.shade400,
-            Colors.orange.shade400,
-          ],
-        ),
-      ),
-      padding: const EdgeInsets.all(2),
-      child: Container(
-        decoration: const BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.black,
-        ),
-        padding: const EdgeInsets.all(2),
-        child: CircleAvatar(
-          radius: 22,
-          backgroundImage: NetworkImage(widget.video.user.avatarUrl),
-          backgroundColor: Colors.grey.shade800,
-        ),
-      ),
     );
   }
 
@@ -140,21 +104,6 @@ class _EngagementButtonsState extends State<EngagementButtons>
       ),
       label: _formatCount(widget.video.likes),
       onTap: _handleLike,
-    );
-  }
-
-  Widget _buildCommentButton() {
-    return _buildEngagementButton(
-      child: const Icon(
-        Icons.comment_outlined,
-        size: 30,
-        color: Colors.white,
-      ),
-      label: _formatCount(widget.video.comments),
-      onTap: () {
-        // Open comments
-        _showCommentsSheet(context);
-      },
     );
   }
 
@@ -196,13 +145,14 @@ class _EngagementButtonsState extends State<EngagementButtons>
   Widget _buildMoreButton() {
     return _buildEngagementButton(
       child: const Icon(
-        Icons.more_horiz,
+        Icons.more_vert,
         size: 28,
         color: Colors.white,
       ),
       label: '',
       onTap: () {
         // Show more options
+        _showMoreOptionsSheet(context);
       },
     );
   }
@@ -384,6 +334,102 @@ class _EngagementButtonsState extends State<EngagementButtons>
                 );
               }).toList(),
               const SizedBox(height: 16),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _showMoreOptionsSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.grey.shade900,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Handle bar
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade700,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // Comments option
+              ListTile(
+                leading: const Icon(
+                  Icons.comment_outlined,
+                  color: Colors.white,
+                ),
+                title: Text(
+                  'Comments (${widget.video.comments})',
+                  style: const TextStyle(color: Colors.white),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  _showCommentsSheet(context);
+                },
+              ),
+
+              // Report option
+              ListTile(
+                leading: const Icon(
+                  Icons.flag_outlined,
+                  color: Colors.white,
+                ),
+                title: const Text(
+                  'Report',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  // Handle report
+                },
+              ),
+
+              // Not Interested option
+              ListTile(
+                leading: const Icon(
+                  Icons.not_interested,
+                  color: Colors.white,
+                ),
+                title: const Text(
+                  'Not Interested',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  // Handle not interested
+                },
+              ),
+
+              // Save option
+              ListTile(
+                leading: const Icon(
+                  Icons.bookmark_outline,
+                  color: Colors.white,
+                ),
+                title: const Text(
+                  'Save',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  // Handle save
+                },
+              ),
+
+              const SizedBox(height: 8),
             ],
           ),
         );

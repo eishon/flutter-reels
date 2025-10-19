@@ -82,38 +82,6 @@ class VideoReelItem extends StatelessWidget {
         SafeArea(
           child: Column(
             children: [
-              // Top bar with back button (optional)
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const SizedBox(width: 40), // Spacer for balance
-                    Text(
-                      'Reels',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        shadows: [
-                          Shadow(
-                            color: Colors.black.withOpacity(0.5),
-                            blurRadius: 8,
-                          ),
-                        ],
-                      ),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.camera_alt_outlined),
-                      color: Colors.white,
-                      onPressed: () {
-                        // Camera action
-                      },
-                    ),
-                  ],
-                ),
-              ),
-
               const Spacer(),
 
               // Bottom content

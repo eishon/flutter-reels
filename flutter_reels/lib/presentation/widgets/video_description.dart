@@ -48,6 +48,14 @@ class _VideoDescriptionState extends State<VideoDescription> {
   Widget _buildUsername() {
     return Row(
       children: [
+        // Avatar on the left
+        CircleAvatar(
+          radius: 16,
+          backgroundImage: NetworkImage(widget.video.user.avatarUrl),
+          backgroundColor: Colors.grey.shade800,
+        ),
+        const SizedBox(width: 8),
+        // Username
         Text(
           '@${widget.video.user.name}',
           style: TextStyle(
