@@ -2,7 +2,7 @@ import 'package:flutter_reels/domain/entities/video_entity.dart';
 import 'package:flutter_reels/domain/repositories/video_repository.dart';
 
 /// Use case for incrementing the share count of a video.
-/// 
+///
 /// Encapsulates the business logic for sharing videos.
 class IncrementShareCountUseCase {
   final VideoRepository repository;
@@ -10,7 +10,7 @@ class IncrementShareCountUseCase {
   IncrementShareCountUseCase(this.repository);
 
   /// Executes the use case to increment share count.
-  /// 
+  ///
   /// Returns the updated [VideoEntity] with incremented share count.
   /// Throws an exception if the operation fails.
   Future<VideoEntity> call(String videoId) async {

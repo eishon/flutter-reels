@@ -1,10 +1,10 @@
 import 'package:flutter_reels/domain/entities/product_entity.dart';
 
 /// Data model for Product that extends ProductEntity.
-/// 
+///
 /// Adds serialization capabilities (fromJson/toJson) while
 /// inheriting all business logic from ProductEntity.
-/// 
+///
 /// This separation keeps domain entities clean and
 /// serialization logic in the data layer.
 class ProductModel extends ProductEntity {
@@ -22,7 +22,7 @@ class ProductModel extends ProductEntity {
   });
 
   /// Creates a ProductModel from a JSON map.
-  /// 
+  ///
   /// This method handles the deserialization from the JSON
   /// data structure used in mock_videos.json.
   factory ProductModel.fromJson(Map<String, dynamic> json) {
@@ -41,7 +41,7 @@ class ProductModel extends ProductEntity {
   }
 
   /// Converts this ProductModel to a JSON map.
-  /// 
+  ///
   /// Useful for caching or sending data to a remote server.
   Map<String, dynamic> toJson() {
     return {
@@ -59,7 +59,7 @@ class ProductModel extends ProductEntity {
   }
 
   /// Creates a ProductEntity from this model.
-  /// 
+  ///
   /// Useful when passing data from data layer to domain layer.
   ProductEntity toEntity() {
     return ProductEntity(

@@ -1,5 +1,5 @@
 /// Domain Entity: User
-/// 
+///
 /// Represents a user/creator in the application.
 /// This is a pure Dart class with no external dependencies.
 class UserEntity {

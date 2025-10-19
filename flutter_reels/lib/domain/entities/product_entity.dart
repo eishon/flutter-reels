@@ -1,5 +1,5 @@
 /// Domain Entity: Product
-/// 
+///
 /// Represents a product that can be tagged in videos.
 /// This is a pure Dart class with no external dependencies.
 class ProductEntity {

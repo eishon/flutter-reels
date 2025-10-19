@@ -1,7 +1,7 @@
 import 'package:flutter_reels/domain/entities/user_entity.dart';
 
 /// Data model for User that extends UserEntity.
-/// 
+///
 /// Adds serialization capabilities while inheriting
 /// all properties from UserEntity.
 class UserModel extends UserEntity {
@@ -11,7 +11,7 @@ class UserModel extends UserEntity {
   });
 
   /// Creates a UserModel from JSON data.
-  /// 
+  ///
   /// Handles the deserialization of user data from JSON structure.
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(

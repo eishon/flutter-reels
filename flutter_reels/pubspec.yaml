@@ -35,6 +35,9 @@ dependencies:
   
   # State management
   provider: ^6.1.2
+  
+  # Dependency injection
+  get_it: ^7.6.7
 
 dev_dependencies:
   flutter_test:

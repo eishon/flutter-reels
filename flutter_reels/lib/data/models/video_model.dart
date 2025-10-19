@@ -3,7 +3,7 @@ import 'package:flutter_reels/data/models/user_model.dart';
 import 'package:flutter_reels/domain/entities/video_entity.dart';
 
 /// Data model for Video that extends VideoEntity.
-/// 
+///
 /// Adds JSON serialization/deserialization capabilities
 /// while inheriting all business logic from VideoEntity.
 class VideoModel extends VideoEntity {
@@ -25,7 +25,7 @@ class VideoModel extends VideoEntity {
   });
 
   /// Creates a VideoModel from JSON data.
-  /// 
+  ///
   /// Parses the complete video object including nested
   /// user and products data from mock_videos.json structure.
   factory VideoModel.fromJson(Map<String, dynamic> json) {
@@ -37,9 +37,8 @@ class VideoModel extends VideoEntity {
     if (json['products'] != null) {
       final productsJson = json['products'] as List;
       productModels.addAll(
-        productsJson.map((productJson) => 
-          ProductModel.fromJson(productJson as Map<String, dynamic>)
-        ),
+        productsJson.map((productJson) =>
+            ProductModel.fromJson(productJson as Map<String, dynamic>)),
       );
     }
 
@@ -62,7 +61,7 @@ class VideoModel extends VideoEntity {
   }
 
   /// Converts this VideoModel to a JSON map.
-  /// 
+  ///
   /// Useful for caching or API requests.
   Map<String, dynamic> toJson() {
     return {
@@ -91,7 +90,7 @@ class VideoModel extends VideoEntity {
           'category': product.category,
           'rating': product.rating,
           'isAvailable': product.isAvailable,
-          if (product.discountPrice != null) 
+          if (product.discountPrice != null)
             'discountPrice': product.discountPrice,
         };
       }).toList(),

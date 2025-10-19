@@ -2,7 +2,7 @@ import 'product_entity.dart';
 import 'user_entity.dart';
 
 /// Domain Entity: Video
-/// 
+///
 /// Represents a video in the application.
 /// This is a pure Dart class with no external dependencies.
 /// Contains all business logic related to a video.
