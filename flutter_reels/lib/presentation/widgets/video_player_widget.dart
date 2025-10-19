@@ -29,6 +29,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   ChewieController? _chewieController;
   bool _isInitialized = false;
   bool _hasError = false;
+  bool _showPlayButton = false;
 
   @override
   void initState() {
@@ -44,8 +45,14 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
     if (oldWidget.isActive != widget.isActive) {
       if (widget.isActive) {
         _videoPlayerController.play();
+        setState(() {
+          _showPlayButton = false;
+        });
       } else {
         _videoPlayerController.pause();
+        setState(() {
+          _showPlayButton = true;
+        });
       }
     }
   }
@@ -62,6 +69,18 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
       }
 
       await _videoPlayerController.initialize();
+
+      // Add listener to update play button state
+      _videoPlayerController.addListener(() {
+        if (mounted) {
+          final isPlaying = _videoPlayerController.value.isPlaying;
+          if (_showPlayButton == isPlaying) {
+            setState(() {
+              _showPlayButton = !isPlaying;
+            });
+          }
+        }
+      });
 
       _chewieController = ChewieController(
         videoPlayerController: _videoPlayerController,
@@ -128,10 +147,15 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   void _togglePlayPause() {
     if (_videoPlayerController.value.isPlaying) {
       _videoPlayerController.pause();
+      setState(() {
+        _showPlayButton = true;
+      });
     } else {
       _videoPlayerController.play();
+      setState(() {
+        _showPlayButton = false;
+      });
     }
-    setState(() {});
   }
 
   @override
@@ -189,9 +213,11 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
         children: [
           Chewie(controller: _chewieController!),
 
-          // Play/Pause indicator
-          if (!_videoPlayerController.value.isPlaying)
-            Center(
+          // Play/Pause indicator with smooth fade animation
+          AnimatedOpacity(
+            opacity: _showPlayButton ? 1.0 : 0.0,
+            duration: const Duration(milliseconds: 300),
+            child: Center(
               child: Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -205,6 +231,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
                 ),
               ),
             ),
+          ),
         ],
       ),
     );
