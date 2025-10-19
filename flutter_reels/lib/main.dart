@@ -7,10 +7,10 @@ import 'package:provider/provider.dart';
 void main() async {
   // Ensure Flutter is initialized
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Initialize dependencies
   await initializeDependencies();
-  
+
   runApp(const FlutterReelsApp());
 }
 

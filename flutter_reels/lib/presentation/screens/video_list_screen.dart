@@ -3,7 +3,7 @@ import 'package:flutter_reels/presentation/providers/video_provider.dart';
 import 'package:provider/provider.dart';
 
 /// Screen that displays a list of videos to verify data flow.
-/// 
+///
 /// This is a test widget demonstrating the complete architecture:
 /// - Loads data from VideoProvider
 /// - Displays loading/error/success states
@@ -107,7 +107,7 @@ class _VideoListScreenState extends State<VideoListScreen> {
               itemCount: videoProvider.videos.length,
               itemBuilder: (context, index) {
                 final video = videoProvider.videos[index];
-                
+
                 return Card(
                   margin: const EdgeInsets.symmetric(
                     horizontal: 16,
@@ -124,7 +124,8 @@ class _VideoListScreenState extends State<VideoListScreen> {
                           children: [
                             CircleAvatar(
                               radius: 20,
-                              backgroundImage: NetworkImage(video.user.avatarUrl),
+                              backgroundImage:
+                                  NetworkImage(video.user.avatarUrl),
                             ),
                             const SizedBox(width: 12),
                             Expanded(
@@ -143,12 +144,13 @@ class _VideoListScreenState extends State<VideoListScreen> {
                                 style: const TextStyle(fontSize: 12),
                               ),
                               padding: EdgeInsets.zero,
-                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              materialTapTargetSize:
+                                  MaterialTapTargetSize.shrinkWrap,
                             ),
                           ],
                         ),
                         const SizedBox(height: 12),
-                        
+
                         // Video title
                         Text(
                           video.title,
@@ -158,7 +160,7 @@ class _VideoListScreenState extends State<VideoListScreen> {
                           ),
                         ),
                         const SizedBox(height: 8),
-                        
+
                         // Video description
                         Text(
                           video.description,
@@ -167,7 +169,7 @@ class _VideoListScreenState extends State<VideoListScreen> {
                           style: const TextStyle(color: Colors.grey),
                         ),
                         const SizedBox(height: 12),
-                        
+
                         // Video URL chip
                         Container(
                           padding: const EdgeInsets.symmetric(
@@ -202,7 +204,7 @@ class _VideoListScreenState extends State<VideoListScreen> {
                           ),
                         ),
                         const SizedBox(height: 12),
-                        
+
                         // Engagement stats
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -213,7 +215,9 @@ class _VideoListScreenState extends State<VideoListScreen> {
                                 videoProvider.toggleLike(video.id);
                               },
                               icon: Icon(
-                                video.isLiked ? Icons.favorite : Icons.favorite_border,
+                                video.isLiked
+                                    ? Icons.favorite
+                                    : Icons.favorite_border,
                                 color: video.isLiked ? Colors.red : Colors.grey,
                               ),
                               label: Text('${video.likes}'),
@@ -221,7 +225,8 @@ class _VideoListScreenState extends State<VideoListScreen> {
                             // Comments
                             TextButton.icon(
                               onPressed: () {},
-                              icon: const Icon(Icons.comment_outlined, color: Colors.grey),
+                              icon: const Icon(Icons.comment_outlined,
+                                  color: Colors.grey),
                               label: Text('${video.comments}'),
                             ),
                             // Share button
@@ -229,12 +234,13 @@ class _VideoListScreenState extends State<VideoListScreen> {
                               onPressed: () {
                                 videoProvider.shareVideo(video.id);
                               },
-                              icon: const Icon(Icons.share_outlined, color: Colors.grey),
+                              icon: const Icon(Icons.share_outlined,
+                                  color: Colors.grey),
                               label: Text('${video.shares}'),
                             ),
                           ],
                         ),
-                        
+
                         // Products section (if any)
                         if (video.hasProducts) ...[
                           const Divider(),
@@ -258,7 +264,8 @@ class _VideoListScreenState extends State<VideoListScreen> {
                                     width: 150,
                                     padding: const EdgeInsets.all(8),
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         Text(
@@ -280,10 +287,12 @@ class _VideoListScreenState extends State<VideoListScreen> {
                                         ),
                                         if (product.discountPrice != null)
                                           Text(
-                                            product.currency + product.discountPrice!,
+                                            product.currency +
+                                                product.discountPrice!,
                                             style: const TextStyle(
                                               fontSize: 10,
-                                              decoration: TextDecoration.lineThrough,
+                                              decoration:
+                                                  TextDecoration.lineThrough,
                                               color: Colors.grey,
                                             ),
                                           ),
@@ -298,7 +307,8 @@ class _VideoListScreenState extends State<VideoListScreen> {
                                             const SizedBox(width: 2),
                                             Text(
                                               '${product.rating}',
-                                              style: const TextStyle(fontSize: 10),
+                                              style:
+                                                  const TextStyle(fontSize: 10),
                                             ),
                                           ],
                                         ),

@@ -5,7 +5,7 @@ import 'package:flutter_reels/domain/usecases/increment_share_count_usecase.dart
 import 'package:flutter_reels/domain/usecases/toggle_like_usecase.dart';
 
 /// Provider for managing video state using Provider package with ChangeNotifier.
-/// 
+///
 /// This class handles:
 /// - Fetching videos from use cases
 /// - Managing loading/error states
@@ -35,7 +35,7 @@ class VideoProvider with ChangeNotifier {
   bool get hasVideos => _videos.isNotEmpty;
 
   /// Loads videos from the use case.
-  /// 
+  ///
   /// Sets loading state, fetches videos, and handles errors.
   /// Notifies listeners of state changes.
   Future<void> loadVideos() async {
@@ -55,12 +55,12 @@ class VideoProvider with ChangeNotifier {
   }
 
   /// Toggles the like status of a video.
-  /// 
+  ///
   /// Updates the video in the list and notifies listeners.
   Future<void> toggleLike(String videoId) async {
     try {
       final updatedVideo = await toggleLikeUseCase(videoId);
-      
+
       // Find and update the video in the list
       final index = _videos.indexWhere((v) => v.id == videoId);
       if (index != -1) {
@@ -74,12 +74,12 @@ class VideoProvider with ChangeNotifier {
   }
 
   /// Increments the share count for a video.
-  /// 
+  ///
   /// Updates the video in the list and notifies listeners.
   Future<void> shareVideo(String videoId) async {
     try {
       final updatedVideo = await incrementShareCountUseCase(videoId);
-      
+
       // Find and update the video in the list
       final index = _videos.indexWhere((v) => v.id == videoId);
       if (index != -1) {
@@ -92,7 +92,7 @@ class VideoProvider with ChangeNotifier {
   }
 
   /// Refreshes the video list.
-  /// 
+  ///
   /// Useful for pull-to-refresh functionality.
   Future<void> refresh() async {
     await loadVideos();

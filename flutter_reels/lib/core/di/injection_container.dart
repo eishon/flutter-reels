@@ -8,10 +8,10 @@ import 'package:flutter_reels/domain/usecases/toggle_like_usecase.dart';
 import 'package:get_it/get_it.dart';
 
 /// Service locator for dependency injection.
-/// 
+///
 /// Uses get_it package to manage dependencies throughout the app.
 /// This provides a centralized place to register and resolve dependencies.
-/// 
+///
 /// Benefits:
 /// - Loose coupling between layers
 /// - Easy to test (can replace with mocks)
@@ -20,10 +20,10 @@ import 'package:get_it/get_it.dart';
 final sl = GetIt.instance;
 
 /// Initializes all dependencies.
-/// 
+///
 /// This should be called once at app startup, before running the app.
 /// Dependencies are registered in order: data sources → repositories → use cases.
-/// 
+///
 /// Example:
 /// ```dart
 /// void main() async {
@@ -50,7 +50,7 @@ Future<void> initializeDependencies() async {
   // Use cases
   // Registered as factory - new instance created each time
   // This is preferred for use cases as they're typically lightweight
-  
+
   sl.registerFactory(
     () => GetVideosUseCase(sl<VideoRepository>()),
   );
@@ -69,7 +69,7 @@ Future<void> initializeDependencies() async {
 }
 
 /// Resets all registered dependencies.
-/// 
+///
 /// Useful for testing to ensure a clean state between tests.
 /// Should NOT be called in production code.
 Future<void> resetDependencies() async {

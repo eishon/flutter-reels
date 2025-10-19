@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_reels/data/models/video_model.dart';
 
 /// Local data source that reads video data from assets folder.
-/// 
+///
 /// This class handles loading and parsing the mock_videos.json file.
 /// In a real app, this could be extended to also handle local database
 /// or shared preferences for caching.
@@ -12,25 +12,26 @@ class VideoLocalDataSource {
   static const String _mockDataPath = 'assets/mock_videos.json';
 
   /// Loads and parses videos from the mock JSON file.
-  /// 
+  ///
   /// Returns a list of [VideoModel] objects.
   /// Throws an exception if the file cannot be read or parsed.
   Future<List<VideoModel>> getVideos() async {
     try {
       // Load the JSON file from assets
       final String jsonString = await rootBundle.loadString(_mockDataPath);
-      
+
       // Parse the JSON string
       final Map<String, dynamic> jsonData = json.decode(jsonString);
-      
+
       // Extract the videos array
       final List<dynamic> videosJson = jsonData['videos'] as List;
-      
+
       // Convert each JSON object to a VideoModel
       final List<VideoModel> videos = videosJson
-          .map((videoJson) => VideoModel.fromJson(videoJson as Map<String, dynamic>))
+          .map((videoJson) =>
+              VideoModel.fromJson(videoJson as Map<String, dynamic>))
           .toList();
-      
+
       return videos;
     } catch (e) {
       throw Exception('Failed to load videos from assets: $e');
@@ -38,7 +39,7 @@ class VideoLocalDataSource {
   }
 
   /// Gets a single video by its ID.
-  /// 
+  ///
   /// Returns the [VideoModel] if found, null otherwise.
   /// Throws an exception if the data cannot be loaded.
   Future<VideoModel?> getVideoById(String id) async {
@@ -52,10 +53,10 @@ class VideoLocalDataSource {
   }
 
   /// Toggles the like status of a video.
-  /// 
+  ///
   /// Note: This is a mock implementation that modifies in-memory data.
   /// In a real app, this would update a local database or call an API.
-  /// 
+  ///
   /// Returns the updated [VideoModel].
   Future<VideoModel> toggleLike(String videoId) async {
     final videos = await getVideos();
@@ -89,10 +90,10 @@ class VideoLocalDataSource {
   }
 
   /// Increments the share count for a video.
-  /// 
+  ///
   /// Note: This is a mock implementation.
   /// In a real app, this would update persistent storage.
-  /// 
+  ///
   /// Returns the updated [VideoModel].
   Future<VideoModel> incrementShareCount(String videoId) async {
     final videos = await getVideos();
