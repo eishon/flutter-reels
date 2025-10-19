@@ -1,19 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_reels/core/di/injection_container.dart';
+import 'package:flutter_reels/presentation/providers/video_provider.dart';
+import 'package:flutter_reels/presentation/screens/video_list_screen.dart';
+import 'package:provider/provider.dart';
 
-void main() => runApp(const FlutterReelsApp());
+void main() async {
+  // Ensure Flutter is initialized
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize dependencies
+  await initializeDependencies();
+  
+  runApp(const FlutterReelsApp());
+}
 
 class FlutterReelsApp extends StatelessWidget {
   const FlutterReelsApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Reels',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        useMaterial3: true,
+    return MultiProvider(
+      providers: [
+        // Register VideoProvider with dependency injection
+        ChangeNotifierProvider(
+          create: (_) => VideoProvider(
+            getVideosUseCase: sl(),
+            toggleLikeUseCase: sl(),
+            incrementShareCountUseCase: sl(),
+          ),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'Flutter Reels',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          useMaterial3: true,
+        ),
+        debugShowCheckedModeBanner: false,
+        home: const VideoListScreen(),
       ),
-      home: const HelloWorldScreen(),
     );
   }
 }
