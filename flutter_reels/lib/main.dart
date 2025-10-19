@@ -1,12 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_reels/core/di/injection_container.dart';
 import 'package:flutter_reels/presentation/providers/video_provider.dart';
-import 'package:flutter_reels/presentation/screens/video_list_screen.dart';
+import 'package:flutter_reels/presentation/screens/reels_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   // Ensure Flutter is initialized
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Set preferred orientations to portrait
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
+  // Set system UI overlay style for immersive experience
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.light,
+      systemNavigationBarColor: Colors.black,
+      systemNavigationBarIconBrightness: Brightness.light,
+    ),
+  );
 
   // Initialize dependencies
   await initializeDependencies();
@@ -35,9 +52,10 @@ class FlutterReelsApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
           useMaterial3: true,
+          brightness: Brightness.dark,
         ),
         debugShowCheckedModeBanner: false,
-        home: const VideoListScreen(),
+        home: const ReelsScreen(),
       ),
     );
   }
