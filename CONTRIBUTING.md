@@ -45,9 +45,15 @@ Enhancement suggestions are tracked as GitHub issues. When creating an enhanceme
 
 ## Development Process
 
-1. **Fork the repository** and create your branch from `master`
+### Branch Protection
+
+The `main` branch is protected and **does not allow direct pushes**. All changes must be made through pull requests. See [Branch Protection Documentation](.github/BRANCH_PROTECTION.md) for details.
+
+1. **Fork the repository** and create your branch from `main`
 
    ```bash
+   git checkout main
+   git pull origin main
    git checkout -b feature/my-new-feature
    ```
 
@@ -98,6 +104,8 @@ Enhancement suggestions are tracked as GitHub issues. When creating an enhanceme
    - Provide a clear description of the problem and solution
    - Include the relevant issue number if applicable
    - Include screenshots if your changes affect the UI
+   - Wait for at least one approval from a reviewer
+   - Ensure all CI checks pass (the `analyze-and-test` job must succeed)
 
 ## Style Guidelines
 

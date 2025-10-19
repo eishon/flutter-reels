@@ -199,6 +199,8 @@ Contributions are welcome! Here's how you can help:
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
+**Note:** The `main` branch is protected and does not allow direct pushes. All changes must be submitted through pull requests with at least one approval. See [Branch Protection Guide](.github/BRANCH_PROTECTION.md) and [Contributing Guidelines](CONTRIBUTING.md) for details.
+
 ### Development Guidelines
 
 - Follow Flutter/Dart style guidelines
