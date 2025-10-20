@@ -22,7 +22,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.16.5'
+          flutter-version: '3.16.9'
           channel: 'stable'
           cache: true
 
@@ -63,7 +63,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.16.5'
+          flutter-version: '3.16.9'
           channel: 'stable'
           cache: true
 
@@ -135,7 +135,7 @@ jobs:
           echo "" >> release-notes.md
           echo "## Build Information" >> release-notes.md
           echo "" >> release-notes.md
-          echo "- **Flutter Version**: 3.16.5" >> release-notes.md
+          echo "- **Flutter Version**: 3.16.9" >> release-notes.md
           echo "- **Build Date**: $(date)" >> release-notes.md
           echo "- **Commit**: ${{ github.sha }}" >> release-notes.md
           echo "" >> release-notes.md
