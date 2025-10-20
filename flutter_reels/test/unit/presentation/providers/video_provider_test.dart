@@ -18,16 +18,19 @@ void main() {
   late MockGetVideosUseCase mockGetVideosUseCase;
   late MockToggleLikeUseCase mockToggleLikeUseCase;
   late MockIncrementShareCountUseCase mockIncrementShareCountUseCase;
+  late MockAnalyticsService mockAnalyticsService;
 
   setUp(() {
     mockGetVideosUseCase = MockGetVideosUseCase();
     mockToggleLikeUseCase = MockToggleLikeUseCase();
     mockIncrementShareCountUseCase = MockIncrementShareCountUseCase();
+    mockAnalyticsService = MockAnalyticsService();
 
     provider = VideoProvider(
       getVideosUseCase: mockGetVideosUseCase,
       toggleLikeUseCase: mockToggleLikeUseCase,
       incrementShareCountUseCase: mockIncrementShareCountUseCase,
+      analyticsService: mockAnalyticsService,
     );
   });
 

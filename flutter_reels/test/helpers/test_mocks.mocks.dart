@@ -3,19 +3,20 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i6;
+import 'dart:async' as _i7;
 
+import 'package:flutter_reels/core/services/analytics_service.dart' as _i5;
 import 'package:flutter_reels/data/datasources/video_local_data_source.dart'
-    as _i5;
+    as _i6;
 import 'package:flutter_reels/data/models/video_model.dart' as _i2;
 import 'package:flutter_reels/domain/entities/video_entity.dart' as _i3;
 import 'package:flutter_reels/domain/repositories/video_repository.dart' as _i4;
 import 'package:flutter_reels/domain/usecases/get_video_by_id_usecase.dart'
-    as _i8;
-import 'package:flutter_reels/domain/usecases/get_videos_usecase.dart' as _i7;
+    as _i9;
+import 'package:flutter_reels/domain/usecases/get_videos_usecase.dart' as _i8;
 import 'package:flutter_reels/domain/usecases/increment_share_count_usecase.dart'
-    as _i10;
-import 'package:flutter_reels/domain/usecases/toggle_like_usecase.dart' as _i9;
+    as _i11;
+import 'package:flutter_reels/domain/usecases/toggle_like_usecase.dart' as _i10;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
@@ -31,7 +32,6 @@ import 'package:mockito/mockito.dart' as _i1;
 // ignore_for_file: unnecessary_parenthesis
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
-// ignore_for_file: invalid_use_of_internal_member
 
 class _FakeVideoModel_0 extends _i1.SmartFake implements _i2.VideoModel {
   _FakeVideoModel_0(
@@ -64,63 +64,232 @@ class _FakeVideoRepository_2 extends _i1.SmartFake
         );
 }
 
+/// A class which mocks [AnalyticsService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockAnalyticsService extends _i1.Mock implements _i5.AnalyticsService {
+  MockAnalyticsService() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  void trackEvent(
+    String? eventType, {
+    Map<String?, Object?>? data,
+  }) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #trackEvent,
+          [eventType],
+          {#data: data},
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void trackVideoAppear({
+    required String? videoId,
+    int? position,
+    String? screenName,
+  }) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #trackVideoAppear,
+          [],
+          {
+            #videoId: videoId,
+            #position: position,
+            #screenName: screenName,
+          },
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void trackVideoClick({
+    required String? videoId,
+    required String? element,
+    int? position,
+  }) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #trackVideoClick,
+          [],
+          {
+            #videoId: videoId,
+            #element: element,
+            #position: position,
+          },
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void trackPageView({
+    required String? screenName,
+    Map<String?, Object?>? metadata,
+  }) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #trackPageView,
+          [],
+          {
+            #screenName: screenName,
+            #metadata: metadata,
+          },
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void trackLike({
+    required String? videoId,
+    required bool? isLiked,
+    required int? likeCount,
+  }) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #trackLike,
+          [],
+          {
+            #videoId: videoId,
+            #isLiked: isLiked,
+            #likeCount: likeCount,
+          },
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void trackShare({
+    required String? videoId,
+    String? shareType,
+  }) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #trackShare,
+          [],
+          {
+            #videoId: videoId,
+            #shareType: shareType,
+          },
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void trackVideoStart({
+    required String? videoId,
+    double? duration,
+  }) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #trackVideoStart,
+          [],
+          {
+            #videoId: videoId,
+            #duration: duration,
+          },
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void trackVideoComplete({
+    required String? videoId,
+    double? duration,
+    double? completionRate,
+  }) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #trackVideoComplete,
+          [],
+          {
+            #videoId: videoId,
+            #duration: duration,
+            #completionRate: completionRate,
+          },
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void trackError({
+    required String? errorType,
+    required String? errorMessage,
+    String? videoId,
+  }) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #trackError,
+          [],
+          {
+            #errorType: errorType,
+            #errorMessage: errorMessage,
+            #videoId: videoId,
+          },
+        ),
+        returnValueForMissingStub: null,
+      );
+}
+
 /// A class which mocks [VideoLocalDataSource].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockVideoLocalDataSource extends _i1.Mock
-    implements _i5.VideoLocalDataSource {
+    implements _i6.VideoLocalDataSource {
   MockVideoLocalDataSource() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i6.Future<List<_i2.VideoModel>> getVideos() => (super.noSuchMethod(
+  _i7.Future<List<_i2.VideoModel>> getVideos() => (super.noSuchMethod(
         Invocation.method(
           #getVideos,
           [],
         ),
-        returnValue: _i6.Future<List<_i2.VideoModel>>.value(<_i2.VideoModel>[]),
-      ) as _i6.Future<List<_i2.VideoModel>>);
+        returnValue: _i7.Future<List<_i2.VideoModel>>.value(<_i2.VideoModel>[]),
+      ) as _i7.Future<List<_i2.VideoModel>>);
 
   @override
-  _i6.Future<_i2.VideoModel?> getVideoById(String? id) => (super.noSuchMethod(
+  _i7.Future<_i2.VideoModel?> getVideoById(String? id) => (super.noSuchMethod(
         Invocation.method(
           #getVideoById,
           [id],
         ),
-        returnValue: _i6.Future<_i2.VideoModel?>.value(),
-      ) as _i6.Future<_i2.VideoModel?>);
+        returnValue: _i7.Future<_i2.VideoModel?>.value(),
+      ) as _i7.Future<_i2.VideoModel?>);
 
   @override
-  _i6.Future<_i2.VideoModel> toggleLike(String? videoId) => (super.noSuchMethod(
+  _i7.Future<_i2.VideoModel> toggleLike(String? videoId) => (super.noSuchMethod(
         Invocation.method(
           #toggleLike,
           [videoId],
         ),
-        returnValue: _i6.Future<_i2.VideoModel>.value(_FakeVideoModel_0(
+        returnValue: _i7.Future<_i2.VideoModel>.value(_FakeVideoModel_0(
           this,
           Invocation.method(
             #toggleLike,
             [videoId],
           ),
         )),
-      ) as _i6.Future<_i2.VideoModel>);
+      ) as _i7.Future<_i2.VideoModel>);
 
   @override
-  _i6.Future<_i2.VideoModel> incrementShareCount(String? videoId) =>
+  _i7.Future<_i2.VideoModel> incrementShareCount(String? videoId) =>
       (super.noSuchMethod(
         Invocation.method(
           #incrementShareCount,
           [videoId],
         ),
-        returnValue: _i6.Future<_i2.VideoModel>.value(_FakeVideoModel_0(
+        returnValue: _i7.Future<_i2.VideoModel>.value(_FakeVideoModel_0(
           this,
           Invocation.method(
             #incrementShareCount,
             [videoId],
           ),
         )),
-      ) as _i6.Future<_i2.VideoModel>);
+      ) as _i7.Future<_i2.VideoModel>);
 }
 
 /// A class which mocks [VideoRepository].
@@ -132,61 +301,61 @@ class MockVideoRepository extends _i1.Mock implements _i4.VideoRepository {
   }
 
   @override
-  _i6.Future<List<_i3.VideoEntity>> getVideos() => (super.noSuchMethod(
+  _i7.Future<List<_i3.VideoEntity>> getVideos() => (super.noSuchMethod(
         Invocation.method(
           #getVideos,
           [],
         ),
         returnValue:
-            _i6.Future<List<_i3.VideoEntity>>.value(<_i3.VideoEntity>[]),
-      ) as _i6.Future<List<_i3.VideoEntity>>);
+            _i7.Future<List<_i3.VideoEntity>>.value(<_i3.VideoEntity>[]),
+      ) as _i7.Future<List<_i3.VideoEntity>>);
 
   @override
-  _i6.Future<_i3.VideoEntity?> getVideoById(String? id) => (super.noSuchMethod(
+  _i7.Future<_i3.VideoEntity?> getVideoById(String? id) => (super.noSuchMethod(
         Invocation.method(
           #getVideoById,
           [id],
         ),
-        returnValue: _i6.Future<_i3.VideoEntity?>.value(),
-      ) as _i6.Future<_i3.VideoEntity?>);
+        returnValue: _i7.Future<_i3.VideoEntity?>.value(),
+      ) as _i7.Future<_i3.VideoEntity?>);
 
   @override
-  _i6.Future<_i3.VideoEntity> toggleLike(String? videoId) =>
+  _i7.Future<_i3.VideoEntity> toggleLike(String? videoId) =>
       (super.noSuchMethod(
         Invocation.method(
           #toggleLike,
           [videoId],
         ),
-        returnValue: _i6.Future<_i3.VideoEntity>.value(_FakeVideoEntity_1(
+        returnValue: _i7.Future<_i3.VideoEntity>.value(_FakeVideoEntity_1(
           this,
           Invocation.method(
             #toggleLike,
             [videoId],
           ),
         )),
-      ) as _i6.Future<_i3.VideoEntity>);
+      ) as _i7.Future<_i3.VideoEntity>);
 
   @override
-  _i6.Future<_i3.VideoEntity> incrementShareCount(String? videoId) =>
+  _i7.Future<_i3.VideoEntity> incrementShareCount(String? videoId) =>
       (super.noSuchMethod(
         Invocation.method(
           #incrementShareCount,
           [videoId],
         ),
-        returnValue: _i6.Future<_i3.VideoEntity>.value(_FakeVideoEntity_1(
+        returnValue: _i7.Future<_i3.VideoEntity>.value(_FakeVideoEntity_1(
           this,
           Invocation.method(
             #incrementShareCount,
             [videoId],
           ),
         )),
-      ) as _i6.Future<_i3.VideoEntity>);
+      ) as _i7.Future<_i3.VideoEntity>);
 }
 
 /// A class which mocks [GetVideosUseCase].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockGetVideosUseCase extends _i1.Mock implements _i7.GetVideosUseCase {
+class MockGetVideosUseCase extends _i1.Mock implements _i8.GetVideosUseCase {
   MockGetVideosUseCase() {
     _i1.throwOnMissingStub(this);
   }
@@ -201,21 +370,21 @@ class MockGetVideosUseCase extends _i1.Mock implements _i7.GetVideosUseCase {
       ) as _i4.VideoRepository);
 
   @override
-  _i6.Future<List<_i3.VideoEntity>> call() => (super.noSuchMethod(
+  _i7.Future<List<_i3.VideoEntity>> call() => (super.noSuchMethod(
         Invocation.method(
           #call,
           [],
         ),
         returnValue:
-            _i6.Future<List<_i3.VideoEntity>>.value(<_i3.VideoEntity>[]),
-      ) as _i6.Future<List<_i3.VideoEntity>>);
+            _i7.Future<List<_i3.VideoEntity>>.value(<_i3.VideoEntity>[]),
+      ) as _i7.Future<List<_i3.VideoEntity>>);
 }
 
 /// A class which mocks [GetVideoByIdUseCase].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockGetVideoByIdUseCase extends _i1.Mock
-    implements _i8.GetVideoByIdUseCase {
+    implements _i9.GetVideoByIdUseCase {
   MockGetVideoByIdUseCase() {
     _i1.throwOnMissingStub(this);
   }
@@ -230,19 +399,19 @@ class MockGetVideoByIdUseCase extends _i1.Mock
       ) as _i4.VideoRepository);
 
   @override
-  _i6.Future<_i3.VideoEntity?> call(String? id) => (super.noSuchMethod(
+  _i7.Future<_i3.VideoEntity?> call(String? id) => (super.noSuchMethod(
         Invocation.method(
           #call,
           [id],
         ),
-        returnValue: _i6.Future<_i3.VideoEntity?>.value(),
-      ) as _i6.Future<_i3.VideoEntity?>);
+        returnValue: _i7.Future<_i3.VideoEntity?>.value(),
+      ) as _i7.Future<_i3.VideoEntity?>);
 }
 
 /// A class which mocks [ToggleLikeUseCase].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockToggleLikeUseCase extends _i1.Mock implements _i9.ToggleLikeUseCase {
+class MockToggleLikeUseCase extends _i1.Mock implements _i10.ToggleLikeUseCase {
   MockToggleLikeUseCase() {
     _i1.throwOnMissingStub(this);
   }
@@ -257,26 +426,26 @@ class MockToggleLikeUseCase extends _i1.Mock implements _i9.ToggleLikeUseCase {
       ) as _i4.VideoRepository);
 
   @override
-  _i6.Future<_i3.VideoEntity> call(String? videoId) => (super.noSuchMethod(
+  _i7.Future<_i3.VideoEntity> call(String? videoId) => (super.noSuchMethod(
         Invocation.method(
           #call,
           [videoId],
         ),
-        returnValue: _i6.Future<_i3.VideoEntity>.value(_FakeVideoEntity_1(
+        returnValue: _i7.Future<_i3.VideoEntity>.value(_FakeVideoEntity_1(
           this,
           Invocation.method(
             #call,
             [videoId],
           ),
         )),
-      ) as _i6.Future<_i3.VideoEntity>);
+      ) as _i7.Future<_i3.VideoEntity>);
 }
 
 /// A class which mocks [IncrementShareCountUseCase].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockIncrementShareCountUseCase extends _i1.Mock
-    implements _i10.IncrementShareCountUseCase {
+    implements _i11.IncrementShareCountUseCase {
   MockIncrementShareCountUseCase() {
     _i1.throwOnMissingStub(this);
   }
@@ -291,17 +460,17 @@ class MockIncrementShareCountUseCase extends _i1.Mock
       ) as _i4.VideoRepository);
 
   @override
-  _i6.Future<_i3.VideoEntity> call(String? videoId) => (super.noSuchMethod(
+  _i7.Future<_i3.VideoEntity> call(String? videoId) => (super.noSuchMethod(
         Invocation.method(
           #call,
           [videoId],
         ),
-        returnValue: _i6.Future<_i3.VideoEntity>.value(_FakeVideoEntity_1(
+        returnValue: _i7.Future<_i3.VideoEntity>.value(_FakeVideoEntity_1(
           this,
           Invocation.method(
             #call,
             [videoId],
           ),
         )),
-      ) as _i6.Future<_i3.VideoEntity>);
+      ) as _i7.Future<_i3.VideoEntity>);
 }

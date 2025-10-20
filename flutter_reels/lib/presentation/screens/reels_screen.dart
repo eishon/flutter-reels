@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_reels/core/di/injection_container.dart';
+import 'package:flutter_reels/core/services/analytics_service.dart';
 import 'package:flutter_reels/main.dart';
 import 'package:flutter_reels/presentation/providers/video_provider.dart';
 import 'package:flutter_reels/presentation/widgets/video_reel_item.dart';
@@ -11,6 +13,7 @@ import 'package:provider/provider.dart';
 /// - Full-screen immersive experience
 /// - Pull-to-refresh functionality
 /// - Loading and error states
+/// - Analytics tracking for video views and page views
 class ReelsScreen extends StatefulWidget {
   const ReelsScreen({super.key});
 
@@ -23,16 +26,21 @@ class _ReelsScreenState extends State<ReelsScreen>
   late PageController _pageController;
   int _currentIndex = 0;
   bool _isScreenActive = true;
+  late AnalyticsService _analyticsService;
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController();
+    _analyticsService = sl<AnalyticsService>();
     WidgetsBinding.instance.addObserver(this);
 
     // Load videos when screen initializes
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<VideoProvider>().loadVideos();
+      
+      // Track page view
+      _analyticsService.trackPageView(screenName: 'reels_screen');
     });
   }
 
@@ -95,6 +103,17 @@ class _ReelsScreenState extends State<ReelsScreen>
     setState(() {
       _currentIndex = index;
     });
+
+    // Track video appear event
+    final videoProvider = context.read<VideoProvider>();
+    if (index < videoProvider.videos.length) {
+      final video = videoProvider.videos[index];
+      _analyticsService.trackVideoAppear(
+        videoId: video.id,
+        position: index,
+        screenName: 'reels_screen',
+      );
+    }
   }
 
   Future<void> _onRefresh() async {

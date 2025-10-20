@@ -55,6 +55,7 @@ class FlutterReelsApp extends StatelessWidget {
             getVideosUseCase: sl(),
             toggleLikeUseCase: sl(),
             incrementShareCountUseCase: sl(),
+            analyticsService: sl(),
           ),
         ),
       ],

@@ -3,6 +3,7 @@
 /// This file centralizes all mock class definitions using mockito.
 /// These mocks are used across different test files to maintain consistency.
 
+import 'package:flutter_reels/core/services/analytics_service.dart';
 import 'package:flutter_reels/data/datasources/video_local_data_source.dart';
 import 'package:flutter_reels/domain/repositories/video_repository.dart';
 import 'package:flutter_reels/domain/usecases/get_video_by_id_usecase.dart';
@@ -16,6 +17,9 @@ import 'package:mockito/annotations.dart';
 ///
 /// This will generate test_mocks.mocks.dart file
 @GenerateMocks([
+  // Core services
+  AnalyticsService,
+
   // Data layer
   VideoLocalDataSource,
 
