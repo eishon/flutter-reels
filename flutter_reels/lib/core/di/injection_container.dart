@@ -2,6 +2,7 @@ import 'package:flutter_reels/core/platform/platform_initializer.dart';
 import 'package:flutter_reels/core/services/access_token_service.dart';
 import 'package:flutter_reels/core/services/analytics_service.dart';
 import 'package:flutter_reels/core/services/button_events_service.dart';
+import 'package:flutter_reels/core/services/navigation_events_service.dart';
 import 'package:flutter_reels/core/services/state_events_service.dart';
 import 'package:flutter_reels/data/datasources/video_local_data_source.dart';
 import 'package:flutter_reels/data/repositories/video_repository_impl.dart';
@@ -45,8 +46,9 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<AnalyticsService>(platformServices.analyticsService);
   sl.registerSingleton<ButtonEventsService>(
       platformServices.buttonEventsService);
-  sl.registerSingleton<StateEventsService>(
-      platformServices.stateEventsService);
+  sl.registerSingleton<StateEventsService>(platformServices.stateEventsService);
+  sl.registerSingleton<NavigationEventsService>(
+      platformServices.navigationEventsService);
 
   // Data sources
   // Registered as lazy singleton - created only when first accessed

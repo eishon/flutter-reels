@@ -2,6 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_reels/core/services/access_token_service.dart';
 import 'package:flutter_reels/core/services/analytics_service.dart';
 import 'package:flutter_reels/core/services/button_events_service.dart';
+import 'package:flutter_reels/core/services/navigation_events_service.dart';
 import 'package:flutter_reels/core/services/state_events_service.dart';
 import 'package:flutter_reels/core/platform/messages.g.dart';
 
@@ -12,12 +13,14 @@ class PlatformServices {
     required this.analyticsService,
     required this.buttonEventsService,
     required this.stateEventsService,
+    required this.navigationEventsService,
   });
 
   final AccessTokenService accessTokenService;
   final AnalyticsService analyticsService;
   final ButtonEventsService buttonEventsService;
   final StateEventsService stateEventsService;
+  final NavigationEventsService navigationEventsService;
 }
 
 /// Implementation of FlutterReelsAnalyticsApi that sends events to native
@@ -95,6 +98,30 @@ class _FlutterStateApiImpl extends FlutterReelsStateApi {
   }
 }
 
+/// Implementation of FlutterReelsNavigationApi that sends navigation events to native
+class _FlutterNavigationApiImpl extends FlutterReelsNavigationApi {
+  static const MessageCodec<Object?> _codec =
+      FlutterReelsNavigationApi.pigeonChannelCodec;
+
+  @override
+  void onSwipeLeft() {
+    const channel = BasicMessageChannel<Object?>(
+      'dev.flutter.pigeon.flutter_reels.FlutterReelsNavigationApi.onSwipeLeft',
+      _codec,
+    );
+    channel.send(null);
+  }
+
+  @override
+  void onSwipeRight() {
+    const channel = BasicMessageChannel<Object?>(
+      'dev.flutter.pigeon.flutter_reels.FlutterReelsNavigationApi.onSwipeRight',
+      _codec,
+    );
+    channel.send(null);
+  }
+}
+
 /// Initializes platform communication channels
 ///
 /// This sets up the Pigeon APIs that handle communication between
@@ -143,6 +170,12 @@ class PlatformInitializer {
     final stateEventsApi = _FlutterStateApiImpl();
     final stateEventsService = StateEventsService(api: stateEventsApi);
 
+    // Create navigation events service
+    // Native must call FlutterReelsNavigationApi.setup() to receive events
+    final navigationEventsApi = _FlutterNavigationApiImpl();
+    final navigationEventsService =
+        NavigationEventsService(api: navigationEventsApi);
+
     // Note: Other APIs are set up by native platforms
     // Native side must call:
     // - FlutterReelsHostApi.setup() to handle pause/resume
@@ -157,6 +190,7 @@ class PlatformInitializer {
       analyticsService: analyticsService,
       buttonEventsService: buttonEventsService,
       stateEventsService: stateEventsService,
+      navigationEventsService: navigationEventsService,
     );
   }
 }

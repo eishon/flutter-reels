@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_reels/core/di/injection_container.dart';
+import 'package:flutter_reels/core/services/navigation_events_service.dart';
 import 'package:flutter_reels/domain/entities/video_entity.dart';
 import 'package:flutter_reels/presentation/widgets/engagement_buttons.dart';
 import 'package:flutter_reels/presentation/widgets/video_description.dart';
@@ -37,10 +39,12 @@ class _VideoReelItemState extends State<VideoReelItem>
   double _dragOffset = 0.0;
   late AnimationController _animationController;
   late Animation<double> _animation;
+  late NavigationEventsService _navigationEventsService;
 
   @override
   void initState() {
     super.initState();
+    _navigationEventsService = sl<NavigationEventsService>();
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 300),
@@ -61,6 +65,12 @@ class _VideoReelItemState extends State<VideoReelItem>
   }
 
   void _handleSwipeLeft() {
+    // Notify native platform about swipe left gesture
+    _navigationEventsService.notifySwipeLeft(
+      fromVideoId: widget.video.id,
+      metadata: {'action': 'swipe_left', 'timestamp': DateTime.now().toIso8601String()},
+    );
+
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Swiped left'),
@@ -70,6 +80,12 @@ class _VideoReelItemState extends State<VideoReelItem>
   }
 
   void _handleSwipeRight() {
+    // Notify native platform about swipe right gesture
+    _navigationEventsService.notifySwipeRight(
+      fromVideoId: widget.video.id,
+      metadata: {'action': 'swipe_right', 'timestamp': DateTime.now().toIso8601String()},
+    );
+
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Swiped right'),
