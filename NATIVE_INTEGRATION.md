@@ -11,6 +11,8 @@ This guide shows you how to integrate Flutter Reels into your existing native An
 5. [Testing](#testing)
 6. [Troubleshooting](#troubleshooting)
 
+> **📘 Advanced Navigation:** For complex navigation patterns including NATIVE→FLUTTER→NATIVE→FLUTTER (multi-instance), see [Multi-Instance Navigation Guide](./MULTI_INSTANCE_NAVIGATION.md)
+
 ---
 
 ## Prerequisites

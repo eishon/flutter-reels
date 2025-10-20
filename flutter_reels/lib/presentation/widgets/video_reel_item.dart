@@ -68,7 +68,10 @@ class _VideoReelItemState extends State<VideoReelItem>
     // Notify native platform about swipe left gesture
     _navigationEventsService.notifySwipeLeft(
       fromVideoId: widget.video.id,
-      metadata: {'action': 'swipe_left', 'timestamp': DateTime.now().toIso8601String()},
+      metadata: {
+        'action': 'swipe_left',
+        'timestamp': DateTime.now().toIso8601String()
+      },
     );
 
     ScaffoldMessenger.of(context).showSnackBar(
@@ -83,7 +86,10 @@ class _VideoReelItemState extends State<VideoReelItem>
     // Notify native platform about swipe right gesture
     _navigationEventsService.notifySwipeRight(
       fromVideoId: widget.video.id,
-      metadata: {'action': 'swipe_right', 'timestamp': DateTime.now().toIso8601String()},
+      metadata: {
+        'action': 'swipe_right',
+        'timestamp': DateTime.now().toIso8601String()
+      },
     );
 
     ScaffoldMessenger.of(context).showSnackBar(
