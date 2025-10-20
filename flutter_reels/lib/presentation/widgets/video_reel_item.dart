@@ -30,8 +30,35 @@ class VideoReelItem extends StatefulWidget {
   State<VideoReelItem> createState() => _VideoReelItemState();
 }
 
-class _VideoReelItemState extends State<VideoReelItem> {
+class _VideoReelItemState extends State<VideoReelItem>
+    with SingleTickerProviderStateMixin {
   bool _isBottomSheetOpen = false;
+  bool _isMuted = false;
+  double _dragOffset = 0.0;
+  late AnimationController _animationController;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+    _animation = Tween<double>(begin: 0.0, end: 0.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
+    )..addListener(() {
+        setState(() {
+          _dragOffset = _animation.value;
+        });
+      });
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   void _handleSwipeLeft() {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -51,116 +78,173 @@ class _VideoReelItemState extends State<VideoReelItem> {
     );
   }
 
+  void _onHorizontalDragUpdate(DragUpdateDetails details) {
+    setState(() {
+      _dragOffset += details.delta.dx;
+      // Limit the drag offset to prevent excessive movement
+      _dragOffset = _dragOffset.clamp(-50.0, 50.0);
+    });
+  }
+
+  void _onHorizontalDragEnd(DragEndDetails details) {
+    if (details.primaryVelocity! > 500) {
+      // Swipe right with sufficient velocity
+      _handleSwipeRight();
+    } else if (details.primaryVelocity! < -500) {
+      // Swipe left with sufficient velocity
+      _handleSwipeLeft();
+    }
+
+    // Animate back to center
+    _animation = Tween<double>(
+      begin: _dragOffset,
+      end: 0.0,
+    ).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
+    );
+    _animationController.forward(from: 0.0);
+  }
+
   @override
   Widget build(BuildContext context) {
     final isVideoActive = widget.isActive && !_isBottomSheetOpen;
 
     return GestureDetector(
-      onHorizontalDragEnd: (details) {
-        if (details.primaryVelocity! > 0) {
-          // Swipe right
-          _handleSwipeRight();
-        } else if (details.primaryVelocity! < 0) {
-          // Swipe left
-          _handleSwipeLeft();
-        }
-      },
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          // Video player
-          VideoPlayerWidget(
-            videoUrl: widget.video.url,
-            isActive: isVideoActive,
-          ),
-
-          // Top gradient overlay for better text visibility
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            height: 120,
-            child: Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.black54,
-                    Colors.transparent,
-                  ],
-                ),
-              ),
+      onHorizontalDragUpdate: _onHorizontalDragUpdate,
+      onHorizontalDragEnd: _onHorizontalDragEnd,
+      child: Transform.translate(
+        offset: Offset(_dragOffset * 0.3, 0), // Reduced movement for subtlety
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            // Video player
+            VideoPlayerWidget(
+              videoUrl: widget.video.url,
+              isActive: isVideoActive,
+              isMuted: _isMuted,
             ),
-          ),
 
-          // Bottom gradient overlay for better text visibility
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            height: 300,
-            child: Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.topCenter,
-                  colors: [
-                    Colors.black87,
-                    Colors.black54,
-                    Colors.transparent,
-                  ],
-                ),
-              ),
-            ),
-          ),
-
-          // Main content overlay
-          SafeArea(
-            child: Column(
-              children: [
-                const Spacer(),
-
-                // Bottom content
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: 16.0,
-                    right: 16.0,
-                    top: 16.0,
-                    bottom: 8.0,
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      // Video description and user info
-                      Expanded(
-                        child: VideoDescription(video: widget.video),
-                      ),
-                      const SizedBox(width: 12),
-                      // Engagement buttons
-                      EngagementButtons(
-                        video: widget.video,
-                        onLike: widget.onLike,
-                        onShare: widget.onShare,
-                      ),
+            // Top gradient overlay for better text visibility
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              height: 120,
+              child: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.black54,
+                      Colors.transparent,
                     ],
                   ),
                 ),
+              ),
+            ),
 
-                // Products button at bottom (if products available)
-                if (widget.video.hasProducts)
+            // Bottom gradient overlay for better text visibility
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              height: 300,
+              child: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
+                    colors: [
+                      Colors.black87,
+                      Colors.black54,
+                      Colors.transparent,
+                    ],
+                  ),
+                ),
+              ),
+            ),
+
+            // Swipe direction indicator
+            if (_dragOffset.abs() > 10)
+              Positioned.fill(
+                child: Center(
+                  child: Opacity(
+                    opacity: (_dragOffset.abs() / 50).clamp(0.0, 0.6),
+                    child: Container(
+                      width: 80,
+                      height: 80,
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.5),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        _dragOffset > 0
+                            ? Icons.arrow_forward
+                            : Icons.arrow_back,
+                        color: Colors.white,
+                        size: 40,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+            // Main content overlay
+            SafeArea(
+              child: Column(
+                children: [
+                  const Spacer(),
+
+                  // Bottom content
                   Padding(
                     padding: const EdgeInsets.only(
                       left: 16.0,
                       right: 16.0,
-                      bottom: 16.0,
+                      top: 16.0,
+                      bottom: 8.0,
                     ),
-                    child: _buildProductsButton(context),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        // Video description and user info
+                        Expanded(
+                          child: VideoDescription(
+                            video: widget.video,
+                            isMuted: _isMuted,
+                            onToggleMute: () {
+                              setState(() {
+                                _isMuted = !_isMuted;
+                              });
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        // Engagement buttons
+                        EngagementButtons(
+                          video: widget.video,
+                          onLike: widget.onLike,
+                          onShare: widget.onShare,
+                        ),
+                      ],
+                    ),
                   ),
-              ],
+
+                  // Products button at bottom (if products available)
+                  if (widget.video.hasProducts)
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        left: 16.0,
+                        right: 16.0,
+                        bottom: 16.0,
+                      ),
+                      child: _buildProductsButton(context),
+                    ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -41,8 +41,8 @@ class _VideoListScreenState extends State<VideoListScreen> {
       ),
       body: Consumer<VideoProvider>(
         builder: (context, videoProvider, child) {
-          // Loading state
-          if (videoProvider.isLoading && !videoProvider.hasVideos) {
+          // Loading state - only show if we haven't loaded data yet
+          if (videoProvider.isLoading && !videoProvider.hasLoadedOnce) {
             return const Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -82,8 +82,8 @@ class _VideoListScreenState extends State<VideoListScreen> {
             );
           }
 
-          // Empty state
-          if (!videoProvider.hasVideos) {
+          // Empty state - only show if we've loaded data and there are no videos
+          if (!videoProvider.hasVideos && videoProvider.hasLoadedOnce) {
             return const Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,

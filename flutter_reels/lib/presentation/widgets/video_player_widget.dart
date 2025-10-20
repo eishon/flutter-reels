@@ -10,14 +10,17 @@ import 'package:video_player/video_player.dart';
 /// - Loop playback
 /// - Tap to pause/play
 /// - Loading indicator
+/// - Volume control
 class VideoPlayerWidget extends StatefulWidget {
   final String videoUrl;
   final bool isActive;
+  final bool isMuted;
 
   const VideoPlayerWidget({
     super.key,
     required this.videoUrl,
     required this.isActive,
+    this.isMuted = false,
   });
 
   @override
@@ -55,6 +58,11 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
         });
       }
     }
+
+    // Handle mute state changes
+    if (oldWidget.isMuted != widget.isMuted) {
+      _videoPlayerController.setVolume(widget.isMuted ? 0.0 : 1.0);
+    }
   }
 
   Future<void> _initializePlayer() async {
@@ -69,6 +77,9 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
       }
 
       await _videoPlayerController.initialize();
+
+      // Set initial volume based on muted state
+      _videoPlayerController.setVolume(widget.isMuted ? 0.0 : 1.0);
 
       // Add listener to update play button state
       _videoPlayerController.addListener(() {

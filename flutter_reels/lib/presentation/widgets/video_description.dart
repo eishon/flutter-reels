@@ -9,12 +9,17 @@ import 'package:flutter_reels/domain/entities/video_entity.dart';
 /// - Hashtags extracted from description
 /// - Audio/music info
 /// - Expandable description for long text
+/// - Audio mute/unmute control
 class VideoDescription extends StatefulWidget {
   final VideoEntity video;
+  final bool isMuted;
+  final VoidCallback onToggleMute;
 
   const VideoDescription({
     super.key,
     required this.video,
+    required this.isMuted,
+    required this.onToggleMute,
   });
 
   @override
@@ -23,7 +28,6 @@ class VideoDescription extends StatefulWidget {
 
 class _VideoDescriptionState extends State<VideoDescription> {
   bool _isExpanded = false;
-  bool _isMuted = false;
   static const int _maxLines = 2;
 
   @override
@@ -126,12 +130,10 @@ class _VideoDescriptionState extends State<VideoDescription> {
   Widget _buildAudioInfo() {
     return GestureDetector(
       onTap: () {
-        setState(() {
-          _isMuted = !_isMuted;
-        });
+        widget.onToggleMute();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(_isMuted ? 'Audio muted' : 'Audio unmuted'),
+            content: Text(widget.isMuted ? 'Audio unmuted' : 'Audio muted'),
             duration: const Duration(milliseconds: 500),
           ),
         );
@@ -153,7 +155,7 @@ class _VideoDescriptionState extends State<VideoDescription> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
-              _isMuted ? Icons.volume_off : Icons.music_note,
+              widget.isMuted ? Icons.volume_off : Icons.music_note,
               size: 16,
               color: Colors.white,
               shadows: [
@@ -166,7 +168,7 @@ class _VideoDescriptionState extends State<VideoDescription> {
             const SizedBox(width: 6),
             Flexible(
               child: Text(
-                _isMuted
+                widget.isMuted
                     ? 'Audio muted'
                     : 'Original Audio - ${widget.video.user.name}',
                 maxLines: 1,

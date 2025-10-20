@@ -25,11 +25,13 @@ class VideoProvider with ChangeNotifier {
   // State properties
   List<VideoEntity> _videos = [];
   bool _isLoading = false;
+  bool _hasLoadedOnce = false;
   String? _errorMessage;
 
   // Getters for state
   List<VideoEntity> get videos => _videos;
   bool get isLoading => _isLoading;
+  bool get hasLoadedOnce => _hasLoadedOnce;
   String? get errorMessage => _errorMessage;
   bool get hasError => _errorMessage != null;
   bool get hasVideos => _videos.isNotEmpty;
@@ -46,9 +48,11 @@ class VideoProvider with ChangeNotifier {
     try {
       _videos = await getVideosUseCase();
       _isLoading = false;
+      _hasLoadedOnce = true;
       notifyListeners();
     } catch (e) {
       _isLoading = false;
+      _hasLoadedOnce = true;
       _errorMessage = 'Failed to load videos: ${e.toString()}';
       notifyListeners();
     }

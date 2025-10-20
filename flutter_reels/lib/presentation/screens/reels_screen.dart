@@ -111,8 +111,8 @@ class _ReelsScreenState extends State<ReelsScreen>
       backgroundColor: Colors.black,
       body: Consumer<VideoProvider>(
         builder: (context, videoProvider, child) {
-          // Loading state - show only when loading and no videos loaded yet
-          if (videoProvider.isLoading && !videoProvider.hasVideos) {
+          // Loading state - show only when loading for the first time
+          if (videoProvider.isLoading && !videoProvider.hasLoadedOnce) {
             return const Center(
               child: CircularProgressIndicator(
                 color: Colors.white,
@@ -121,7 +121,7 @@ class _ReelsScreenState extends State<ReelsScreen>
           }
 
           // Error state - show only after loading is complete
-          if (videoProvider.hasError && !videoProvider.isLoading) {
+          if (videoProvider.hasError) {
             return Center(
               child: Padding(
                 padding: const EdgeInsets.all(32.0),
@@ -161,7 +161,7 @@ class _ReelsScreenState extends State<ReelsScreen>
           }
 
           // Empty state - show only after loading is complete and no videos
-          if (!videoProvider.hasVideos && !videoProvider.isLoading) {
+          if (!videoProvider.hasVideos && videoProvider.hasLoadedOnce) {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
