@@ -34,6 +34,10 @@ jobs:
         working-directory: flutter_reels
         run: flutter pub get
 
+      - name: Generate Pigeon files
+        working-directory: flutter_reels
+        run: dart run pigeon --input pigeon/messages.dart
+
       - name: Verify Flutter formatting
         working-directory: flutter_reels
         run: dart format --set-exit-if-changed lib test

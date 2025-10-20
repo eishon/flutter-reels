@@ -30,6 +30,10 @@ jobs:
         working-directory: flutter_reels
         run: flutter pub get
 
+      - name: Generate Pigeon files
+        working-directory: flutter_reels
+        run: dart run pigeon --input pigeon/messages.dart
+
       - name: Build Android AAR
         working-directory: flutter_reels
         run: flutter build aar --release
@@ -70,6 +74,10 @@ jobs:
       - name: Get Flutter dependencies
         working-directory: flutter_reels
         run: flutter pub get
+
+      - name: Generate Pigeon files
+        working-directory: flutter_reels
+        run: dart run pigeon --input pigeon/messages.dart
 
       - name: Build iOS Framework
         working-directory: flutter_reels

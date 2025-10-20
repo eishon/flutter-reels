@@ -25,6 +25,10 @@ jobs:
         working-directory: flutter_reels
         run: flutter pub get
 
+      - name: Generate Pigeon files
+        working-directory: flutter_reels
+        run: dart run pigeon --input pigeon/messages.dart
+
       - name: Analyze Flutter code
         working-directory: flutter_reels
         run: flutter analyze
