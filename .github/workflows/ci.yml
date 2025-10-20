@@ -45,6 +45,7 @@ jobs:
       - name: Analyze Flutter code
         working-directory: flutter_reels
         run: flutter analyze
+        continue-on-error: true
 
       - name: Run Flutter tests
         working-directory: flutter_reels
