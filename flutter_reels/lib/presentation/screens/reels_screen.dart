@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_reels/core/di/injection_container.dart';
+import 'package:flutter_reels/core/services/access_token_service.dart';
 import 'package:flutter_reels/core/services/analytics_service.dart';
 import 'package:flutter_reels/core/services/state_events_service.dart';
 import 'package:flutter_reels/main.dart';
@@ -29,6 +30,7 @@ class _ReelsScreenState extends State<ReelsScreen>
   bool _isScreenActive = true;
   late AnalyticsService _analyticsService;
   late StateEventsService _stateEventsService;
+  late AccessTokenService _accessTokenService;
 
   @override
   void initState() {
@@ -36,6 +38,7 @@ class _ReelsScreenState extends State<ReelsScreen>
     _pageController = PageController();
     _analyticsService = sl<AnalyticsService>();
     _stateEventsService = sl<StateEventsService>();
+    _accessTokenService = sl<AccessTokenService>();
     WidgetsBinding.instance.addObserver(this);
 
     // Load videos when screen initializes
@@ -150,10 +153,93 @@ class _ReelsScreenState extends State<ReelsScreen>
     }
   }
 
+  Future<void> _testAccessToken() async {
+    print('🧪 [Test] Testing Access Token...');
+    try {
+      final token = await _accessTokenService.getToken();
+      
+      if (!mounted) return;
+      
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Access Token'),
+          content: SingleChildScrollView(
+            child: SelectableText(
+              token ?? 'No token received from native',
+              style: TextStyle(
+                fontFamily: 'monospace',
+                fontSize: 12,
+                color: token != null ? Colors.black : Colors.red,
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Close'),
+            ),
+          ],
+        ),
+      );
+      
+      print('🧪 [Test] Access Token Result: ${token ?? "null"}');
+    } catch (e) {
+      print('🧪 [Test] Access Token Error: $e');
+      
+      if (!mounted) return;
+      
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Error'),
+          content: Text('Failed to get access token:\n$e'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Close'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        actions: [
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.more_vert, color: Colors.white),
+            color: Colors.grey[900],
+            onSelected: (value) {
+              if (value == 'test_token') {
+                _testAccessToken();
+              }
+            },
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: 'test_token',
+                child: Row(
+                  children: [
+                    Icon(Icons.vpn_key, color: Colors.white70),
+                    SizedBox(width: 12),
+                    Text(
+                      'Test Access Token',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+      extendBodyBehindAppBar: true,
       body: Consumer<VideoProvider>(
         builder: (context, videoProvider, child) {
           // Loading state - show only when loading for the first time
