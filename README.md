@@ -17,12 +17,14 @@ This repository contains a Flutter module (`flutter_reels`) that can be distribu
 Visit the [flutter_reels](./flutter_reels) directory for detailed integration instructions for both Android and iOS.
 
 **Quick Links:**
+- [**🚀 Native Initialization Quick Start**](./NATIVE_INITIALIZATION.md) ⭐ **START HERE** (Step-by-step setup)
+- [**Native Integration Guide**](./NATIVE_INTEGRATION.md) (Complete native platform integration)
+- [**Pigeon API Documentation**](./flutter_reels/pigeon/README.md) (Platform communication APIs)
 - [Android Integration Guide](./flutter_reels/README.md#for-android-native)
 - [iOS Integration Guide](./flutter_reels/README.md#for-ios-native)
-- [**Native Integration Guide**](./NATIVE_INTEGRATION.md) ⭐ (Complete native platform integration)
-- [**Pigeon API Documentation**](./flutter_reels/pigeon/README.md) (Platform communication APIs)
 - [Gradle Integration Guide](./GRADLE_INTEGRATION.md) (Android Dependency)
 - [CocoaPods Integration Guide](./COCOAPODS_INTEGRATION.md) (iOS Dependency)
+- [Multi-Instance Navigation](./MULTI_INSTANCE_NAVIGATION.md) (Advanced navigation patterns)
 - [GitHub Packages Setup](./GITHUB_PACKAGES_SETUP.md) (For Private Repository Access)
 
 ### For Development
