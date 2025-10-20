@@ -1,3 +1,5 @@
+import 'package:flutter_reels/core/platform/platform_initializer.dart';
+import 'package:flutter_reels/core/services/access_token_service.dart';
 import 'package:flutter_reels/data/datasources/video_local_data_source.dart';
 import 'package:flutter_reels/data/repositories/video_repository_impl.dart';
 import 'package:flutter_reels/domain/repositories/video_repository.dart';
@@ -22,7 +24,8 @@ final sl = GetIt.instance;
 /// Initializes all dependencies.
 ///
 /// This should be called once at app startup, before running the app.
-/// Dependencies are registered in order: data sources → repositories → use cases.
+/// Dependencies are registered in order: 
+/// platform services → data sources → repositories → use cases.
 ///
 /// Example:
 /// ```dart
@@ -32,6 +35,11 @@ final sl = GetIt.instance;
 /// }
 /// ```
 Future<void> initializeDependencies() async {
+  // Platform services
+  // Initialize native platform communication and get access token service
+  final accessTokenService = PlatformInitializer.initializePlatformAPIs();
+  sl.registerSingleton<AccessTokenService>(accessTokenService);
+
   // Data sources
   // Registered as lazy singleton - created only when first accessed
   sl.registerLazySingleton<VideoLocalDataSource>(

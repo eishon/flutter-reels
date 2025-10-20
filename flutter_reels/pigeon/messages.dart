@@ -13,8 +13,7 @@ import 'package:pigeon/pigeon.dart';
 @ConfigurePigeon(PigeonOptions(
   dartOut: 'lib/core/platform/messages.g.dart',
   dartOptions: DartOptions(),
-  kotlinOut:
-      'android/src/main/kotlin/com/example/flutter_reels/Messages.g.kt',
+  kotlinOut: 'android/src/main/kotlin/com/example/flutter_reels/Messages.g.kt',
   kotlinOptions: KotlinOptions(
     package: 'com.example.flutter_reels',
   ),
@@ -31,28 +30,10 @@ import 'package:pigeon/pigeon.dart';
 /// Host API for native platforms to communicate with Flutter
 ///
 /// This API allows native code to:
-/// - Update access tokens
 /// - Control video playback (pause/resume)
 /// - Notify Flutter of native screen lifecycle events
 @HostApi()
 abstract class FlutterReelsHostApi {
-  /// Update the access token used for API calls
-  ///
-  /// This should be called:
-  /// - On app launch with initial token
-  /// - When token is refreshed
-  /// - Before token expires
-  ///
-  /// [token] The new access token
-  void updateAccessToken(String token);
-
-  /// Clear the stored access token
-  ///
-  /// This should be called:
-  /// - On user logout
-  /// - When token is invalidated
-  void clearAccessToken();
-
   /// Pause all video playback
   ///
   /// This should be called when:
@@ -73,6 +54,22 @@ abstract class FlutterReelsHostApi {
 /// FLUTTER API (Flutter → Native)
 /// Methods called BY Flutter TO native platforms
 /// =============================================================================
+
+/// Token API for retrieving access tokens from native platform
+///
+/// Flutter calls this to get current valid token on-demand
+@FlutterApi()
+abstract class FlutterReelsTokenApi {
+  /// Get current valid access token
+  ///
+  /// Native should:
+  /// - Return current valid token
+  /// - Return null if user is not authenticated
+  /// - Handle token refresh if needed before returning
+  ///
+  /// Returns the current access token or null
+  String? getAccessToken();
+}
 
 /// Analytics API for tracking user events
 ///
