@@ -5,17 +5,18 @@ import 'package:flutter_reels/presentation/providers/video_provider.dart';
 import 'package:flutter_reels/presentation/screens/reels_screen.dart';
 import 'package:provider/provider.dart';
 
+/// Entry point for the Flutter Reels application
 void main() async {
   // Ensure Flutter is initialized
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Set preferred orientations to portrait
+  // Set preferred orientations to portrait only
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
 
-  // Set system UI overlay style for immersive experience
+  // Set system UI overlay style for immersive full-screen experience
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -25,15 +26,22 @@ void main() async {
     ),
   );
 
-  // Initialize dependencies
+  // Initialize dependency injection container
   await initializeDependencies();
 
   runApp(const FlutterReelsApp());
 }
 
-// Route observer to track screen navigation
+/// Global route observer to track navigation lifecycle events
+/// Used in ReelsScreen to manage video playback state
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
+/// Main application widget for Flutter Reels
+/// 
+/// This widget sets up:
+/// - State management providers (VideoProvider)
+/// - Material Design theme (dark mode)
+/// - Navigation and routing
 class FlutterReelsApp extends StatelessWidget {
   const FlutterReelsApp({super.key});
 
@@ -41,7 +49,7 @@ class FlutterReelsApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        // Register VideoProvider with dependency injection
+        // VideoProvider manages video state, likes, and shares
         ChangeNotifierProvider(
           create: (_) => VideoProvider(
             getVideosUseCase: sl(),
@@ -56,52 +64,12 @@ class FlutterReelsApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           useMaterial3: true,
           brightness: Brightness.dark,
+          // Dark theme optimized for video viewing
+          scaffoldBackgroundColor: Colors.black,
         ),
         debugShowCheckedModeBanner: false,
         navigatorObservers: [routeObserver],
         home: const ReelsScreen(),
-      ),
-    );
-  }
-}
-
-class HelloWorldScreen extends StatelessWidget {
-  const HelloWorldScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Flutter Reels Module'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      ),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Icon(
-              Icons.video_library,
-              size: 100,
-              color: Colors.blue,
-            ),
-            SizedBox(height: 20),
-            Text(
-              'Hello World!',
-              style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 10),
-            Text(
-              'Flutter Reels Module',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey,
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
