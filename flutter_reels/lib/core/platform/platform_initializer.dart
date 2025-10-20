@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_reels/core/services/access_token_service.dart';
 import 'package:flutter_reels/core/services/analytics_service.dart';
+import 'package:flutter_reels/core/services/button_events_service.dart';
 import 'package:flutter_reels/core/platform/messages.g.dart';
 
 /// Platform initialization result
@@ -8,10 +9,12 @@ class PlatformServices {
   const PlatformServices({
     required this.accessTokenService,
     required this.analyticsService,
+    required this.buttonEventsService,
   });
 
   final AccessTokenService accessTokenService;
   final AnalyticsService analyticsService;
+  final ButtonEventsService buttonEventsService;
 }
 
 /// Implementation of FlutterReelsAnalyticsApi that sends events to native
@@ -27,6 +30,38 @@ class _FlutterAnalyticsApiImpl extends FlutterReelsAnalyticsApi {
     );
 
     channel.send(<Object?>[event]);
+  }
+}
+
+/// Implementation of FlutterReelsButtonEventsApi that sends events to native
+class _FlutterButtonEventsApiImpl extends FlutterReelsButtonEventsApi {
+  static const MessageCodec<Object?> _codec = FlutterReelsButtonEventsApi.pigeonChannelCodec;
+
+  @override
+  void onBeforeLikeButtonClick(String videoId) {
+    const channel = BasicMessageChannel<Object?>(
+      'dev.flutter.pigeon.flutter_reels.FlutterReelsButtonEventsApi.onBeforeLikeButtonClick',
+      _codec,
+    );
+    channel.send(<Object?>[videoId]);
+  }
+
+  @override
+  void onAfterLikeButtonClick(String videoId, bool isLiked, int likeCount) {
+    const channel = BasicMessageChannel<Object?>(
+      'dev.flutter.pigeon.flutter_reels.FlutterReelsButtonEventsApi.onAfterLikeButtonClick',
+      _codec,
+    );
+    channel.send(<Object?>[videoId, isLiked, likeCount]);
+  }
+
+  @override
+  void onShareButtonClick(ShareData shareData) {
+    const channel = BasicMessageChannel<Object?>(
+      'dev.flutter.pigeon.flutter_reels.FlutterReelsButtonEventsApi.onShareButtonClick',
+      _codec,
+    );
+    channel.send(<Object?>[shareData]);
   }
 }
 
@@ -68,6 +103,11 @@ class PlatformInitializer {
     final analyticsApi = _FlutterAnalyticsApiImpl();
     final analyticsService = AnalyticsService(api: analyticsApi);
 
+    // Create button events service
+    // Native must call FlutterReelsButtonEventsApi.setup() to receive events
+    final buttonEventsApi = _FlutterButtonEventsApiImpl();
+    final buttonEventsService = ButtonEventsService(api: buttonEventsApi);
+
     // Note: Other APIs are set up by native platforms
     // Native side must call:
     // - FlutterReelsHostApi.setup() to handle pause/resume
@@ -80,6 +120,7 @@ class PlatformInitializer {
     return PlatformServices(
       accessTokenService: accessTokenService,
       analyticsService: analyticsService,
+      buttonEventsService: buttonEventsService,
     );
   }
 }

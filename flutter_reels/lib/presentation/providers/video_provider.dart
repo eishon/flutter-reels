@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_reels/core/services/analytics_service.dart';
+import 'package:flutter_reels/core/services/button_events_service.dart';
 import 'package:flutter_reels/domain/entities/video_entity.dart';
 import 'package:flutter_reels/domain/usecases/get_videos_usecase.dart';
 import 'package:flutter_reels/domain/usecases/increment_share_count_usecase.dart';
@@ -13,17 +14,20 @@ import 'package:flutter_reels/domain/usecases/toggle_like_usecase.dart';
 /// - User interactions (like, share)
 /// - Notifying UI of state changes
 /// - Tracking analytics events
+/// - Notifying native about button events
 class VideoProvider with ChangeNotifier {
   final GetVideosUseCase getVideosUseCase;
   final ToggleLikeUseCase toggleLikeUseCase;
   final IncrementShareCountUseCase incrementShareCountUseCase;
   final AnalyticsService analyticsService;
+  final ButtonEventsService buttonEventsService;
 
   VideoProvider({
     required this.getVideosUseCase,
     required this.toggleLikeUseCase,
     required this.incrementShareCountUseCase,
     required this.analyticsService,
+    required this.buttonEventsService,
   });
 
   // State properties
@@ -66,7 +70,11 @@ class VideoProvider with ChangeNotifier {
   ///
   /// Updates the video in the list and notifies listeners.
   /// Tracks analytics event for the like action.
+  /// Notifies native before and after the action.
   Future<void> toggleLike(String videoId) async {
+    // Notify native BEFORE like action
+    buttonEventsService.notifyBeforeLikeClick(videoId);
+
     try {
       final updatedVideo = await toggleLikeUseCase(videoId);
 
@@ -75,6 +83,13 @@ class VideoProvider with ChangeNotifier {
       if (index != -1) {
         _videos[index] = updatedVideo;
         notifyListeners();
+
+        // Notify native AFTER like action completes
+        buttonEventsService.notifyAfterLikeClick(
+          videoId: videoId,
+          isLiked: updatedVideo.isLiked,
+          likeCount: updatedVideo.likes,
+        );
 
         // Track analytics
         analyticsService.trackLike(
@@ -98,7 +113,26 @@ class VideoProvider with ChangeNotifier {
   ///
   /// Updates the video in the list and notifies listeners.
   /// Tracks analytics event for the share action.
+  /// Notifies native to handle share action.
   Future<void> shareVideo(String videoId) async {
+    // Find video to get share data
+    final videoIndex = _videos.indexWhere((v) => v.id == videoId);
+    if (videoIndex == -1) {
+      debugPrint('Video not found: $videoId');
+      return;
+    }
+
+    final video = _videos[videoIndex];
+
+    // Notify native to handle share (native can show share sheet)
+    buttonEventsService.notifyShareClick(
+      videoId: videoId,
+      videoUrl: video.url,
+      title: video.title,
+      description: video.description,
+      thumbnailUrl: null, // Could add thumbnail URL to VideoEntity if needed
+    );
+
     try {
       final updatedVideo = await incrementShareCountUseCase(videoId);
 

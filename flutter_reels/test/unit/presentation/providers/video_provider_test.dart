@@ -19,18 +19,21 @@ void main() {
   late MockToggleLikeUseCase mockToggleLikeUseCase;
   late MockIncrementShareCountUseCase mockIncrementShareCountUseCase;
   late MockAnalyticsService mockAnalyticsService;
+  late MockButtonEventsService mockButtonEventsService;
 
   setUp(() {
     mockGetVideosUseCase = MockGetVideosUseCase();
     mockToggleLikeUseCase = MockToggleLikeUseCase();
     mockIncrementShareCountUseCase = MockIncrementShareCountUseCase();
     mockAnalyticsService = MockAnalyticsService();
+    mockButtonEventsService = MockButtonEventsService();
 
     provider = VideoProvider(
       getVideosUseCase: mockGetVideosUseCase,
       toggleLikeUseCase: mockToggleLikeUseCase,
       incrementShareCountUseCase: mockIncrementShareCountUseCase,
       analyticsService: mockAnalyticsService,
+      buttonEventsService: mockButtonEventsService,
     );
   });
 

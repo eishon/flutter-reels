@@ -4,6 +4,7 @@
 /// These mocks are used across different test files to maintain consistency.
 
 import 'package:flutter_reels/core/services/analytics_service.dart';
+import 'package:flutter_reels/core/services/button_events_service.dart';
 import 'package:flutter_reels/data/datasources/video_local_data_source.dart';
 import 'package:flutter_reels/domain/repositories/video_repository.dart';
 import 'package:flutter_reels/domain/usecases/get_video_by_id_usecase.dart';
@@ -19,6 +20,7 @@ import 'package:mockito/annotations.dart';
 @GenerateMocks([
   // Core services
   AnalyticsService,
+  ButtonEventsService,
 
   // Data layer
   VideoLocalDataSource,
