@@ -31,6 +31,9 @@ void main() async {
   runApp(const FlutterReelsApp());
 }
 
+// Route observer to track screen navigation
+final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
+
 class FlutterReelsApp extends StatelessWidget {
   const FlutterReelsApp({super.key});
 
@@ -55,6 +58,7 @@ class FlutterReelsApp extends StatelessWidget {
           brightness: Brightness.dark,
         ),
         debugShowCheckedModeBanner: false,
+        navigatorObservers: [routeObserver],
         home: const ReelsScreen(),
       ),
     );

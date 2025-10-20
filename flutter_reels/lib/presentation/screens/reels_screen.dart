@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_reels/main.dart';
 import 'package:flutter_reels/presentation/providers/video_provider.dart';
 import 'package:flutter_reels/presentation/widgets/video_reel_item.dart';
 import 'package:provider/provider.dart';
@@ -17,14 +18,17 @@ class ReelsScreen extends StatefulWidget {
   State<ReelsScreen> createState() => _ReelsScreenState();
 }
 
-class _ReelsScreenState extends State<ReelsScreen> {
+class _ReelsScreenState extends State<ReelsScreen>
+    with WidgetsBindingObserver, RouteAware {
   late PageController _pageController;
   int _currentIndex = 0;
+  bool _isScreenActive = true;
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController();
+    WidgetsBinding.instance.addObserver(this);
 
     // Load videos when screen initializes
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -33,9 +37,58 @@ class _ReelsScreenState extends State<ReelsScreen> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Subscribe to route changes
+    routeObserver.subscribe(this, ModalRoute.of(context) as PageRoute);
+  }
+
+  @override
   void dispose() {
+    routeObserver.unsubscribe(this);
+    WidgetsBinding.instance.removeObserver(this);
     _pageController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    setState(() {
+      _isScreenActive = state == AppLifecycleState.resumed;
+    });
+  }
+
+  @override
+  void didPush() {
+    // Called when this route has been pushed
+    setState(() {
+      _isScreenActive = true;
+    });
+  }
+
+  @override
+  void didPopNext() {
+    // Called when the top route has been popped off, and this route shows up
+    setState(() {
+      _isScreenActive = true;
+    });
+  }
+
+  @override
+  void didPushNext() {
+    // Called when a new route has been pushed, and this route is no longer visible
+    setState(() {
+      _isScreenActive = false;
+    });
+  }
+
+  @override
+  void didPop() {
+    // Called when this route has been popped off
+    setState(() {
+      _isScreenActive = false;
+    });
   }
 
   void _onPageChanged(int index) {
@@ -153,7 +206,7 @@ class _ReelsScreenState extends State<ReelsScreen> {
                   video: video,
                   onLike: () => videoProvider.toggleLike(video.id),
                   onShare: () => videoProvider.shareVideo(video.id),
-                  isActive: index == _currentIndex,
+                  isActive: index == _currentIndex && _isScreenActive,
                 );
               },
             ),
