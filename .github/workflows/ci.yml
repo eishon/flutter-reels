@@ -1,10 +1,13 @@
 name: CI
 
 on:
+  # Only run on PRs to master/main, and pushes to feature branches
   push:
-    branches: [ master, main, develop ]
+    branches-ignore:
+      - master
+      - main
   pull_request:
-    branches: [ master, main, develop ]
+    branches: [ master, main ]
 
 jobs:
   analyze-and-test:
