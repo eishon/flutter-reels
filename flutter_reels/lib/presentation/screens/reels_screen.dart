@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_reels/core/di/injection_container.dart';
 import 'package:flutter_reels/core/services/analytics_service.dart';
+import 'package:flutter_reels/core/services/state_events_service.dart';
 import 'package:flutter_reels/main.dart';
 import 'package:flutter_reels/presentation/providers/video_provider.dart';
 import 'package:flutter_reels/presentation/widgets/video_reel_item.dart';
@@ -27,20 +28,25 @@ class _ReelsScreenState extends State<ReelsScreen>
   int _currentIndex = 0;
   bool _isScreenActive = true;
   late AnalyticsService _analyticsService;
+  late StateEventsService _stateEventsService;
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController();
     _analyticsService = sl<AnalyticsService>();
+    _stateEventsService = sl<StateEventsService>();
     WidgetsBinding.instance.addObserver(this);
 
     // Load videos when screen initializes
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<VideoProvider>().loadVideos();
-      
+
       // Track page view
       _analyticsService.trackPageView(screenName: 'reels_screen');
+
+      // Notify native that screen appeared
+      _stateEventsService.notifyScreenFocused(screenName: 'reels_screen');
     });
   }
 
@@ -65,6 +71,14 @@ class _ReelsScreenState extends State<ReelsScreen>
     setState(() {
       _isScreenActive = state == AppLifecycleState.resumed;
     });
+
+    // Notify native of screen focus state based on app lifecycle
+    if (state == AppLifecycleState.resumed) {
+      _stateEventsService.notifyScreenFocused(screenName: 'reels_screen');
+    } else if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive) {
+      _stateEventsService.notifyScreenUnfocused(screenName: 'reels_screen');
+    }
   }
 
   @override
@@ -73,6 +87,9 @@ class _ReelsScreenState extends State<ReelsScreen>
     setState(() {
       _isScreenActive = true;
     });
+
+    // Notify native that screen gained focus
+    _stateEventsService.notifyScreenFocused(screenName: 'reels_screen');
   }
 
   @override
@@ -81,6 +98,9 @@ class _ReelsScreenState extends State<ReelsScreen>
     setState(() {
       _isScreenActive = true;
     });
+
+    // Notify native that screen regained focus
+    _stateEventsService.notifyScreenFocused(screenName: 'reels_screen');
   }
 
   @override
@@ -89,6 +109,9 @@ class _ReelsScreenState extends State<ReelsScreen>
     setState(() {
       _isScreenActive = false;
     });
+
+    // Notify native that screen lost focus
+    _stateEventsService.notifyScreenUnfocused(screenName: 'reels_screen');
   }
 
   @override
@@ -97,6 +120,9 @@ class _ReelsScreenState extends State<ReelsScreen>
     setState(() {
       _isScreenActive = false;
     });
+
+    // Notify native that screen disappeared
+    _stateEventsService.notifyScreenUnfocused(screenName: 'reels_screen');
   }
 
   void _onPageChanged(int index) {

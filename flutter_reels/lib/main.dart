@@ -37,7 +37,7 @@ void main() async {
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
 /// Main application widget for Flutter Reels
-/// 
+///
 /// This widget sets up:
 /// - State management providers (VideoProvider)
 /// - Material Design theme (dark mode)

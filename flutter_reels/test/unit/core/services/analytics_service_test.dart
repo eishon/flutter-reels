@@ -30,9 +30,9 @@ void main() {
         // Assert
         verify(mockApi.trackEvent(argThat(
           predicate<AnalyticsEvent>((event) {
-            return event.type == eventType && 
-                   event.data['key'] == 'value' &&
-                   event.data['number'] == 42;
+            return event.type == eventType &&
+                event.data['key'] == 'value' &&
+                event.data['number'] == 42;
           }),
         ))).called(1);
       });
@@ -58,9 +58,9 @@ void main() {
         // Assert
         verify(mockApi.trackEvent(argThat(
           predicate<AnalyticsEvent>((event) {
-            return event.type == 'appear' && 
-                   event.data['video_id'] == 'video123' &&
-                   event.data.containsKey('timestamp');
+            return event.type == 'appear' &&
+                event.data['video_id'] == 'video123' &&
+                event.data.containsKey('timestamp');
           }),
         ))).called(1);
       });
@@ -76,10 +76,10 @@ void main() {
         // Assert
         verify(mockApi.trackEvent(argThat(
           predicate<AnalyticsEvent>((event) {
-            return event.type == 'appear' && 
-                   event.data['video_id'] == 'video123' &&
-                   event.data['position'] == 5 &&
-                   event.data['screen'] == 'reels_screen';
+            return event.type == 'appear' &&
+                event.data['video_id'] == 'video123' &&
+                event.data['position'] == 5 &&
+                event.data['screen'] == 'reels_screen';
           }),
         ))).called(1);
       });
@@ -91,9 +91,9 @@ void main() {
         // Assert
         verify(mockApi.trackEvent(argThat(
           predicate<AnalyticsEvent>((event) {
-            return event.type == 'appear' && 
-                   !event.data.containsKey('position') &&
-                   !event.data.containsKey('screen');
+            return event.type == 'appear' &&
+                !event.data.containsKey('position') &&
+                !event.data.containsKey('screen');
           }),
         ))).called(1);
       });
@@ -110,10 +110,10 @@ void main() {
         // Assert
         verify(mockApi.trackEvent(argThat(
           predicate<AnalyticsEvent>((event) {
-            return event.type == 'click' && 
-                   event.data['video_id'] == 'video123' &&
-                   event.data['element'] == 'product_button' &&
-                   event.data.containsKey('timestamp');
+            return event.type == 'click' &&
+                event.data['video_id'] == 'video123' &&
+                event.data['element'] == 'product_button' &&
+                event.data.containsKey('timestamp');
           }),
         ))).called(1);
       });
@@ -143,9 +143,9 @@ void main() {
         // Assert
         verify(mockApi.trackEvent(argThat(
           predicate<AnalyticsEvent>((event) {
-            return event.type == 'page_view' && 
-                   event.data['screen'] == 'reels_screen' &&
-                   event.data.containsKey('timestamp');
+            return event.type == 'page_view' &&
+                event.data['screen'] == 'reels_screen' &&
+                event.data.containsKey('timestamp');
           }),
         ))).called(1);
       });
@@ -161,8 +161,8 @@ void main() {
         verify(mockApi.trackEvent(argThat(
           predicate<AnalyticsEvent>((event) {
             return event.data['screen'] == 'reels_screen' &&
-                   event.data['source'] == 'deep_link' &&
-                   event.data['campaign'] == 'promo';
+                event.data['source'] == 'deep_link' &&
+                event.data['campaign'] == 'promo';
           }),
         ))).called(1);
       });
@@ -180,11 +180,11 @@ void main() {
         // Assert
         verify(mockApi.trackEvent(argThat(
           predicate<AnalyticsEvent>((event) {
-            return event.type == 'like' && 
-                   event.data['video_id'] == 'video123' &&
-                   event.data['is_liked'] == true &&
-                   event.data['like_count'] == 42 &&
-                   event.data.containsKey('timestamp');
+            return event.type == 'like' &&
+                event.data['video_id'] == 'video123' &&
+                event.data['is_liked'] == true &&
+                event.data['like_count'] == 42 &&
+                event.data.containsKey('timestamp');
           }),
         ))).called(1);
       });
@@ -201,7 +201,7 @@ void main() {
         verify(mockApi.trackEvent(argThat(
           predicate<AnalyticsEvent>((event) {
             return event.data['is_liked'] == false &&
-                   event.data['like_count'] == 41;
+                event.data['like_count'] == 41;
           }),
         ))).called(1);
       });
@@ -215,9 +215,9 @@ void main() {
         // Assert
         verify(mockApi.trackEvent(argThat(
           predicate<AnalyticsEvent>((event) {
-            return event.type == 'share' && 
-                   event.data['video_id'] == 'video123' &&
-                   event.data.containsKey('timestamp');
+            return event.type == 'share' &&
+                event.data['video_id'] == 'video123' &&
+                event.data.containsKey('timestamp');
           }),
         ))).called(1);
       });
@@ -246,9 +246,9 @@ void main() {
         // Assert
         verify(mockApi.trackEvent(argThat(
           predicate<AnalyticsEvent>((event) {
-            return event.type == 'video_start' && 
-                   event.data['video_id'] == 'video123' &&
-                   event.data.containsKey('timestamp');
+            return event.type == 'video_start' &&
+                event.data['video_id'] == 'video123' &&
+                event.data.containsKey('timestamp');
           }),
         ))).called(1);
       });
@@ -277,9 +277,9 @@ void main() {
         // Assert
         verify(mockApi.trackEvent(argThat(
           predicate<AnalyticsEvent>((event) {
-            return event.type == 'video_complete' && 
-                   event.data['video_id'] == 'video123' &&
-                   event.data.containsKey('timestamp');
+            return event.type == 'video_complete' &&
+                event.data['video_id'] == 'video123' &&
+                event.data.containsKey('timestamp');
           }),
         ))).called(1);
       });
@@ -296,7 +296,7 @@ void main() {
         verify(mockApi.trackEvent(argThat(
           predicate<AnalyticsEvent>((event) {
             return event.data['duration'] == 30.0 &&
-                   event.data['completion_rate'] == 0.95;
+                event.data['completion_rate'] == 0.95;
           }),
         ))).called(1);
       });
@@ -313,10 +313,10 @@ void main() {
         // Assert
         verify(mockApi.trackEvent(argThat(
           predicate<AnalyticsEvent>((event) {
-            return event.type == 'error' && 
-                   event.data['error_type'] == 'network_error' &&
-                   event.data['error_message'] == 'Failed to load video' &&
-                   event.data.containsKey('timestamp');
+            return event.type == 'error' &&
+                event.data['error_type'] == 'network_error' &&
+                event.data['error_message'] == 'Failed to load video' &&
+                event.data.containsKey('timestamp');
           }),
         ))).called(1);
       });
@@ -347,7 +347,8 @@ void main() {
 
         // Assert - all should have timestamps
         verify(mockApi.trackEvent(argThat(
-          predicate<AnalyticsEvent>((event) => event.data.containsKey('timestamp')),
+          predicate<AnalyticsEvent>(
+              (event) => event.data.containsKey('timestamp')),
         ))).called(3);
       });
 

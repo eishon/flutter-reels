@@ -278,7 +278,7 @@ void main() {
           isLiked: true,
           likeCount: 10,
         );
-        
+
         service.notifyBeforeLikeClick('video2');
         service.notifyAfterLikeClick(
           videoId: 'video2',
