@@ -75,12 +75,6 @@ class _EngagementButtonsState extends State<EngagementButtons>
         _buildShareButton(),
         const SizedBox(height: 24),
 
-        // Product tag button (if products available)
-        if (widget.video.hasProducts) ...[
-          _buildProductButton(),
-          const SizedBox(height: 24),
-        ],
-
         // More options button
         _buildMoreButton(),
       ],
@@ -116,29 +110,6 @@ class _EngagementButtonsState extends State<EngagementButtons>
       ),
       label: _formatCount(widget.video.shares),
       onTap: widget.onShare,
-    );
-  }
-
-  Widget _buildProductButton() {
-    return _buildEngagementButton(
-      child: Container(
-        width: 36,
-        height: 36,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Icon(
-          Icons.shopping_bag_outlined,
-          size: 24,
-          color: Colors.grey.shade900,
-        ),
-      ),
-      label: widget.video.productCount.toString(),
-      onTap: () {
-        // Show products
-        _showProductsSheet(context);
-      },
     );
   }
 
@@ -249,93 +220,6 @@ class _EngagementButtonsState extends State<EngagementButtons>
               ),
             );
           },
-        );
-      },
-    );
-  }
-
-  void _showProductsSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.grey.shade900,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) {
-        return Container(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Container(
-                  width: 40,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade700,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                'Products in this video',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 16),
-              ...widget.video.products.map((product) {
-                return Card(
-                  color: Colors.grey.shade800,
-                  margin: const EdgeInsets.only(bottom: 12),
-                  child: ListTile(
-                    leading: Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade700,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Icon(
-                        Icons.shopping_bag,
-                        color: Colors.white54,
-                      ),
-                    ),
-                    title: Text(
-                      product.name,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    subtitle: Text(
-                      '${product.currency}${product.price}',
-                      style: TextStyle(
-                        color: Colors.green.shade400,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    trailing: ElevatedButton(
-                      onPressed: () {
-                        // Handle product purchase
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        foregroundColor: Colors.black,
-                      ),
-                      child: const Text('View'),
-                    ),
-                  ),
-                );
-              }).toList(),
-              const SizedBox(height: 16),
-            ],
-          ),
         );
       },
     );
