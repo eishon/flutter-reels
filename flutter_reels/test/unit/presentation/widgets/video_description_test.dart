@@ -169,12 +169,14 @@ void main() {
       expect(find.text('Audio muted'), findsOneWidget);
     });
 
-    testWidgets('should expand description when tapped if long', (tester) async {
+    testWidgets('should expand description when tapped if long',
+        (tester) async {
       const longDescriptionVideo = VideoEntity(
         id: '1',
         url: 'https://example.com/video.mp4',
         title: 'Test Video',
-        description: 'This is a very long description that should be expandable because it contains more than 100 characters and should trigger the expand functionality',
+        description:
+            'This is a very long description that should be expandable because it contains more than 100 characters and should trigger the expand functionality',
         user: UserEntity(
           name: 'testuser',
           avatarUrl: 'https://example.com/avatar.jpg',
