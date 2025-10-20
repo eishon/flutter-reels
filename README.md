@@ -19,6 +19,8 @@ Visit the [flutter_reels](./flutter_reels) directory for detailed integration in
 **Quick Links:**
 - [Android Integration Guide](./flutter_reels/README.md#for-android-native)
 - [iOS Integration Guide](./flutter_reels/README.md#for-ios-native)
+- [**Native Integration Guide**](./NATIVE_INTEGRATION.md) ⭐ (Complete native platform integration)
+- [**Pigeon API Documentation**](./flutter_reels/pigeon/README.md) (Platform communication APIs)
 - [Gradle Integration Guide](./GRADLE_INTEGRATION.md) (Android Dependency)
 - [CocoaPods Integration Guide](./COCOAPODS_INTEGRATION.md) (iOS Dependency)
 - [GitHub Packages Setup](./GITHUB_PACKAGES_SETUP.md) (For Private Repository Access)
@@ -170,12 +172,42 @@ This project uses GitHub Actions for continuous integration and deployment:
 
 ## 📱 Features
 
-- ✅ Simple "Hello World" screen (foundation)
-- ✅ Native Android integration support
-- ✅ Native iOS integration support
-- ✅ Automated builds and releases
-- ✅ Comprehensive documentation
-- 🔄 More features coming soon!
+### Core Features
+- ✅ Vertical video feed (TikTok/Instagram Reels style)
+- ✅ Auto-playing videos with smooth transitions
+- ✅ Like, comment, and share interactions
+- ✅ User profiles with avatars
+- ✅ Product tagging and e-commerce integration
+- ✅ Pull-to-refresh functionality
+- ✅ Horizontal swipe gestures
+
+### Native Platform Integration
+- ✅ **Type-safe platform communication** via Pigeon
+- ✅ **Analytics tracking** - Track video views, clicks, and user engagement
+- ✅ **Access token management** - Secure authentication flow
+- ✅ **Button event callbacks** - Before/after like and share events
+- ✅ **Screen state tracking** - Monitor screen lifecycle (focus/unfocus)
+- ✅ **Video playback states** - Track playing, paused, buffering, completed
+- ✅ **Navigation gestures** - Swipe left/right event handling
+- ✅ **Native share integration** - Open platform share sheets
+- ✅ **Deep linking support** - Navigate to specific videos
+
+### Architecture & Quality
+- ✅ **Clean Architecture** - Separation of concerns (Domain, Data, Presentation)
+- ✅ **Dependency Injection** - Using get_it for loose coupling
+- ✅ **State Management** - Provider for reactive UI
+- ✅ **Comprehensive Testing** - 343+ unit tests with 95%+ coverage
+- ✅ **CI/CD Pipeline** - Automated builds and releases
+- ✅ **Native Integration Support** - Android and iOS
+- ✅ **Automated builds and releases**
+- ✅ **Comprehensive documentation**
+
+### Coming Soon
+- 🔄 Comments section
+- 🔄 Follow/unfollow functionality
+- 🔄 Video upload capability
+- 🔄 Advanced video filters
+- 🔄 Live streaming support
 
 ## 🛠️ Technology Stack
 
@@ -186,8 +218,31 @@ This project uses GitHub Actions for continuous integration and deployment:
 
 ## 📖 Documentation
 
-- [Module Integration Guide](./flutter_reels/README.md)
+### Integration Guides
+- [**Native Integration Guide**](./NATIVE_INTEGRATION.md) - Complete guide for Android/iOS integration
+- [**Pigeon API Documentation**](./flutter_reels/pigeon/README.md) - Platform communication APIs
+- [Module Integration Guide](./flutter_reels/README.md) - Flutter module setup
+- [Gradle Integration](./GRADLE_INTEGRATION.md) - Android dependency management
+- [CocoaPods Integration](./COCOAPODS_INTEGRATION.md) - iOS dependency management
+- [GitHub Packages Setup](./GITHUB_PACKAGES_SETUP.md) - Private repository access
+
+### Platform Communication
+The Flutter Reels module uses Pigeon for type-safe communication with native platforms:
+
+- **6 Complete APIs** for bidirectional communication
+- **Analytics tracking** - Monitor user behavior
+- **Token management** - Handle authentication
+- **Button events** - React to user interactions
+- **State tracking** - Screen and video lifecycle
+- **Navigation** - Gesture-based navigation
+- **Native callbacks** - Asynchronous token retrieval
+
+See [Pigeon README](./flutter_reels/pigeon/README.md) for complete API documentation.
+
+### External Resources
 - [Flutter Add-to-App Official Documentation](https://docs.flutter.dev/add-to-app)
+- [Pigeon Package Documentation](https://pub.dev/packages/pigeon)
+- [Clean Architecture in Flutter](https://resocoder.com/2019/08/27/flutter-tdd-clean-architecture-course-1-explanation-project-structure/)
 
 ## 🤝 Contributing
 
