@@ -116,7 +116,7 @@ class _EngagementButtonsState extends State<EngagementButtons>
   Widget _buildMoreButton() {
     return _buildEngagementButton(
       child: const Icon(
-        Icons.more_vert,
+        Icons.more_horiz,
         size: 28,
         color: Colors.white,
       ),

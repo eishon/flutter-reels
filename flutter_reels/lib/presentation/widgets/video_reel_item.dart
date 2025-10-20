@@ -33,106 +33,135 @@ class VideoReelItem extends StatefulWidget {
 class _VideoReelItemState extends State<VideoReelItem> {
   bool _isBottomSheetOpen = false;
 
+  void _handleSwipeLeft() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Swiped left'),
+        duration: Duration(milliseconds: 800),
+      ),
+    );
+  }
+
+  void _handleSwipeRight() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Swiped right'),
+        duration: Duration(milliseconds: 800),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isVideoActive = widget.isActive && !_isBottomSheetOpen;
 
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        // Video player
-        VideoPlayerWidget(
-          videoUrl: widget.video.url,
-          isActive: isVideoActive,
-        ),
-
-        // Top gradient overlay for better text visibility
-        Positioned(
-          top: 0,
-          left: 0,
-          right: 0,
-          height: 120,
-          child: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Colors.black54,
-                  Colors.transparent,
-                ],
-              ),
-            ),
+    return GestureDetector(
+      onHorizontalDragEnd: (details) {
+        if (details.primaryVelocity! > 0) {
+          // Swipe right
+          _handleSwipeRight();
+        } else if (details.primaryVelocity! < 0) {
+          // Swipe left
+          _handleSwipeLeft();
+        }
+      },
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          // Video player
+          VideoPlayerWidget(
+            videoUrl: widget.video.url,
+            isActive: isVideoActive,
           ),
-        ),
 
-        // Bottom gradient overlay for better text visibility
-        Positioned(
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: 300,
-          child: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.bottomCenter,
-                end: Alignment.topCenter,
-                colors: [
-                  Colors.black87,
-                  Colors.black54,
-                  Colors.transparent,
-                ],
-              ),
-            ),
-          ),
-        ),
-
-        // Main content overlay
-        SafeArea(
-          child: Column(
-            children: [
-              const Spacer(),
-
-              // Bottom content
-              Padding(
-                padding: const EdgeInsets.only(
-                  left: 16.0,
-                  right: 16.0,
-                  top: 16.0,
-                  bottom: 8.0,
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    // Video description and user info
-                    Expanded(
-                      child: VideoDescription(video: widget.video),
-                    ),
-                    const SizedBox(width: 12),
-                    // Engagement buttons
-                    EngagementButtons(
-                      video: widget.video,
-                      onLike: widget.onLike,
-                      onShare: widget.onShare,
-                    ),
+          // Top gradient overlay for better text visibility
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            height: 120,
+            child: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.black54,
+                    Colors.transparent,
                   ],
                 ),
               ),
+            ),
+          ),
 
-              // Products button at bottom (if products available)
-              if (widget.video.hasProducts)
+          // Bottom gradient overlay for better text visibility
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: 300,
+            child: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  colors: [
+                    Colors.black87,
+                    Colors.black54,
+                    Colors.transparent,
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+          // Main content overlay
+          SafeArea(
+            child: Column(
+              children: [
+                const Spacer(),
+
+                // Bottom content
                 Padding(
                   padding: const EdgeInsets.only(
                     left: 16.0,
                     right: 16.0,
-                    bottom: 16.0,
+                    top: 16.0,
+                    bottom: 8.0,
                   ),
-                  child: _buildProductsButton(context),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      // Video description and user info
+                      Expanded(
+                        child: VideoDescription(video: widget.video),
+                      ),
+                      const SizedBox(width: 12),
+                      // Engagement buttons
+                      EngagementButtons(
+                        video: widget.video,
+                        onLike: widget.onLike,
+                        onShare: widget.onShare,
+                      ),
+                    ],
+                  ),
                 ),
-            ],
+
+                // Products button at bottom (if products available)
+                if (widget.video.hasProducts)
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 16.0,
+                      right: 16.0,
+                      bottom: 16.0,
+                    ),
+                    child: _buildProductsButton(context),
+                  ),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -233,20 +262,17 @@ class _VideoReelItemState extends State<VideoReelItem> {
 
                   // Products Grid/List
                   Expanded(
-                    child: GridView.builder(
-                      controller: scrollController,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: isSingleProduct ? 1 : 2,
-                        crossAxisSpacing: 12,
-                        mainAxisSpacing: 12,
-                        mainAxisExtent: isSingleProduct ? 400 : 350,
-                      ),
-                      itemCount: widget.video.products.length,
-                      itemBuilder: (context, index) {
-                        final product = widget.video.products[index];
-                        return _buildProductCard(context, product);
-                      },
-                    ),
+                    child: isSingleProduct
+                        ? SingleChildScrollView(
+                            controller: scrollController,
+                            child: _buildProductCard(
+                                context, widget.video.products[0]),
+                          )
+                        : SingleChildScrollView(
+                            controller: scrollController,
+                            child: _buildStaggeredGrid(
+                                context, widget.video.products),
+                          ),
                   ),
                 ],
               ),
@@ -264,7 +290,45 @@ class _VideoReelItemState extends State<VideoReelItem> {
     });
   }
 
+  Widget _buildStaggeredGrid(BuildContext context, List<dynamic> products) {
+    // Create two columns for staggered grid
+    final leftColumn = <Widget>[];
+    final rightColumn = <Widget>[];
+
+    for (int i = 0; i < products.length; i++) {
+      final productWidget = Padding(
+        padding: const EdgeInsets.only(bottom: 12),
+        child: _buildProductCard(context, products[i]),
+      );
+
+      if (i % 2 == 0) {
+        leftColumn.add(productWidget);
+      } else {
+        rightColumn.add(productWidget);
+      }
+    }
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Column(
+            children: leftColumn,
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            children: rightColumn,
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildProductCard(BuildContext context, product) {
+    final isSingleProduct = widget.video.products.length == 1;
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(12),
       child: Container(
@@ -282,162 +346,162 @@ class _VideoReelItemState extends State<VideoReelItem> {
             ),
           ],
         ),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Product Image (Square)
-                AspectRatio(
-                  aspectRatio: 1.0,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade100,
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(12),
-                        topRight: Radius.circular(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Product Image (adjust aspect ratio for single product)
+            AspectRatio(
+              aspectRatio: isSingleProduct ? 1.5 : 1.0,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade100,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(12),
+                    topRight: Radius.circular(12),
+                  ),
+                  image: product.imageUrl.isNotEmpty
+                      ? DecorationImage(
+                          image: NetworkImage(product.imageUrl),
+                          fit: BoxFit.cover,
+                        )
+                      : null,
+                ),
+                child: product.imageUrl.isEmpty
+                    ? Icon(
+                        Icons.image_outlined,
+                        size: 48,
+                        color: Colors.grey.shade400,
+                      )
+                    : null,
+              ),
+            ),
+
+            // Product Details
+            Padding(
+              padding: EdgeInsets.all(isSingleProduct ? 16.0 : 8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Product Name (Marquee)
+                  SizedBox(
+                    height: isSingleProduct ? 24 : 16,
+                    child: _MarqueeText(
+                      text: product.name,
+                      style: TextStyle(
+                        color: Colors.grey.shade900,
+                        fontSize: isSingleProduct ? 18 : 12,
+                        fontWeight: FontWeight.bold,
                       ),
-                      image: product.imageUrl.isNotEmpty
-                          ? DecorationImage(
-                              image: NetworkImage(product.imageUrl),
-                              fit: BoxFit.cover,
-                            )
-                          : null,
                     ),
-                    child: product.imageUrl.isEmpty
-                        ? Icon(
-                            Icons.image_outlined,
-                            size: 48,
-                            color: Colors.grey.shade400,
-                          )
-                        : null,
                   ),
-                ),
+                  SizedBox(height: isSingleProduct ? 8 : 4),
 
-                // Product Details
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Product Name (Marquee)
-                        SizedBox(
-                          height: 18,
-                          child: _MarqueeText(
-                            text: product.name,
-                            style: TextStyle(
-                              color: Colors.grey.shade900,
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                  // Product Description
+                  Text(
+                    product.description,
+                    style: TextStyle(
+                      color: Colors.grey.shade600,
+                      fontSize: isSingleProduct ? 14 : 10,
+                    ),
+                    maxLines: isSingleProduct ? 4 : 3,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(height: isSingleProduct ? 12 : 6),
+
+                  // Price
+                  Wrap(
+                    spacing: isSingleProduct ? 8 : 4,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      Text(
+                        '${product.currency}${product.price.toStringAsFixed(2)}',
+                        style: TextStyle(
+                          color: Colors.grey.shade900,
+                          fontSize: isSingleProduct ? 20 : 13,
+                          fontWeight: FontWeight.bold,
                         ),
-                        const SizedBox(height: 4),
-
-                        // Product Description (3 lines max)
+                      ),
+                      if (product.discountPrice != null)
                         Text(
-                          product.description,
+                          '${product.currency}${product.discountPrice}',
                           style: TextStyle(
-                            color: Colors.grey.shade600,
-                            fontSize: 11,
-                          ),
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(height: 6),
-
-                        // Price
-                        Row(
-                          children: [
-                            Text(
-                              '${product.currency}${product.price.toStringAsFixed(2)}',
-                              style: TextStyle(
-                                color: Colors.grey.shade900,
-                                fontSize: 13,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            if (product.discountPrice != null) ...[
-                              const SizedBox(width: 3),
-                              Text(
-                                '${product.currency}${product.discountPrice}',
-                                style: TextStyle(
-                                  color: Colors.grey.shade500,
-                                  fontSize: 10,
-                                  decoration: TextDecoration.lineThrough,
-                                ),
-                              ),
-                            ],
-                          ],
-                        ),
-                        const SizedBox(height: 5),
-
-                        // Availability
-                        Row(
-                          children: [
-                            Container(
-                              width: 5,
-                              height: 5,
-                              decoration: BoxDecoration(
-                                color: product.isAvailable
-                                    ? Colors.green
-                                    : Colors.red,
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              product.isAvailable ? 'In Stock' : 'Out of Stock',
-                              style: TextStyle(
-                                color: product.isAvailable
-                                    ? Colors.green.shade700
-                                    : Colors.red.shade700,
-                                fontSize: 9,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const Spacer(),
-
-                        // Go to Product Button (Red Capsule)
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              // Handle go to product
-                              Navigator.pop(context);
-                              // TODO: Navigate to product details or open product URL
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.red,
-                              foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              elevation: 0,
-                            ),
-                            child: const Text(
-                              'Go to Product',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                            color: Colors.grey.shade500,
+                            fontSize: isSingleProduct ? 16 : 11,
+                            decoration: TextDecoration.lineThrough,
                           ),
                         ),
-                      ],
+                    ],
+                  ),
+                  SizedBox(height: isSingleProduct ? 12 : 6),
+
+                  // Availability
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: isSingleProduct ? 8 : 6,
+                        height: isSingleProduct ? 8 : 6,
+                        decoration: BoxDecoration(
+                          color:
+                              product.isAvailable ? Colors.green : Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      SizedBox(width: isSingleProduct ? 8 : 4),
+                      Text(
+                        product.isAvailable ? 'In Stock' : 'Out of Stock',
+                        style: TextStyle(
+                          color: product.isAvailable
+                              ? Colors.green.shade700
+                              : Colors.red.shade700,
+                          fontSize: isSingleProduct ? 14 : 10,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: isSingleProduct ? 16 : 10),
+
+                  // Go to Product Button (Red Capsule)
+                  SizedBox(
+                    width: double.infinity,
+                    height: isSingleProduct ? 48 : 32,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        // Handle go to product
+                        Navigator.pop(context);
+                        // TODO: Navigate to product details or open product URL
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        foregroundColor: Colors.white,
+                        padding: EdgeInsets.symmetric(
+                            vertical: isSingleProduct ? 12 : 6,
+                            horizontal: isSingleProduct ? 16 : 10),
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(isSingleProduct ? 24 : 20),
+                        ),
+                        elevation: 0,
+                      ),
+                      child: Text(
+                        'Go to Product',
+                        style: TextStyle(
+                          fontSize: isSingleProduct ? 16 : 11,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ], // children of outer Column
-            ); // Column closing
-          }, // builder closing
-        ), // LayoutBuilder closing
-      ), // Container closing
-    ); // ClipRRect closing
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   } // method closing
 }
 

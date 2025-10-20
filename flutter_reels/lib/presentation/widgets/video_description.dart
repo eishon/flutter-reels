@@ -23,6 +23,7 @@ class VideoDescription extends StatefulWidget {
 
 class _VideoDescriptionState extends State<VideoDescription> {
   bool _isExpanded = false;
+  bool _isMuted = false;
   static const int _maxLines = 2;
 
   @override
@@ -68,32 +69,6 @@ class _VideoDescriptionState extends State<VideoDescription> {
                 blurRadius: 8,
               ),
             ],
-          ),
-        ),
-        const SizedBox(width: 6),
-        // Follow button
-        Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 12,
-            vertical: 4,
-          ),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.white, width: 1.5),
-            borderRadius: BorderRadius.circular(4),
-          ),
-          child: Text(
-            'Follow',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-              shadows: [
-                Shadow(
-                  color: Colors.black.withOpacity(0.5),
-                  blurRadius: 4,
-                ),
-              ],
-            ),
           ),
         ),
       ],
@@ -149,52 +124,67 @@ class _VideoDescriptionState extends State<VideoDescription> {
   }
 
   Widget _buildAudioInfo() {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 12,
-        vertical: 6,
-      ),
-      decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.3),
-        borderRadius: BorderRadius.circular(4),
-        border: Border.all(
-          color: Colors.white.withOpacity(0.3),
-          width: 1,
-        ),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            Icons.music_note,
-            size: 16,
-            color: Colors.white,
-            shadows: [
-              Shadow(
-                color: Colors.black.withOpacity(0.5),
-                blurRadius: 4,
-              ),
-            ],
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _isMuted = !_isMuted;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(_isMuted ? 'Audio muted' : 'Audio unmuted'),
+            duration: const Duration(milliseconds: 500),
           ),
-          const SizedBox(width: 6),
-          Flexible(
-            child: Text(
-              'Original Audio - ${widget.video.user.name}',
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 12,
-                shadows: [
-                  Shadow(
-                    color: Colors.black.withOpacity(0.5),
-                    blurRadius: 4,
-                  ),
-                ],
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: 6,
+        ),
+        decoration: BoxDecoration(
+          color: Colors.black.withOpacity(0.3),
+          borderRadius: BorderRadius.circular(4),
+          border: Border.all(
+            color: Colors.white.withOpacity(0.3),
+            width: 1,
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              _isMuted ? Icons.volume_off : Icons.music_note,
+              size: 16,
+              color: Colors.white,
+              shadows: [
+                Shadow(
+                  color: Colors.black.withOpacity(0.5),
+                  blurRadius: 4,
+                ),
+              ],
+            ),
+            const SizedBox(width: 6),
+            Flexible(
+              child: Text(
+                _isMuted
+                    ? 'Audio muted'
+                    : 'Original Audio - ${widget.video.user.name}',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                  shadows: [
+                    Shadow(
+                      color: Colors.black.withOpacity(0.5),
+                      blurRadius: 4,
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
