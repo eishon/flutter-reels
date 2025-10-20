@@ -157,9 +157,9 @@ class _ReelsScreenState extends State<ReelsScreen>
     print('🧪 [Test] Testing Access Token...');
     try {
       final token = await _accessTokenService.getToken();
-      
+
       if (!mounted) return;
-      
+
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -182,13 +182,13 @@ class _ReelsScreenState extends State<ReelsScreen>
           ],
         ),
       );
-      
+
       print('🧪 [Test] Access Token Result: ${token ?? "null"}');
     } catch (e) {
       print('🧪 [Test] Access Token Error: $e');
-      
+
       if (!mounted) return;
-      
+
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
