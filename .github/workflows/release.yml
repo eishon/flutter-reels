@@ -1,0 +1,179 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  create-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.6'
+          channel: 'stable'
+          cache: true
+
+      - name: Get version from tag
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          PREVIOUS_TAG=$(git describe --abbrev=0 --tags $(git rev-list --tags --skip=1 --max-count=1) 2>/dev/null || echo "")
+          if [ -z "$PREVIOUS_TAG" ]; then
+            CHANGELOG=$(git log --pretty=format:"- %s (%h)" --no-merges)
+          else
+            CHANGELOG=$(git log ${PREVIOUS_TAG}..HEAD --pretty=format:"- %s (%h)" --no-merges)
+          fi
+          echo "CHANGELOG<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create integration guide
+        run: |
+          cat > INTEGRATION.md << 'EOF'
+          # Flutter Reels - Integration Guide v${{ steps.get_version.outputs.VERSION }}
+          
+          ## Overview
+          Flutter Reels is a hybrid Add-to-App solution that provides native SDKs for Android and iOS.
+          
+          ## Integration Steps
+          
+          ### Android Integration
+          
+          1. Clone or download this release
+          2. Add the reels_flutter module and reels_android SDK to your project
+          3. Follow the setup instructions in `SETUP.md`
+          
+          ```gradle
+          // In your settings.gradle
+          include ':reels_android'
+          project(':reels_android').projectDir = new File('../reels_android')
+          
+          setBinding(new Binding([gradle: this]))
+          evaluate(new File(settingsDir, '../reels_flutter/.android/include_flutter.groovy'))
+          ```
+          
+          ### iOS Integration
+          
+          1. Add the Flutter module and iOS SDK to your project
+          2. Update your Podfile:
+          
+          ```ruby
+          flutter_application_path = '../reels_flutter'
+          load File.join(flutter_application_path, '.ios', 'Flutter', 'podhelper.rb')
+          
+          target 'YourApp' do
+            install_all_flutter_pods(flutter_application_path)
+            pod 'ReelsIOS', :path => '../reels_ios'
+          end
+          ```
+          
+          ## Documentation
+          
+          - [Complete Setup Guide](SETUP.md)
+          - [Architecture Overview](reels_flutter/lib/ARCHITECTURE.md)
+          - [Android Integration](examples/android-integration.md)
+          - [iOS Integration](examples/ios-integration.md)
+          
+          ## Requirements
+          
+          - Flutter SDK: 3.35.6+
+          - Android: minSdk 21, compileSdk 34
+          - iOS: 13.0+
+          - Kotlin: 1.9.0+
+          - Swift: 5.0+
+          
+          ## Support
+          
+          For issues and questions, please open an issue on GitHub.
+          EOF
+
+      - name: Create release archive
+        run: |
+          mkdir -p release
+          
+          # Create a clean copy without build artifacts
+          rsync -av --exclude='.git' \
+                    --exclude='build/' \
+                    --exclude='.gradle/' \
+                    --exclude='*.iml' \
+                    --exclude='.dart_tool/' \
+                    --exclude='.idea/' \
+                    --exclude='*.lock' \
+                    --exclude='example/' \
+                    --exclude='legacy/' \
+                    --exclude='test/' \
+                    reels_flutter/ release/reels_flutter/
+          
+          rsync -av --exclude='build/' \
+                    --exclude='.gradle/' \
+                    --exclude='*.iml' \
+                    reels_android/ release/reels_android/
+          
+          rsync -av --exclude='build/' \
+                    --exclude='.build/' \
+                    --exclude='*.xcworkspace' \
+                    --exclude='Pods/' \
+                    reels_ios/ release/reels_ios/
+          
+          # Copy documentation
+          cp SETUP.md README.md LICENSE INTEGRATION.md release/
+          cp -r examples release/ 2>/dev/null || true
+          
+          # Create archive
+          cd release
+          tar -czf ../flutter-reels-v${{ steps.get_version.outputs.VERSION }}.tar.gz .
+          cd ..
+          zip -r flutter-reels-v${{ steps.get_version.outputs.VERSION }}.zip release/
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: Flutter Reels v${{ steps.get_version.outputs.VERSION }}
+          body: |
+            # Flutter Reels v${{ steps.get_version.outputs.VERSION }}
+            
+            ## What's Changed
+            
+            ${{ steps.changelog.outputs.CHANGELOG }}
+            
+            ## Installation
+            
+            Download one of the archives below and follow the integration guide.
+            
+            ## Integration Guide
+            
+            See [INTEGRATION.md](INTEGRATION.md) for detailed setup instructions.
+            
+            ## Requirements
+            
+            - Flutter SDK: 3.35.6+
+            - Android: minSdk 21, compileSdk 34  
+            - iOS: 13.0+
+            
+            ---
+            
+            **Full Changelog**: https://github.com/eishon/flutter-reels/compare/${{ steps.changelog.outputs.PREVIOUS_TAG }}...v${{ steps.get_version.outputs.VERSION }}
+          files: |
+            flutter-reels-v${{ steps.get_version.outputs.VERSION }}.tar.gz
+            flutter-reels-v${{ steps.get_version.outputs.VERSION }}.zip
+            INTEGRATION.md
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
