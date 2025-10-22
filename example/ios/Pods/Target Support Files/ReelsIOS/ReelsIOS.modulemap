@@ -1,0 +1,6 @@
+framework module ReelsIOS {
+  umbrella header "ReelsIOS-umbrella.h"
+
+  export *
+  module * { export * }
+}

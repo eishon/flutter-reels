@@ -1,0 +1,28 @@
+{
+  "name": "ReelsIOS",
+  "version": "0.1.0",
+  "summary": "Flutter Reels iOS SDK",
+  "description": "Native iOS wrapper for Flutter Reels module",
+  "homepage": "https://github.com/eishon/flutter-reels",
+  "license": {
+    "type": "MIT",
+    "file": "../LICENSE"
+  },
+  "authors": {
+    "Eishon": "eishon@example.com"
+  },
+  "source": {
+    "git": "https://github.com/eishon/flutter-reels.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "12.0"
+  },
+  "swift_versions": "5.0",
+  "source_files": "Sources/ReelsIOS/**/*.{swift,h,m}",
+  "pod_target_xcconfig": {
+    "DEFINES_MODULE": "YES",
+    "VALID_ARCHS": "arm64 x86_64"
+  },
+  "swift_version": "5.0"
+}
