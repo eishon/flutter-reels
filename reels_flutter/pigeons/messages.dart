@@ -2,7 +2,7 @@ import 'package:pigeon/pigeon.dart';
 
 @ConfigurePigeon(
   PigeonOptions(
-    dartOut: 'lib/src/pigeon_generated.dart',
+    dartOut: 'lib/core/pigeon_generated.dart',
     dartOptions: DartOptions(),
     kotlinOut:
         'android/src/main/kotlin/com/eishon/reels_flutter/PigeonGenerated.kt',
