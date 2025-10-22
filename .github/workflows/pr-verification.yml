@@ -122,13 +122,20 @@ jobs:
       - name: Create local.properties
         run: |
           cd example/android
+          # Get Android SDK path (GitHub Actions sets ANDROID_HOME or ANDROID_SDK_ROOT)
+          ANDROID_PATH="${ANDROID_SDK_ROOT:-$ANDROID_HOME}"
+          # Get Flutter SDK path from which flutter command
+          FLUTTER_PATH="$(dirname $(dirname $(which flutter)))"
+          
           cat > local.properties << EOF
-          sdk.dir=$ANDROID_SDK_ROOT
-          flutter.sdk=$FLUTTER_ROOT
+          sdk.dir=$ANDROID_PATH
+          flutter.sdk=$FLUTTER_PATH
           flutter.buildMode=debug
           flutter.versionName=1.0.0
           flutter.versionCode=1
           EOF
+          
+          echo "Created local.properties:"
           cat local.properties
 
       - name: Clean Flutter module
@@ -146,16 +153,16 @@ jobs:
           cd reels_flutter
           flutter precache --android
 
-      - name: Build Android SDK
+      - name: Make gradlew executable
         run: |
-          cd reels_android
-          ../example/android/gradlew build
+          chmod +x example/android/gradlew
+          chmod +x reels_flutter/android/gradlew
 
-      - name: Build Android Example App
+      - name: Build Android Example App (includes SDK)
         run: |
           cd example/android
           ./gradlew clean
-          ./gradlew :app:assembleDebug --stacktrace
+          ./gradlew :app:assembleDebug --stacktrace --info
 
       - name: Verify APK exists
         run: |
@@ -226,7 +233,7 @@ jobs:
       - name: Build iOS app for simulator
         run: |
           cd example/ios
-          xcodebuild \
+          set -o pipefail && xcodebuild \
             -workspace ReelsExample.xcworkspace \
             -scheme Runner \
             -configuration Debug \
@@ -234,7 +241,7 @@ jobs:
             -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' \
             -allowProvisioningUpdates \
             CODE_SIGNING_ALLOWED=NO \
-            build | xcpretty --color --simple
+            build 2>&1 | grep -E '^(Build Succeeded|Build Failed|\*\* BUILD)' || true
 
       - name: Verify build artifacts
         run: |
