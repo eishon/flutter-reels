@@ -17,6 +17,15 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Reels SDK initialized"
-        android:textSize="16sp" />
+        android:text="Reels SDK initialized with Pigeon APIs"
+        android:textSize="16sp"
+        android:layout_marginBottom="24dp" />
+
+    <Button
+        android:id="@+id/launch_reels_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Launch Reels"
+        android:textSize="18sp"
+        android:padding="16dp" />
 </LinearLayout>

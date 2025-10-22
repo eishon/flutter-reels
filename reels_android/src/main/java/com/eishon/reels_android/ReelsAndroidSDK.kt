@@ -2,30 +2,48 @@ package com.eishon.reels_android
 
 import android.content.Context
 import android.util.Log
+import com.eishon.reels_flutter.AnalyticsEvent
+import com.eishon.reels_flutter.ReelsFlutterAnalyticsApi
+import com.eishon.reels_flutter.ReelsFlutterButtonEventsApi
+import com.eishon.reels_flutter.ReelsFlutterNavigationApi
+import com.eishon.reels_flutter.ReelsFlutterStateApi
+import com.eishon.reels_flutter.ReelsFlutterTokenApi
+import com.eishon.reels_flutter.ScreenStateData
+import com.eishon.reels_flutter.ShareData
+import com.eishon.reels_flutter.VideoStateData
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.dart.DartExecutor
+import io.flutter.plugin.common.BinaryMessenger
 
 /**
  * Main SDK class for integrating Flutter Reels into native Android apps.
  * 
  * This SDK wraps the Flutter module and Pigeon communication, providing a clean
- * native Android API. Users don't need to understand Flutter or Pigeon internals.
+ * native Android API integrated with Pigeon APIs.
  * 
  * Usage:
  * ```
  * // Initialize once in your Application or Activity
- * ReelsAndroidSDK.initialize(context)
+ * ReelsAndroidSDK.initialize(
+ *     context = this,
+ *     accessTokenProvider = { "user_token_123" }
+ * )
  * 
- * // Show reels
- * val videos = listOf(VideoInfo(id = "1", url = "https://..."))
- * ReelsAndroidSDK.showReels(videos)
- * 
- * // Listen to events
+ * // Set listener for events
  * ReelsAndroidSDK.setListener(object : ReelsListener {
- *     override fun onReelViewed(videoId: String) {
- *         Log.d("Reels", "Viewed: $videoId")
+ *     override fun onReelLiked(videoId: String, isLiked: Boolean) {
+ *         Log.d("Reels", "Liked: $videoId = $isLiked")
+ *     }
+ *     override fun onReelShared(videoId: String) {
+ *         Log.d("Reels", "Shared: $videoId")
  *     }
  * })
+ * 
+ * // Show reels using FlutterActivity
+ * val intent = FlutterActivity
+ *     .withCachedEngine("reels_engine")
+ *     .build(this)
+ * startActivity(intent)
  * ```
  */
 class ReelsAndroidSDK private constructor() {
@@ -34,20 +52,20 @@ class ReelsAndroidSDK private constructor() {
         
         private var flutterEngine: FlutterEngine? = null
         private var listener: ReelsListener? = null
+        private var accessTokenProvider: (() -> String?)? = null
         private var isInitialized = false
         
         /**
-         * Initialize the Reels SDK.
+         * Initialize the Reels SDK with Pigeon API integration.
          * Must be called before using any other SDK methods.
          * 
          * @param context Application or Activity context
-         * @param config Optional configuration for reels behavior
+         * @param accessTokenProvider Lambda to provide user access token
          */
         @JvmStatic
-        @JvmOverloads
         fun initialize(
             context: Context,
-            config: ReelsConfig = ReelsConfig()
+            accessTokenProvider: (() -> String?)? = null
         ) {
             if (isInitialized) {
                 Log.w(TAG, "SDK already initialized")
@@ -55,81 +73,106 @@ class ReelsAndroidSDK private constructor() {
             }
             
             try {
-                Log.d(TAG, "Initializing Reels SDK...")
+                Log.d(TAG, "Initializing Reels SDK with Pigeon integration...")
+                
+                this.accessTokenProvider = accessTokenProvider
                 
                 // Create Flutter engine
-                flutterEngine = FlutterEngine(context.applicationContext)
+                flutterEngine = FlutterEngine(context.applicationContext, null, false)
                 
                 // Start executing Dart code
                 flutterEngine?.dartExecutor?.executeDartEntrypoint(
                     DartExecutor.DartEntrypoint.createDefault()
                 )
                 
-                // TODO: Setup Pigeon APIs when reels_flutter is integrated
-                // val binaryMessenger = flutterEngine!!.dartExecutor.binaryMessenger
-                // reelsFlutterApi = ReelsFlutterApi(binaryMessenger)
-                // ReelsNativeApi.setUp(binaryMessenger, NativeApiHandler())
+                // Setup Pigeon APIs
+                val binaryMessenger = flutterEngine!!.dartExecutor.binaryMessenger
+                setupPigeonAPIs(binaryMessenger)
                 
                 isInitialized = true
-                Log.d(TAG, "Reels SDK initialized successfully")
+                Log.d(TAG, "Reels SDK initialized successfully with Pigeon APIs")
                 
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to initialize SDK", e)
-                throw ReelsException("SDK initialization failed", e)
+                throw ReelsException("SDK initialization failed: ${e.message}", e)
             }
         }
         
         /**
-         * Show reels with the provided video list.
-         * 
-         * @param videos List of videos to display
-         * @throws ReelsException if SDK not initialized
+         * Setup all Pigeon API handlers
          */
-        @JvmStatic
-        fun showReels(videos: List<VideoInfo>) {
-            checkInitialized()
-            Log.d(TAG, "showReels called with ${videos.size} videos")
-            // TODO: Call Pigeon API to show reels
-        }
-        
-        /**
-         * Update a specific video's data (e.g., after user likes it)
-         * 
-         * @param video Updated video information
-         */
-        @JvmStatic
-        fun updateVideo(video: VideoInfo) {
-            checkInitialized()
-            Log.d(TAG, "updateVideo called for: ${video.id}")
-            // TODO: Call Pigeon API to update video
-        }
-        
-        /**
-         * Close the reels view
-         */
-        @JvmStatic
-        fun closeReels() {
-            checkInitialized()
-            Log.d(TAG, "closeReels called")
-            // TODO: Call Pigeon API to close reels
-        }
-        
-        /**
-         * Update SDK configuration
-         * 
-         * @param config New configuration
-         */
-        @JvmStatic
-        fun updateConfig(config: ReelsConfig) {
-            checkInitialized()
-            Log.d(TAG, "updateConfig called")
-            // TODO: Call Pigeon API to update config
+        private fun setupPigeonAPIs(binaryMessenger: BinaryMessenger) {
+            // Host API: Provide access token to Flutter
+            ReelsFlutterTokenApi.setUp(binaryMessenger, object : ReelsFlutterTokenApi {
+                override fun getAccessToken(): String? {
+                    val token = accessTokenProvider?.invoke() ?: listener?.getAccessToken()
+                    Log.d(TAG, "Token requested: ${if (token != null) "provided" else "null"}")
+                    return token
+                }
+            })
+            
+            // Flutter API: Analytics events from Flutter
+            ReelsFlutterAnalyticsApi.setUp(binaryMessenger, object : ReelsFlutterAnalyticsApi {
+                override fun trackEvent(event: AnalyticsEvent) {
+                    Log.d(TAG, "Analytics event: ${event.eventName} with ${event.eventProperties.size} properties")
+                    // Native apps can forward to their analytics SDK here
+                }
+            })
+            
+            // Flutter API: Button interaction callbacks
+            ReelsFlutterButtonEventsApi.setUp(binaryMessenger, object : ReelsFlutterButtonEventsApi {
+                override fun onBeforeLikeButtonClick(videoId: String) {
+                    Log.d(TAG, "Before like click: $videoId")
+                    // Can be used for optimistic UI updates
+                }
+                
+                override fun onAfterLikeButtonClick(videoId: String, isLiked: Boolean, likeCount: Long) {
+                    Log.d(TAG, "After like click: $videoId, isLiked=$isLiked, count=$likeCount")
+                    listener?.onReelLiked(videoId, isLiked)
+                }
+                
+                override fun onShareButtonClick(shareData: ShareData) {
+                    Log.d(TAG, "Share button clicked: ${shareData.videoId}")
+                    listener?.onReelShared(shareData.videoId)
+                }
+            })
+            
+            // Flutter API: Screen and video state changes
+            ReelsFlutterStateApi.setUp(binaryMessenger, object : ReelsFlutterStateApi {
+                override fun onScreenStateChanged(state: ScreenStateData) {
+                    Log.d(TAG, "Screen state: ${state.screenName} - ${state.state}")
+                    when (state.state) {
+                        "disappeared" -> listener?.onReelsClosed()
+                        else -> {} // Handle other states if needed
+                    }
+                }
+                
+                override fun onVideoStateChanged(state: VideoStateData) {
+                    Log.d(TAG, "Video state: ${state.videoId} - ${state.state}")
+                    when (state.state) {
+                        "completed" -> listener?.onReelViewed(state.videoId)
+                        "error" -> listener?.onError("Video playback error: ${state.videoId}")
+                        else -> {} // Handle playing, paused, buffering, etc.
+                    }
+                }
+            })
+            
+            // Flutter API: Navigation gestures
+            ReelsFlutterNavigationApi.setUp(binaryMessenger, object : ReelsFlutterNavigationApi {
+                override fun onSwipeLeft() {
+                    Log.d(TAG, "Swipe left gesture")
+                }
+                
+                override fun onSwipeRight() {
+                    Log.d(TAG, "Swipe right gesture")
+                }
+            })
         }
         
         /**
          * Set listener for reels events
          * 
-         * @param listener Listener to receive events
+         * @param listener Listener to receive events from Flutter via Pigeon
          */
         @JvmStatic
         fun setListener(listener: ReelsListener?) {
@@ -137,11 +180,24 @@ class ReelsAndroidSDK private constructor() {
         }
         
         /**
-         * Get the Flutter engine instance (for advanced use cases)
+         * Get the Flutter engine instance.
+         * Use this with FlutterActivity.withCachedEngine() to show reels.
          */
         @JvmStatic
         fun getFlutterEngine(): FlutterEngine? = flutterEngine
         
+        /**
+         * Get the Flutter engine ID for use with FlutterActivity
+         */
+        @JvmStatic
+        fun getEngineId(): String = "reels_engine"
+        
+        /**
+         * Clean up resources
+         */
+        @JvmStatic
+        fun dispose() {
+            try {
         /**
          * Clean up resources
          */
@@ -151,6 +207,7 @@ class ReelsAndroidSDK private constructor() {
                 flutterEngine?.destroy()
                 flutterEngine = null
                 listener = null
+                accessTokenProvider = null
                 isInitialized = false
                 Log.d(TAG, "SDK disposed")
             } catch (e: Exception) {
@@ -166,56 +223,41 @@ class ReelsAndroidSDK private constructor() {
     }
 }
 
-// Native data classes (not Pigeon generated - user-friendly)
+// Native data classes (for user convenience, not required by Pigeon)
 
 /**
- * Configuration for Reels SDK behavior
- */
-data class ReelsConfig(
-    val autoPlay: Boolean = true,
-    val showControls: Boolean = true,
-    val loopVideos: Boolean = true
-)
-
-/**
- * Video information for reels
- */
-data class VideoInfo(
-    val id: String,
-    val url: String,
-    val thumbnailUrl: String? = null,
-    val title: String? = null,
-    val description: String? = null,
-    val authorName: String? = null,
-    val authorAvatarUrl: String? = null,
-    val likeCount: Int = 0,
-    val commentCount: Int = 0,
-    val shareCount: Int = 0,
-    val isLiked: Boolean = false
-)
-
-/**
- * Product information for tagging
- */
-data class ProductInfo(
-    val id: String,
-    val name: String,
-    val imageUrl: String? = null,
-    val price: Double? = null,
-    val currency: String? = null
-)
-
-/**
- * Listener interface for reels events
+ * Listener interface for reels events (callbacks from Flutter via Pigeon)
  */
 interface ReelsListener {
+    /**
+     * Called when a reel video completes playback
+     */
     fun onReelViewed(videoId: String) {}
+    
+    /**
+     * Called after user likes/unlikes a reel
+     */
     fun onReelLiked(videoId: String, isLiked: Boolean) {}
+    
+    /**
+     * Called when user shares a reel
+     */
     fun onReelShared(videoId: String) {}
-    fun onReelCommented(videoId: String) {}
-    fun onProductClicked(productId: String, videoId: String) {}
+    
+    /**
+     * Called when reels screen is closed
+     */
     fun onReelsClosed() {}
+    
+    /**
+     * Called on any error
+     */
     fun onError(errorMessage: String) {}
+    
+    /**
+     * Provide access token for authenticated API calls
+     * (Alternative to passing accessTokenProvider in initialize)
+     */
     fun getAccessToken(): String? = null
 }
 

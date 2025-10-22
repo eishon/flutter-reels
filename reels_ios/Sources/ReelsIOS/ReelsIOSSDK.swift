@@ -4,19 +4,21 @@ import Flutter
 /// Main SDK class for integrating Flutter Reels into native iOS apps.
 ///
 /// This SDK wraps the Flutter module and Pigeon communication, providing a clean
-/// native iOS API. Users don't need to understand Flutter or Pigeon internals.
+/// native iOS API integrated with Pigeon APIs.
 ///
 /// Usage:
 /// ```swift
 /// // Initialize once in your AppDelegate
-/// ReelsIOSSDK.shared.initialize()
+/// ReelsIOSSDK.shared.initialize(accessTokenProvider: {
+///     return "user_token_123"
+/// })
 ///
-/// // Show reels
-/// let videos = [VideoInfo(id: "1", url: "https://...")]
-/// ReelsIOSSDK.shared.showReels(videos: videos)
-///
-/// // Listen to events
+/// // Set delegate for events
 /// ReelsIOSSDK.shared.delegate = self
+///
+/// // Show reels using FlutterViewController
+/// let flutterVC = FlutterViewController(engine: ReelsIOSSDK.shared.getFlutterEngine()!, nibName: nil, bundle: nil)
+/// present(flutterVC, animated: true)
 /// ```
 @objc public class ReelsIOSSDK: NSObject {
     
@@ -25,89 +27,74 @@ import Flutter
     
     private var flutterEngine: FlutterEngine?
     private var isInitialized = false
+    private var accessTokenProvider: (() -> String?)?
     
-    /// Delegate to receive reels events
+    /// Delegate to receive reels events from Flutter via Pigeon
     @objc public weak var delegate: ReelsDelegate?
     
     private override init() {
         super.init()
     }
     
-    /// Initialize the Reels SDK.
+    /// Initialize the Reels SDK with Pigeon API integration.
     /// Must be called before using any other SDK methods.
     ///
     /// - Parameters:
-    ///   - config: Optional configuration for reels behavior
-    @objc public func initialize(config: ReelsConfig = ReelsConfig()) {
+    ///   - accessTokenProvider: Closure to provide user access token
+    @objc public func initialize(accessTokenProvider: (() -> String?)? = nil) {
         guard !isInitialized else {
             print("ReelsIOSSDK: Already initialized")
             return
         }
         
-        print("ReelsIOSSDK: Initializing...")
+        print("ReelsIOSSDK: Initializing with Pigeon APIs...")
+        
+        self.accessTokenProvider = accessTokenProvider
         
         // Create Flutter engine
-        flutterEngine = FlutterEngine(name: "reels_flutter")
+        flutterEngine = FlutterEngine(name: "reels_engine")
         
         // Run the Flutter engine
         flutterEngine?.run()
         
-        // TODO: Setup Pigeon APIs when reels_flutter is integrated
-        // let binaryMessenger = flutterEngine!.binaryMessenger
-        // setupPigeonAPIs(binaryMessenger: binaryMessenger)
+        // Setup Pigeon APIs
+        if let engine = flutterEngine {
+            setupPigeonAPIs(binaryMessenger: engine.binaryMessenger)
+        }
         
         isInitialized = true
-        print("ReelsIOSSDK: Initialized successfully")
+        print("ReelsIOSSDK: Initialized successfully with Pigeon APIs")
     }
     
-    /// Show reels with the provided video list.
-    ///
-    /// - Parameters:
-    ///   - videos: Array of videos to display
-    /// - Throws: ReelsError if SDK not initialized
-    @objc public func showReels(videos: [VideoInfo]) throws {
-        try checkInitialized()
-        print("ReelsIOSSDK: showReels called with \(videos.count) videos")
-        // TODO: Call Pigeon API to show reels
+    /// Setup all Pigeon API handlers
+    private func setupPigeonAPIs(binaryMessenger: FlutterBinaryMessenger) {
+        // Host API: Provide access token to Flutter
+        ReelsFlutterTokenApiSetup.setUp(binaryMessenger: binaryMessenger, api: self)
+        
+        // Flutter API: Analytics events from Flutter
+        ReelsFlutterAnalyticsApiSetup.setUp(binaryMessenger: binaryMessenger, api: self)
+        
+        // Flutter API: Button interaction callbacks
+        ReelsFlutterButtonEventsApiSetup.setUp(binaryMessenger: binaryMessenger, api: self)
+        
+        // Flutter API: Screen and video state changes
+        ReelsFlutterStateApiSetup.setUp(binaryMessenger: binaryMessenger, api: self)
+        
+        // Flutter API: Navigation gestures
+        ReelsFlutterNavigationApiSetup.setUp(binaryMessenger: binaryMessenger, api: self)
     }
     
-    /// Update a specific video's data (e.g., after user likes it)
-    ///
-    /// - Parameters:
-    ///   - video: Updated video information
-    @objc public func updateVideo(video: VideoInfo) throws {
-        try checkInitialized()
-        print("ReelsIOSSDK: updateVideo called for: \(video.id)")
-        // TODO: Call Pigeon API to update video
-    }
-    
-    /// Close the reels view
-    @objc public func closeReels() throws {
-        try checkInitialized()
-        print("ReelsIOSSDK: closeReels called")
-        // TODO: Call Pigeon API to close reels
-    }
-    
-    /// Update SDK configuration
-    ///
-    /// - Parameters:
-    ///   - config: New configuration
-    @objc public func updateConfig(config: ReelsConfig) throws {
-        try checkInitialized()
-        print("ReelsIOSSDK: updateConfig called")
-        // TODO: Call Pigeon API to update config
-    }
-    
-    /// Get the Flutter engine instance (for advanced use cases)
+    /// Get the Flutter engine instance.
+    /// Use this to create FlutterViewController for showing reels.
     @objc public func getFlutterEngine() -> FlutterEngine? {
         return flutterEngine
     }
     
     /// Clean up resources
     @objc public func dispose() {
-        flutterEngine?.destroyContext()
         flutterEngine = nil
         isInitialized = false
+        accessTokenProvider = nil
         print("ReelsIOSSDK: Disposed")
     }
     
@@ -118,86 +105,74 @@ import Flutter
     }
 }
 
-// MARK: - Public Data Models (Native iOS, not Pigeon)
+// MARK: - Pigeon Host API Implementation
 
-/// Configuration for Reels SDK behavior
-@objc public class ReelsConfig: NSObject {
-    @objc public let autoPlay: Bool
-    @objc public let showControls: Bool
-    @objc public let loopVideos: Bool
-    
-    @objc public init(autoPlay: Bool = true, showControls: Bool = true, loopVideos: Bool = true) {
-        self.autoPlay = autoPlay
-        self.showControls = showControls
-        self.loopVideos = loopVideos
+extension ReelsIOSSDK: ReelsFlutterTokenApi {
+    public func getAccessToken() throws -> String? {
+        let token = accessTokenProvider?() ?? delegate?.getAccessToken?()
+        print("ReelsIOSSDK: Token requested: \(token != nil ? "provided" : "null")")
+        return token
     }
 }
 
-/// Video information for reels
-@objc public class VideoInfo: NSObject {
-    @objc public let id: String
-    @objc public let url: String
-    @objc public let thumbnailUrl: String?
-    @objc public let title: String?
-    @objc public let description: String?
-    @objc public let authorName: String?
-    @objc public let authorAvatarUrl: String?
-    @objc public let likeCount: Int
-    @objc public let commentCount: Int
-    @objc public let shareCount: Int
-    @objc public let isLiked: Bool
-    
-    @objc public init(
-        id: String,
-        url: String,
-        thumbnailUrl: String? = nil,
-        title: String? = nil,
-        description: String? = nil,
-        authorName: String? = nil,
-        authorAvatarUrl: String? = nil,
-        likeCount: Int = 0,
-        commentCount: Int = 0,
-        shareCount: Int = 0,
-        isLiked: Bool = false
-    ) {
-        self.id = id
-        self.url = url
-        self.thumbnailUrl = thumbnailUrl
-        self.title = title
-        self.description = description
-        self.authorName = authorName
-        self.authorAvatarUrl = authorAvatarUrl
-        self.likeCount = likeCount
-        self.commentCount = commentCount
-        self.shareCount = shareCount
-        self.isLiked = isLiked
+// MARK: - Pigeon Flutter API Implementations
+
+extension ReelsIOSSDK: ReelsFlutterAnalyticsApi {
+    public func trackEvent(event: AnalyticsEvent) throws {
+        print("ReelsIOSSDK: Analytics event: \(event.eventName) with \(event.eventProperties.count) properties")
+        // Native apps can forward to their analytics SDK here
     }
 }
 
-/// Product information for tagging
-@objc public class ProductInfo: NSObject {
-    @objc public let id: String
-    @objc public let name: String
-    @objc public let imageUrl: String?
-    @objc public let price: Double
-    @objc public let currency: String?
+extension ReelsIOSSDK: ReelsFlutterButtonEventsApi {
+    public func onBeforeLikeButtonClick(videoId: String) throws {
+        print("ReelsIOSSDK: Before like click: \(videoId)")
+        // Can be used for optimistic UI updates
+    }
     
-    @objc public init(
-        id: String,
-        name: String,
-        imageUrl: String? = nil,
-        price: Double = 0.0,
-        currency: String? = nil
-    ) {
-        self.id = id
-        self.name = name
-        self.imageUrl = imageUrl
-        self.price = price
-        self.currency = currency
+    public func onAfterLikeButtonClick(videoId: String, isLiked: Bool, likeCount: Int64) throws {
+        print("ReelsIOSSDK: After like click: \(videoId), isLiked=\(isLiked), count=\(likeCount)")
+        delegate?.onReelLiked?(videoId: videoId, isLiked: isLiked)
+    }
+    
+    public func onShareButtonClick(shareData: ShareData) throws {
+        print("ReelsIOSSDK: Share button clicked: \(shareData.videoId)")
+        delegate?.onReelShared?(videoId: shareData.videoId)
     }
 }
 
-/// Delegate protocol for reels events
+extension ReelsIOSSDK: ReelsFlutterStateApi {
+    public func onScreenStateChanged(state: ScreenStateData) throws {
+        print("ReelsIOSSDK: Screen state: \(state.screenName) - \(state.state)")
+        if state.state == "disappeared" {
+            delegate?.onReelsClosed?()
+        }
+    }
+    
+    public func onVideoStateChanged(state: VideoStateData) throws {
+        print("ReelsIOSSDK: Video state: \(state.videoId) - \(state.state)")
+        switch state.state {
+        case "completed":
+            delegate?.onReelViewed?(videoId: state.videoId)
+        case "error":
+            delegate?.onError?(errorMessage: "Video playback error: \(state.videoId)")
+        default:
+            break // Handle playing, paused, buffering, etc.
+        }
+    }
+}
+
+extension ReelsIOSSDK: ReelsFlutterNavigationApi {
+    public func onSwipeLeft() throws {
+        print("ReelsIOSSDK: Swipe left gesture")
+    }
+    
+    public func onSwipeRight() throws {
+        print("ReelsIOSSDK: Swipe right gesture")
+    }
+}
+
+// MARK: - Public Data Models
 @objc public protocol ReelsDelegate: AnyObject {
     @objc optional func onReelViewed(videoId: String)
     @objc optional func onReelLiked(videoId: String, isLiked: Bool)
