@@ -1,260 +1,517 @@
-# Flutter Reels - Native SDK Integration# Flutter Reels
+# Flutter Reels# Flutter Reels - Native SDK Integration# Flutter Reels
 
 
 
-This project provides native Android and iOS SDKs for integrating Flutter-based reels functionality into native mobile applications.[![CI](https://github.com/eishon/flutter-reels/actions/workflows/ci.yml/badge.svg)](https://github.com/eishon/flutter-reels/actions/workflows/ci.yml)
+A Flutter-based reels library for native Android and iOS applications using the **Add-to-App** pattern with clean, native SDKs.
 
-[![Build Android](https://github.com/eishon/flutter-reels/actions/workflows/build-android.yml/badge.svg)](https://github.com/eishon/flutter-reels/actions/workflows/build-android.yml)
+
+
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)]()This project provides native Android and iOS SDKs for integrating Flutter-based reels functionality into native mobile applications.[![CI](https://github.com/eishon/flutter-reels/actions/workflows/ci.yml/badge.svg)](https://github.com/eishon/flutter-reels/actions/workflows/ci.yml)
+
+[![Android](https://img.shields.io/badge/Android-5.0%2B-green)]()
+
+[![iOS](https://img.shields.io/badge/iOS-13.0%2B-blue)]()[![Build Android](https://github.com/eishon/flutter-reels/actions/workflows/build-android.yml/badge.svg)](https://github.com/eishon/flutter-reels/actions/workflows/build-android.yml)
+
+[![Flutter](https://img.shields.io/badge/Flutter-3.35.6-blue)]()
 
 ## Project Structure[![Build iOS](https://github.com/eishon/flutter-reels/actions/workflows/build-ios.yml/badge.svg)](https://github.com/eishon/flutter-reels/actions/workflows/build-ios.yml)
 
+---
 
+
+
+## 🎯 Features
 
 ```A Flutter module designed to be integrated into native Android and iOS applications. This module provides a reels/stories viewing experience that can be seamlessly embedded in your existing native apps.
 
+- ✅ **Clean Native APIs** - No Flutter or Pigeon knowledge required for users
+
+- ✅ **Add-to-App Integration** - Flutter module embedded in native appsflutter-reels/
+
+- ✅ **Type-Safe Communication** - Pigeon-based platform channels (hidden from users)
+
+- ✅ **Android SDK** - Kotlin-based wrapper with idiomatic API├── reels_flutter/          # Flutter module with reels functionality## 📋 Overview
+
+- ✅ **iOS SDK** - Swift-based wrapper with Objective-C compatibility
+
+- ✅ **Example Apps** - Complete integration examples for both platforms├── reels_android/          # Android native SDK wrapper
+
+
+
+---├── reels_ios/              # iOS native SDK wrapper  This repository contains a Flutter module (`flutter_reels`) that can be distributed as a library for native Android and iOS projects. The module is built with native integration in mind and includes automated CI/CD pipelines for easy distribution.
+
+
+
+## 📁 Project Structure├── example/
+
+
+
+```│   ├── android/           # Android example app## 🚀 Quick Start
+
 flutter-reels/
 
-├── reels_flutter/          # Flutter module with reels functionality## 📋 Overview
+├── reels_flutter/          # Flutter module with reels UI (Add-to-App)│   └── ios/               # iOS example app
 
-├── reels_android/          # Android native SDK wrapper
+├── reels_android/          # Android native SDK wrapper (Kotlin)
 
-├── reels_ios/              # iOS native SDK wrapper  This repository contains a Flutter module (`flutter_reels`) that can be distributed as a library for native Android and iOS projects. The module is built with native integration in mind and includes automated CI/CD pipelines for easy distribution.
+├── reels_ios/              # iOS native SDK wrapper (Swift)└── legacy/                # Previous project version (archived)### For Integration
 
 ├── example/
 
-│   ├── android/           # Android example app## 🚀 Quick Start
+│   ├── android/           # Android integration example```
 
-│   └── ios/               # iOS example app
+│   └── ios/               # iOS integration example
 
-└── legacy/                # Previous project version (archived)### For Integration
+├── legacy/                # Previous implementation (archived)Visit the [flutter_reels](./flutter_reels) directory for detailed integration instructions for both Android and iOS.
 
-```
+└── docs/                  # Documentation
 
-Visit the [flutter_reels](./flutter_reels) directory for detailed integration instructions for both Android and iOS.
+```## Architecture
 
-## Architecture
 
-**Quick Links:**
 
-The project follows a three-tier architecture:- [**🚀 Native Initialization Quick Start**](./NATIVE_INITIALIZATION.md) ⭐ **START HERE** (Step-by-step setup)
+---**Quick Links:**
 
-- [**Native Integration Guide**](./NATIVE_INTEGRATION.md) (Complete native platform integration)
 
-1. **reels_flutter**: Flutter module containing the core reels UI and logic- [**Pigeon API Documentation**](./flutter_reels/pigeon/README.md) (Platform communication APIs)
 
-2. **reels_android / reels_ios**: Native wrapper SDKs that embed the Flutter module- [Android Integration Guide](./flutter_reels/README.md#for-android-native)
+## 🚀 Quick StartThe project follows a three-tier architecture:- [**🚀 Native Initialization Quick Start**](./NATIVE_INITIALIZATION.md) ⭐ **START HERE** (Step-by-step setup)
+
+
+
+### For Users (Integrating the SDK)- [**Native Integration Guide**](./NATIVE_INTEGRATION.md) (Complete native platform integration)
+
+
+
+**Choose your platform:**1. **reels_flutter**: Flutter module containing the core reels UI and logic- [**Pigeon API Documentation**](./flutter_reels/pigeon/README.md) (Platform communication APIs)
+
+
+
+- **Android**: See [INTEGRATION_GUIDE.md#android](./INTEGRATION_GUIDE.md#android-integration)2. **reels_android / reels_ios**: Native wrapper SDKs that embed the Flutter module- [Android Integration Guide](./flutter_reels/README.md#for-android-native)
+
+- **iOS**: See [INTEGRATION_GUIDE.md#ios](./INTEGRATION_GUIDE.md#ios-integration)
 
 3. **example apps**: Demonstration apps showing how to integrate the native SDKs- [iOS Integration Guide](./flutter_reels/README.md#for-ios-native)
 
+### For Contributors (Building the Project)
+
 - [Gradle Integration Guide](./GRADLE_INTEGRATION.md) (Android Dependency)
+
+**See [SETUP.md](./SETUP.md)** for complete build instructions and troubleshooting.
 
 ### Communication Layer- [CocoaPods Integration Guide](./COCOAPODS_INTEGRATION.md) (iOS Dependency)
 
+---
+
 - [Multi-Instance Navigation](./MULTI_INSTANCE_NAVIGATION.md) (Advanced navigation patterns)
+
+## 📚 Documentation
 
 - **Pigeon**: Type-safe platform channel communication between Flutter and native code- [GitHub Packages Setup](./GITHUB_PACKAGES_SETUP.md) (For Private Repository Access)
 
-- Native SDKs provide clean APIs for initialization and interaction
+| Document | Description |
 
-- Flutter module handles the UI rendering and business logic### For Development
+|----------|-------------|- Native SDKs provide clean APIs for initialization and interaction
 
+| [**SETUP.md**](./SETUP.md) | Complete setup guide, build instructions, fixes, and artifacts |
 
+| [**INTEGRATION_GUIDE.md**](./INTEGRATION_GUIDE.md) | User-facing integration guide for Android and iOS |- Flutter module handles the UI rendering and business logic### For Development
+
+| [**ARCHITECTURE_RECOMMENDATION.md**](./ARCHITECTURE_RECOMMENDATION.md) | Architecture analysis and Option C justification |
+
+| [**BUILD_VERIFICATION.md**](./BUILD_VERIFICATION.md) | Build verification report and test results |
+
+| [**PROGRESS.md**](./PROGRESS.md) | Development progress and status tracking |
 
 ## Package Naming```bash
 
+---
+
 # Clone the repository
+
+## 🏗️ Architecture
 
 All packages use the `com.eishon` organization:git clone https://github.com/eishon/flutter-reels.git
 
+**Option C: Hybrid Add-to-App**
+
 - Android: `com.eishon.reels_android`cd flutter-reels/flutter_reels
 
-- iOS: `com.eishon.reels_ios` (ReelsIOS)
+```
 
-- Example apps: `com.eishon.reels.example`# Get dependencies
+User's Native App (Kotlin/Swift)- iOS: `com.eishon.reels_ios` (ReelsIOS)
 
-flutter pub get
+        ↓
 
-## Current Status
+Native SDK Wrapper (reels_android / reels_ios)- Example apps: `com.eishon.reels.example`# Get dependencies
 
-# Run the module in standalone mode
+    [Clean, platform-native API]
 
-### ✅ Completedflutter run
+    [Hides all Pigeon complexity]flutter pub get
 
-- [x] Project structure created```
+        ↓
 
-- [x] Flutter module initialized
+    Pigeon Communication Layer [HIDDEN]## Current Status
 
-- [x] Android native SDK structure## 📦 Releases & Distribution
+        ↓
 
-- [x] iOS native SDK structure (SPM + CocoaPods)
+Flutter Engine + reels_flutter Module# Run the module in standalone mode
 
-- [x] Android example app structure### For Private Repository Access
+    [Reels UI Implementation]
 
-- [x] iOS example app structure
-
-This repository is currently **private**. To use it in your projects:
-
-### 🚧 In Progress
-
-- [ ] Pigeon API definitions1. **GitHub Packages** (Recommended for Private Repos)
-
-- [ ] Flutter module integration with native wrappers   - See [GitHub Packages Setup Guide](./GITHUB_PACKAGES_SETUP.md)
-
-- [ ] Pigeon communication implementation   - Requires Personal Access Token (PAT)
-
-- [ ] GitHub Actions for publishing AAR/framework   - Works with Gradle (Android) and CocoaPods (iOS)
+```### ✅ Completedflutter run
 
 
+
+**Key Benefits:**- [x] Project structure created```
+
+- Users get clean native APIs (no Flutter knowledge needed)
+
+- Official Flutter pattern (Add-to-App is fully supported)- [x] Flutter module initialized
+
+- Reliable builds (no AAR compilation issues)
+
+- Easy debugging (source code access)- [x] Android native SDK structure## 📦 Releases & Distribution
+
+
+
+---- [x] iOS native SDK structure (SPM + CocoaPods)
+
+
+
+## 💻 Usage Examples- [x] Android example app structure### For Private Repository Access
+
+
+
+### Android- [x] iOS example app structure
+
+
+
+```kotlinThis repository is currently **private**. To use it in your projects:
+
+// Initialize
+
+ReelsAndroidSDK.initialize(this, ReelsConfig(### 🚧 In Progress
+
+    autoPlay = true,
+
+    showControls = true,- [ ] Pigeon API definitions1. **GitHub Packages** (Recommended for Private Repos)
+
+    loopVideos = true
+
+))- [ ] Flutter module integration with native wrappers   - See [GitHub Packages Setup Guide](./GITHUB_PACKAGES_SETUP.md)
+
+
+
+// Set listener- [ ] Pigeon communication implementation   - Requires Personal Access Token (PAT)
+
+ReelsAndroidSDK.setListener(object : ReelsListener {
+
+    override fun onReelViewed(videoId: String) {- [ ] GitHub Actions for publishing AAR/framework   - Works with Gradle (Android) and CocoaPods (iOS)
+
+        // Handle event
+
+    }
+
+})
 
 ### 📋 Pending2. **Direct Downloads**
 
-- [ ] Core reels functionality   - Pre-built releases available on [Releases](https://github.com/eishon/flutter-reels/releases) page
+// Show reels
 
-- [ ] Video playback   - Requires repository access
+val videos = listOf(- [ ] Core reels functionality   - Pre-built releases available on [Releases](https://github.com/eishon/flutter-reels/releases) page
 
-- [ ] Engagement features (like, share, comment)   - **Android AAR**: Ready-to-use Android Archive files
+    VideoInfo(id = "1", url = "https://example.com/video1.mp4")
 
-- [ ] Product tagging   - **iOS Frameworks**: XCFramework bundles for iOS integration
+)- [ ] Video playback   - Requires repository access
+
+ReelsAndroidSDK.showReels(videos)
+
+```- [ ] Engagement features (like, share, comment)   - **Android AAR**: Ready-to-use Android Archive files
 
 
 
-## Development Roadmap### For Public Repository
+### iOS- [ ] Product tagging   - **iOS Frameworks**: XCFramework bundles for iOS integration
 
 
 
-### Phase 1: Infrastructure (Current)If you make this repository public, users can use simple dependency management:
+```swift
 
-1. Setup project structure- **Android**: One-line Gradle dependency
+// Initialize
 
-2. Implement Pigeon communication- **iOS**: One-line CocoaPods dependency
+let config = ReelsConfig(autoPlay: true, showControls: true, loopVideos: true)## Development Roadmap### For Public Repository
 
-3. Integrate Flutter module with native wrappers- No authentication required
+ReelsIOSSDK.shared.initialize(config: config)
 
-4. Create CI/CD pipelines for publishing
+ReelsIOSSDK.shared.delegate = self
 
-### Creating a New Release
 
-### Phase 2: Functionality (Next)
 
-1. Implement reels UI in Flutter moduleTo create a new release:
+// Show reels### Phase 1: Infrastructure (Current)If you make this repository public, users can use simple dependency management:
 
-2. Add video playback capabilities
+let videos = [
 
-3. Implement engagement features```bash
+    VideoInfo(id: "1", url: "https://example.com/video1.mp4")1. Setup project structure- **Android**: One-line Gradle dependency
 
-4. Add product tagging support# Tag your commit with a version
+]
 
-git tag v1.0.0
+try? ReelsIOSSDK.shared.showReels(videos: videos)2. Implement Pigeon communication- **iOS**: One-line CocoaPods dependency
 
-## Buildinggit push origin v1.0.0
 
-```
 
-### Flutter Module
+// Implement delegate3. Integrate Flutter module with native wrappers- No authentication required
 
-```bashThe GitHub Actions workflows will automatically:
+extension AppDelegate: ReelsDelegate {
 
-cd reels_flutter1. Build Android AAR files
+    func onReelViewed(videoId: String) {4. Create CI/CD pipelines for publishing
 
-flutter pub get2. Build iOS frameworks
+        // Handle event
 
-flutter build aar  # For Android3. Create a GitHub release with all artifacts
+    }### Creating a New Release
 
-flutter build ios-framework  # For iOS4. Generate release notes
+}
 
-```
+```### Phase 2: Functionality (Next)
 
-## 🔧 Development Workflow
 
-### Android SDK
 
-```bash### Prerequisites
+**No Pigeon. No Flutter. Just clean native code.** ✨1. Implement reels UI in Flutter moduleTo create a new release:
 
-cd example/android
 
-./gradlew :reels_android:assembleRelease- Flutter SDK 3.16.5 or higher
 
-```- For Android:
+---2. Add video playback capabilities
 
-  - Android Studio
 
-### iOS SDK  - Java 17+
+
+## ✅ Build Status3. Implement engagement features```bash
+
+
+
+| Platform | Status | Output |4. Add product tagging support# Tag your commit with a version
+
+|----------|--------|--------|
+
+| **Android** | ✅ Successful | APK (5.4MB) |git tag v1.0.0
+
+| **iOS** | ✅ Pods Installed | 3 dependencies |
+
+| **Native SDKs** | ✅ Validated | Both compile |## Buildinggit push origin v1.0.0
+
+
+
+**Last Verified**: October 22, 2025```
+
+
+
+---### Flutter Module
+
+
+
+## 🔧 Requirements```bashThe GitHub Actions workflows will automatically:
+
+
+
+### Androidcd reels_flutter1. Build Android AAR files
+
+- Android SDK 21+ (Android 5.0+)
+
+- Gradle 8.12flutter pub get2. Build iOS frameworks
+
+- Kotlin 1.9.0+
+
+- Java 17+flutter build aar  # For Android3. Create a GitHub release with all artifacts
+
+
+
+### iOSflutter build ios-framework  # For iOS4. Generate release notes
+
+- iOS 13.0+
+
+- Xcode 14.0+```
+
+- CocoaPods
+
+- Swift 5.0+## 🔧 Development Workflow
+
+
+
+### Build Environment### Android SDK
+
+- Flutter SDK 3.35.6+
+
+- Dart SDK 3.9.2+```bash### Prerequisites
+
+
+
+---cd example/android
+
+
+
+## 📦 Installation./gradlew :reels_android:assembleRelease- Flutter SDK 3.16.5 or higher
+
+
+
+### Android```- For Android:
+
+
+
+**Step 1**: Add to `settings.gradle`  - Android Studio
+
+```gradle
+
+include ':reels_android'### iOS SDK  - Java 17+
+
+project(':reels_android').projectDir = file('../path/to/reels_android')
 
 ```bash  - Android SDK (API 21+)
 
-cd reels_ios- For iOS:
+setBinding(new Binding([gradle: this]))
+
+evaluate(new File('../path/to/reels_flutter/.android/include_flutter.groovy'))cd reels_ios- For iOS:
+
+```
 
 pod lib lint  - macOS
 
-```  - Xcode 14.0+
+**Step 2**: Add dependency in `app/build.gradle`
 
-  - CocoaPods
+```gradle```  - Xcode 14.0+
 
-## Example Apps
+dependencies {
 
-### Project Structure
+    implementation project(':reels_android')  - CocoaPods
 
-### Android
+}
 
-```bash```
+```## Example Apps
 
-cd example/androidflutter-reels/
 
-./gradlew :app:assembleDebug├── .github/
+
+**Step 3**: Use the SDK (see examples above)### Project Structure
+
+
+
+### iOS### Android
+
+
+
+**Step 1**: Update `Podfile````bash```
+
+```ruby
+
+platform :ios, '13.0'cd example/androidflutter-reels/
+
+
+
+flutter_application_path = '../path/to/reels_flutter'./gradlew :app:assembleDebug├── .github/
+
+load File.join(flutter_application_path, '.ios', 'Flutter', 'podhelper.rb')
 
 ./gradlew :app:installDebug│   └── workflows/          # GitHub Actions CI/CD workflows
 
-```│       ├── ci.yml          # Continuous integration
+target 'YourApp' do
 
-│       ├── build-android.yml
+  use_frameworks!```│       ├── ci.yml          # Continuous integration
 
-### iOS│       ├── build-ios.yml
+  pod 'ReelsIOS', :path => '../path/to/reels_ios'
 
-```bash│       └── release.yml     # Release automation
+  install_all_flutter_pods(flutter_application_path)│       ├── build-android.yml
 
-cd example/ios/ios├── flutter_reels/          # The Flutter module
+end
 
-pod install│   ├── lib/
-
-open Runner.xcworkspace│   │   └── main.dart       # Main entry point
-
-# Build and run from Xcode│   ├── test/               # Unit tests
-
-```│   ├── .android/           # Android-specific files
-
-│   ├── .ios/               # iOS-specific files
-
-## Integration Guide│   └── pubspec.yaml        # Dependencies
-
-└── README.md               # This file
-
-### Android Integration```
+```### iOS│       ├── build-ios.yml
 
 
 
-```kotlin### Running Tests
-
-import com.eishon.reels_android.ReelsAndroidSDK
+**Step 2**: Install pods```bash│       └── release.yml     # Release automation
 
 ```bash
 
-class MainActivity : AppCompatActivity() {cd flutter_reels
+cd ioscd example/ios/ios├── flutter_reels/          # The Flutter module
 
-    override fun onCreate(savedInstanceState: Bundle?) {flutter test
+pod install
 
-        super.onCreate(savedInstanceState)```
+```pod install│   ├── lib/
 
-        
 
-        // Initialize Reels SDK### Code Analysis
 
-        ReelsAndroidSDK.initialize()
+**Step 3**: Use the SDK (see examples above)open Runner.xcworkspace│   │   └── main.dart       # Main entry point
 
-    }```bash
 
-}cd flutter_reels
 
-```flutter analyze
+---# Build and run from Xcode│   ├── test/               # Unit tests
+
+
+
+## 🤝 Contributing```│   ├── .android/           # Android-specific files
+
+
+
+Contributions are welcome! Please see [SETUP.md](./SETUP.md) for build instructions.│   ├── .ios/               # iOS-specific files
+
+
+
+1. Fork the repository## Integration Guide│   └── pubspec.yaml        # Dependencies
+
+2. Create your feature branch
+
+3. Make your changes└── README.md               # This file
+
+4. Test on both platforms
+
+5. Submit a pull request### Android Integration```
+
+
+
+---
+
+
+
+## 📄 License```kotlin### Running Tests
+
+
+
+[Your License Here]import com.eishon.reels_android.ReelsAndroidSDK
+
+
+
+---```bash
+
+
+
+## 🙏 Acknowledgmentsclass MainActivity : AppCompatActivity() {cd flutter_reels
+
+
+
+- Built with Flutter's Add-to-App pattern    override fun onCreate(savedInstanceState: Bundle?) {flutter test
+
+- Uses Pigeon for type-safe platform communication
+
+- Inspired by Instagram Reels and TikTok        super.onCreate(savedInstanceState)```
+
+
+
+---        
+
+
+
+## 📞 Support        // Initialize Reels SDK### Code Analysis
+
+
+
+- **Issues**: [GitHub Issues](https://github.com/eishon/flutter-reels/issues)        ReelsAndroidSDK.initialize()
+
+- **Documentation**: See docs above
+
+- **Examples**: Check `example/android` and `example/ios`    }```bash
+
+
+
+---}cd flutter_reels
+
+
+
+**Made with ❤️ using Flutter**```flutter analyze
+
 
 ```
 

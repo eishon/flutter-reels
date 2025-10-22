@@ -52,3 +52,7 @@ node_modules/
 *.framework
 *.xcframework
 artifacts/
+
+# Environment-specific files (use templates instead)
+**/local.properties
+!**/local.properties.template
