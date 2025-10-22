@@ -2,7 +2,7 @@ name: PR Verification
 
 on:
   pull_request:
-    branches: [ master, main, develop ]
+    branches: [ master, main, develop, 'release/**' ]
     paths:
       - 'reels_android/**'
       - 'reels_ios/**'
