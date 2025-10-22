@@ -5,10 +5,7 @@ import 'package:reels_flutter/domain/entities/user_entity.dart';
 /// Adds serialization capabilities while inheriting
 /// all properties from UserEntity.
 class UserModel extends UserEntity {
-  UserModel({
-    required super.name,
-    required super.avatarUrl,
-  });
+  UserModel({required super.name, required super.avatarUrl});
 
   /// Creates a UserModel from JSON data.
   ///
@@ -22,17 +19,11 @@ class UserModel extends UserEntity {
 
   /// Converts this UserModel to a JSON map.
   Map<String, dynamic> toJson() {
-    return {
-      'userName': name,
-      'userAvatar': avatarUrl,
-    };
+    return {'userName': name, 'userAvatar': avatarUrl};
   }
 
   /// Creates a UserEntity from this model.
   UserEntity toEntity() {
-    return UserEntity(
-      name: name,
-      avatarUrl: avatarUrl,
-    );
+    return UserEntity(name: name, avatarUrl: avatarUrl);
   }
 }

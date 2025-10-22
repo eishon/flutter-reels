@@ -26,8 +26,9 @@ void main() {
       // Arrange
       const videoId = 'video-123';
       final testVideo = createTestVideo(id: videoId);
-      when(mockRepository.getVideoById(videoId))
-          .thenAnswer((_) async => testVideo);
+      when(
+        mockRepository.getVideoById(videoId),
+      ).thenAnswer((_) async => testVideo);
 
       // Act
       final result = await useCase(videoId);
@@ -43,8 +44,9 @@ void main() {
       // Arrange
       const videoId = 'specific-video-id';
       final testVideo = createTestVideo(id: videoId);
-      when(mockRepository.getVideoById(videoId))
-          .thenAnswer((_) async => testVideo);
+      when(
+        mockRepository.getVideoById(videoId),
+      ).thenAnswer((_) async => testVideo);
 
       // Act
       await useCase(videoId);
@@ -71,23 +73,18 @@ void main() {
       const videoId = '';
 
       // Act & Assert
-      expect(
-        () => useCase(videoId),
-        throwsA(isA<ArgumentError>()),
-      );
+      expect(() => useCase(videoId), throwsA(isA<ArgumentError>()));
     });
 
     test('should propagate exception from repository', () async {
       // Arrange
       const videoId = 'video-123';
-      when(mockRepository.getVideoById(videoId))
-          .thenThrow(Exception('Failed to load video'));
+      when(
+        mockRepository.getVideoById(videoId),
+      ).thenThrow(Exception('Failed to load video'));
 
       // Act & Assert
-      expect(
-        () => useCase(videoId),
-        throwsA(isA<Exception>()),
-      );
+      expect(() => useCase(videoId), throwsA(isA<Exception>()));
       verify(mockRepository.getVideoById(videoId)).called(1);
     });
 
@@ -96,10 +93,12 @@ void main() {
       final video1 = createTestVideo(id: 'video-1', title: 'Video 1');
       final video2 = createTestVideo(id: 'video-2', title: 'Video 2');
 
-      when(mockRepository.getVideoById('video-1'))
-          .thenAnswer((_) async => video1);
-      when(mockRepository.getVideoById('video-2'))
-          .thenAnswer((_) async => video2);
+      when(
+        mockRepository.getVideoById('video-1'),
+      ).thenAnswer((_) async => video1);
+      when(
+        mockRepository.getVideoById('video-2'),
+      ).thenAnswer((_) async => video2);
 
       // Act
       final result1 = await useCase('video-1');
@@ -118,8 +117,9 @@ void main() {
       // Arrange
       const videoId = 'video-123';
       final testVideo = createTestVideo(id: videoId);
-      when(mockRepository.getVideoById(videoId))
-          .thenAnswer((_) async => testVideo);
+      when(
+        mockRepository.getVideoById(videoId),
+      ).thenAnswer((_) async => testVideo);
 
       // Act
       await useCase(videoId);

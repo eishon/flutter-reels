@@ -59,17 +59,23 @@ void main() {
         // Assert - All should use same repository instance
         expect(
           identical(
-              getVideosUseCase.repository, getVideoByIdUseCase.repository),
+            getVideosUseCase.repository,
+            getVideoByIdUseCase.repository,
+          ),
           true,
         );
         expect(
           identical(
-              getVideoByIdUseCase.repository, toggleLikeUseCase.repository),
+            getVideoByIdUseCase.repository,
+            toggleLikeUseCase.repository,
+          ),
           true,
         );
         expect(
           identical(
-              toggleLikeUseCase.repository, incrementShareUseCase.repository),
+            toggleLikeUseCase.repository,
+            incrementShareUseCase.repository,
+          ),
           true,
         );
       });
@@ -326,10 +332,7 @@ void main() {
         final toggleLikeUseCase = sl<ToggleLikeUseCase>();
 
         // Act & Assert - Should throw or handle gracefully
-        expect(
-          () => toggleLikeUseCase('invalid-id-12345'),
-          throwsException,
-        );
+        expect(() => toggleLikeUseCase('invalid-id-12345'), throwsException);
       });
 
       test('should handle increment share on invalid ID', () async {

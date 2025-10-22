@@ -61,11 +61,7 @@ class _VideoListScreenState extends State<VideoListScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(
-                    Icons.error_outline,
-                    size: 64,
-                    color: Colors.red,
-                  ),
+                  const Icon(Icons.error_outline, size: 64, color: Colors.red),
                   const SizedBox(height: 16),
                   Text(
                     videoProvider.errorMessage ?? 'Unknown error',
@@ -124,8 +120,9 @@ class _VideoListScreenState extends State<VideoListScreen> {
                           children: [
                             CircleAvatar(
                               radius: 20,
-                              backgroundImage:
-                                  NetworkImage(video.user.avatarUrl),
+                              backgroundImage: NetworkImage(
+                                video.user.avatarUrl,
+                              ),
                             ),
                             const SizedBox(width: 12),
                             Expanded(
@@ -225,8 +222,10 @@ class _VideoListScreenState extends State<VideoListScreen> {
                             // Comments
                             TextButton.icon(
                               onPressed: () {},
-                              icon: const Icon(Icons.comment_outlined,
-                                  color: Colors.grey),
+                              icon: const Icon(
+                                Icons.comment_outlined,
+                                color: Colors.grey,
+                              ),
                               label: Text('${video.comments}'),
                             ),
                             // Share button
@@ -234,8 +233,10 @@ class _VideoListScreenState extends State<VideoListScreen> {
                               onPressed: () {
                                 videoProvider.shareVideo(video.id);
                               },
-                              icon: const Icon(Icons.share_outlined,
-                                  color: Colors.grey),
+                              icon: const Icon(
+                                Icons.share_outlined,
+                                color: Colors.grey,
+                              ),
                               label: Text('${video.shares}'),
                             ),
                           ],
@@ -307,8 +308,9 @@ class _VideoListScreenState extends State<VideoListScreen> {
                                             const SizedBox(width: 2),
                                             Text(
                                               '${product.rating}',
-                                              style:
-                                                  const TextStyle(fontSize: 10),
+                                              style: const TextStyle(
+                                                fontSize: 10,
+                                              ),
                                             ),
                                           ],
                                         ),

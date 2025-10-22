@@ -65,15 +65,17 @@ void main() {
         expect(product1.hashCode == product2.hashCode, true);
       });
 
-      test('should return false when comparing entities with different ids',
-          () {
-        // Arrange
-        final product1 = createTestProduct(id: 'id-1');
-        final product2 = createTestProduct(id: 'id-2');
+      test(
+        'should return false when comparing entities with different ids',
+        () {
+          // Arrange
+          final product1 = createTestProduct(id: 'id-1');
+          final product2 = createTestProduct(id: 'id-2');
 
-        // Act & Assert
-        expect(product1 == product2, false);
-      });
+          // Act & Assert
+          expect(product1 == product2, false);
+        },
+      );
 
       test('should return true when comparing entity with itself', () {
         // Arrange
@@ -129,11 +131,7 @@ void main() {
     group('edge cases', () {
       test('should handle empty strings', () {
         // Arrange & Act
-        final product = createTestProduct(
-          id: '',
-          name: '',
-          description: '',
-        );
+        final product = createTestProduct(id: '', name: '', description: '');
 
         // Assert
         expect(product.id, '');

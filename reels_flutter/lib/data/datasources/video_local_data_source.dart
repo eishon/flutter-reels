@@ -28,8 +28,10 @@ class VideoLocalDataSource {
 
       // Convert each JSON object to a VideoModel
       final List<VideoModel> videos = videosJson
-          .map((videoJson) =>
-              VideoModel.fromJson(videoJson as Map<String, dynamic>))
+          .map(
+            (videoJson) =>
+                VideoModel.fromJson(videoJson as Map<String, dynamic>),
+          )
           .toList();
 
       return videos;

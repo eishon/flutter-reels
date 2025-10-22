@@ -39,7 +39,7 @@ void main() {
           'category': 'Electronics',
           'rating': 4.5,
           'isAvailable': true,
-        }
+        },
       ],
     };
 
@@ -247,7 +247,9 @@ void main() {
         expect(json['userName'], 'Test User');
         expect(json['userAvatar'], 'https://example.com/avatar.jpg');
         expect(
-            json.containsKey('user'), false); // Should not have 'user' object
+          json.containsKey('user'),
+          false,
+        ); // Should not have 'user' object
       });
 
       test('should serialize products array correctly', () {

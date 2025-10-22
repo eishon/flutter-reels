@@ -6,10 +6,7 @@ class UserEntity {
   final String name;
   final String avatarUrl;
 
-  const UserEntity({
-    required this.name,
-    required this.avatarUrl,
-  });
+  const UserEntity({required this.name, required this.avatarUrl});
 
   @override
   bool operator ==(Object other) {

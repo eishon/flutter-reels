@@ -83,9 +83,7 @@ void main() {
 
       test('should return true when products list has items', () {
         // Arrange
-        final video = createTestVideo(
-          products: [createTestProduct()],
-        );
+        final video = createTestVideo(products: [createTestProduct()]);
 
         // Act & Assert
         expect(video.hasProducts, true);
@@ -117,9 +115,7 @@ void main() {
 
       test('should return correct count when single product', () {
         // Arrange
-        final video = createTestVideo(
-          products: [createTestProduct()],
-        );
+        final video = createTestVideo(products: [createTestProduct()]);
 
         // Act & Assert
         expect(video.productCount, 1);
@@ -163,17 +159,10 @@ void main() {
 
       test('should update only provided fields', () {
         // Arrange
-        final video = createTestVideo(
-          likes: 100,
-          shares: 50,
-          isLiked: false,
-        );
+        final video = createTestVideo(likes: 100, shares: 50, isLiked: false);
 
         // Act
-        final copied = video.copyWith(
-          likes: 200,
-          isLiked: true,
-        );
+        final copied = video.copyWith(likes: 200, isLiked: true);
 
         // Assert
         expect(copied.likes, 200);
@@ -310,11 +299,7 @@ void main() {
     group('edge cases', () {
       test('should handle zero engagement counts', () {
         // Arrange & Act
-        final video = createTestVideo(
-          likes: 0,
-          shares: 0,
-          comments: 0,
-        );
+        final video = createTestVideo(likes: 0, shares: 0, comments: 0);
 
         // Assert
         expect(video.likes, 0);

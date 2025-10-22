@@ -39,13 +39,17 @@ class _EngagementButtonsState extends State<EngagementButtons>
     );
     _likeAnimation = TweenSequence<double>([
       TweenSequenceItem(
-        tween: Tween<double>(begin: 1.0, end: 1.4)
-            .chain(CurveTween(curve: Curves.easeOut)),
+        tween: Tween<double>(
+          begin: 1.0,
+          end: 1.4,
+        ).chain(CurveTween(curve: Curves.easeOut)),
         weight: 50,
       ),
       TweenSequenceItem(
-        tween: Tween<double>(begin: 1.4, end: 1.0)
-            .chain(CurveTween(curve: Curves.easeIn)),
+        tween: Tween<double>(
+          begin: 1.4,
+          end: 1.0,
+        ).chain(CurveTween(curve: Curves.easeIn)),
         weight: 50,
       ),
     ]).animate(_likeAnimationController);
@@ -103,11 +107,7 @@ class _EngagementButtonsState extends State<EngagementButtons>
 
   Widget _buildShareButton() {
     return _buildEngagementButton(
-      child: const Icon(
-        Icons.share_outlined,
-        size: 28,
-        color: Colors.white,
-      ),
+      child: const Icon(Icons.share_outlined, size: 28, color: Colors.white),
       label: _formatCount(widget.video.shares),
       onTap: widget.onShare,
     );
@@ -115,11 +115,7 @@ class _EngagementButtonsState extends State<EngagementButtons>
 
   Widget _buildMoreButton() {
     return _buildEngagementButton(
-      child: const Icon(
-        Icons.more_horiz,
-        size: 28,
-        color: Colors.white,
-      ),
+      child: const Icon(Icons.more_horiz, size: 28, color: Colors.white),
       label: '',
       onTap: () {
         // Show more options
@@ -147,10 +143,7 @@ class _EngagementButtonsState extends State<EngagementButtons>
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
                 shadows: [
-                  Shadow(
-                    color: Colors.black.withOpacity(0.5),
-                    blurRadius: 4,
-                  ),
+                  Shadow(color: Colors.black.withOpacity(0.5), blurRadius: 4),
                 ],
               ),
             ),
@@ -210,9 +203,7 @@ class _EngagementButtonsState extends State<EngagementButtons>
                     child: Center(
                       child: Text(
                         'Comments section coming soon',
-                        style: TextStyle(
-                          color: Colors.grey.shade400,
-                        ),
+                        style: TextStyle(color: Colors.grey.shade400),
                       ),
                     ),
                   ),
@@ -267,10 +258,7 @@ class _EngagementButtonsState extends State<EngagementButtons>
 
               // Report option
               ListTile(
-                leading: const Icon(
-                  Icons.flag_outlined,
-                  color: Colors.white,
-                ),
+                leading: const Icon(Icons.flag_outlined, color: Colors.white),
                 title: const Text(
                   'Report',
                   style: TextStyle(color: Colors.white),
@@ -283,10 +271,7 @@ class _EngagementButtonsState extends State<EngagementButtons>
 
               // Not Interested option
               ListTile(
-                leading: const Icon(
-                  Icons.not_interested,
-                  color: Colors.white,
-                ),
+                leading: const Icon(Icons.not_interested, color: Colors.white),
                 title: const Text(
                   'Not Interested',
                   style: TextStyle(color: Colors.white),

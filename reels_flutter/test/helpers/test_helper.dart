@@ -41,10 +41,7 @@ UserEntity createTestUser({
   String name = 'Test User',
   String avatarUrl = 'https://example.com/avatar.jpg',
 }) {
-  return UserEntity(
-    name: name,
-    avatarUrl: avatarUrl,
-  );
+  return UserEntity(name: name, avatarUrl: avatarUrl);
 }
 
 /// Creates a test VideoEntity with default or custom values
@@ -93,9 +90,7 @@ List<VideoEntity> createTestVideoList({int count = 3}) {
       shares: 50 * (index + 1),
       comments: 25 * (index + 1),
       products: index % 2 == 0
-          ? [
-              createTestProduct(id: 'product-${index + 1}'),
-            ]
+          ? [createTestProduct(id: 'product-${index + 1}')]
           : [],
     ),
   );

@@ -119,20 +119,17 @@ void main() {
           }
           return false;
         });
-        
+
         expect(richTextFinder, findsOneWidget);
       });
     });
 
-    testWidgets('should display audio info with music note when unmuted',
-        (tester) async {
+    testWidgets('should display audio info with music note when unmuted', (
+      tester,
+    ) async {
       await mockNetworkImagesFor(() async {
         await tester.pumpWidget(
-          createTestWidget(
-            video: testVideo,
-            muted: false,
-            onToggleMute: () {},
-          ),
+          createTestWidget(video: testVideo, muted: false, onToggleMute: () {}),
         );
         await tester.pumpAndSettle();
 
@@ -145,11 +142,7 @@ void main() {
     testWidgets('should display volume off icon when muted', (tester) async {
       await mockNetworkImagesFor(() async {
         await tester.pumpWidget(
-          createTestWidget(
-            video: testVideo,
-            muted: true,
-            onToggleMute: () {},
-          ),
+          createTestWidget(video: testVideo, muted: true, onToggleMute: () {}),
         );
         await tester.pumpAndSettle();
 
@@ -159,8 +152,9 @@ void main() {
       });
     });
 
-    testWidgets('should call onToggleMute when audio info is tapped',
-        (tester) async {
+    testWidgets('should call onToggleMute when audio info is tapped', (
+      tester,
+    ) async {
       await mockNetworkImagesFor(() async {
         await tester.pumpWidget(
           createTestWidget(
@@ -180,15 +174,12 @@ void main() {
       });
     });
 
-    testWidgets('should show snackbar when audio info is tapped',
-        (tester) async {
+    testWidgets('should show snackbar when audio info is tapped', (
+      tester,
+    ) async {
       await mockNetworkImagesFor(() async {
         await tester.pumpWidget(
-          createTestWidget(
-            video: testVideo,
-            muted: false,
-            onToggleMute: () {},
-          ),
+          createTestWidget(video: testVideo, muted: false, onToggleMute: () {}),
         );
         await tester.pumpAndSettle();
 
@@ -202,8 +193,9 @@ void main() {
       });
     });
 
-    testWidgets('should expand description when tapped if long',
-        (tester) async {
+    testWidgets('should expand description when tapped if long', (
+      tester,
+    ) async {
       const longDescriptionVideo = VideoEntity(
         id: '1',
         url: 'https://example.com/video.mp4',
@@ -248,13 +240,15 @@ void main() {
           }
           return false;
         });
-        
+
         expect(descriptionGesture, findsOneWidget);
-        
+
         // Get the RichText widget from the GestureDetector before expansion
-        var gestureDetector = tester.widget<GestureDetector>(descriptionGesture);
+        var gestureDetector = tester.widget<GestureDetector>(
+          descriptionGesture,
+        );
         var richText = gestureDetector.child as RichText;
-        
+
         // Should be collapsed initially (maxLines = 2)
         expect(richText.maxLines, equals(2));
         expect(richText.overflow, equals(TextOverflow.ellipsis));
@@ -266,7 +260,7 @@ void main() {
         // Get the updated RichText after tapping
         gestureDetector = tester.widget<GestureDetector>(descriptionGesture);
         richText = gestureDetector.child as RichText;
-        
+
         // Should be expanded now (maxLines = null)
         expect(richText.maxLines, isNull);
         expect(richText.overflow, equals(TextOverflow.visible));

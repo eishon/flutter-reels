@@ -111,18 +111,20 @@ void main() {
         expect(identical(instance1, instance2), false);
       });
 
-      test('IncrementShareCountUseCase should be registered as factory',
-          () async {
-        // Arrange
-        await initializeDependencies();
+      test(
+        'IncrementShareCountUseCase should be registered as factory',
+        () async {
+          // Arrange
+          await initializeDependencies();
 
-        // Act
-        final instance1 = sl<IncrementShareCountUseCase>();
-        final instance2 = sl<IncrementShareCountUseCase>();
+          // Act
+          final instance1 = sl<IncrementShareCountUseCase>();
+          final instance2 = sl<IncrementShareCountUseCase>();
 
-        // Assert
-        expect(identical(instance1, instance2), false);
-      });
+          // Assert
+          expect(identical(instance1, instance2), false);
+        },
+      );
     });
 
     group('dependency injection', () {

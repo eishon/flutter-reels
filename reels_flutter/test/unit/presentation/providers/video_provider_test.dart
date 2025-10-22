@@ -180,8 +180,9 @@ void main() {
           isLiked: !testVideos[0].isLiked,
           likes: testVideos[0].likes + 1,
         );
-        when(mockToggleLikeUseCase(videoId))
-            .thenAnswer((_) async => updatedVideo);
+        when(
+          mockToggleLikeUseCase(videoId),
+        ).thenAnswer((_) async => updatedVideo);
 
         // Act
         await provider.toggleLike(videoId);
@@ -200,8 +201,9 @@ void main() {
 
         final videoId = testVideos[0].id;
         final updatedVideo = testVideos[0].copyWith(isLiked: true);
-        when(mockToggleLikeUseCase(videoId))
-            .thenAnswer((_) async => updatedVideo);
+        when(
+          mockToggleLikeUseCase(videoId),
+        ).thenAnswer((_) async => updatedVideo);
 
         int notificationCount = 0;
         provider.addListener(() => notificationCount++);
@@ -220,8 +222,9 @@ void main() {
         await provider.loadVideos();
 
         final videoId = testVideos[0].id;
-        when(mockToggleLikeUseCase(videoId))
-            .thenThrow(Exception('Failed to like'));
+        when(
+          mockToggleLikeUseCase(videoId),
+        ).thenThrow(Exception('Failed to like'));
 
         // Act - should not throw
         await provider.toggleLike(videoId);
@@ -238,8 +241,9 @@ void main() {
 
         final nonExistentId = 'non-existent-id';
         final updatedVideo = createTestVideo(id: nonExistentId);
-        when(mockToggleLikeUseCase(nonExistentId))
-            .thenAnswer((_) async => updatedVideo);
+        when(
+          mockToggleLikeUseCase(nonExistentId),
+        ).thenAnswer((_) async => updatedVideo);
 
         // Act
         await provider.toggleLike(nonExistentId);
@@ -261,8 +265,9 @@ void main() {
         final updatedVideo = testVideos[1].copyWith(
           shares: testVideos[1].shares + 1,
         );
-        when(mockIncrementShareCountUseCase(videoId))
-            .thenAnswer((_) async => updatedVideo);
+        when(
+          mockIncrementShareCountUseCase(videoId),
+        ).thenAnswer((_) async => updatedVideo);
 
         // Act
         await provider.shareVideo(videoId);
@@ -280,8 +285,9 @@ void main() {
 
         final videoId = testVideos[0].id;
         final updatedVideo = testVideos[0].copyWith(shares: 100);
-        when(mockIncrementShareCountUseCase(videoId))
-            .thenAnswer((_) async => updatedVideo);
+        when(
+          mockIncrementShareCountUseCase(videoId),
+        ).thenAnswer((_) async => updatedVideo);
 
         int notificationCount = 0;
         provider.addListener(() => notificationCount++);
@@ -300,8 +306,9 @@ void main() {
         await provider.loadVideos();
 
         final videoId = testVideos[0].id;
-        when(mockIncrementShareCountUseCase(videoId))
-            .thenThrow(Exception('Failed to share'));
+        when(
+          mockIncrementShareCountUseCase(videoId),
+        ).thenThrow(Exception('Failed to share'));
 
         // Act - should not throw
         await provider.shareVideo(videoId);
@@ -318,8 +325,9 @@ void main() {
 
         final nonExistentId = 'non-existent-id';
         final updatedVideo = createTestVideo(id: nonExistentId);
-        when(mockIncrementShareCountUseCase(nonExistentId))
-            .thenAnswer((_) async => updatedVideo);
+        when(
+          mockIncrementShareCountUseCase(nonExistentId),
+        ).thenAnswer((_) async => updatedVideo);
 
         // Act
         await provider.shareVideo(nonExistentId);
@@ -392,31 +400,35 @@ void main() {
     });
 
     group('state consistency', () {
-      test('should maintain consistent state after multiple operations',
-          () async {
-        // Arrange
-        final testVideos = createTestVideoList(count: 3);
-        when(mockGetVideosUseCase()).thenAnswer((_) async => testVideos);
-        await provider.loadVideos();
+      test(
+        'should maintain consistent state after multiple operations',
+        () async {
+          // Arrange
+          final testVideos = createTestVideoList(count: 3);
+          when(mockGetVideosUseCase()).thenAnswer((_) async => testVideos);
+          await provider.loadVideos();
 
-        final videoId = testVideos[0].id;
-        final likedVideo = testVideos[0].copyWith(isLiked: true, likes: 101);
-        final sharedVideo = likedVideo.copyWith(shares: 51);
+          final videoId = testVideos[0].id;
+          final likedVideo = testVideos[0].copyWith(isLiked: true, likes: 101);
+          final sharedVideo = likedVideo.copyWith(shares: 51);
 
-        when(mockToggleLikeUseCase(videoId))
-            .thenAnswer((_) async => likedVideo);
-        when(mockIncrementShareCountUseCase(videoId))
-            .thenAnswer((_) async => sharedVideo);
+          when(
+            mockToggleLikeUseCase(videoId),
+          ).thenAnswer((_) async => likedVideo);
+          when(
+            mockIncrementShareCountUseCase(videoId),
+          ).thenAnswer((_) async => sharedVideo);
 
-        // Act - perform multiple operations
-        await provider.toggleLike(videoId);
-        await provider.shareVideo(videoId);
+          // Act - perform multiple operations
+          await provider.toggleLike(videoId);
+          await provider.shareVideo(videoId);
 
-        // Assert
-        expect(provider.videos[0].isLiked, true);
-        expect(provider.videos[0].likes, 101);
-        expect(provider.videos[0].shares, 51);
-      });
+          // Assert
+          expect(provider.videos[0].isLiked, true);
+          expect(provider.videos[0].likes, 101);
+          expect(provider.videos[0].shares, 51);
+        },
+      );
 
       test('should handle rapid successive calls', () async {
         // Arrange

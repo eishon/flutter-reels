@@ -26,12 +26,16 @@ void main() {
     test('should toggle like from false to true', () async {
       // Arrange
       const videoId = 'video-123';
-      final unlikedVideo =
-          createTestVideo(id: videoId, isLiked: false, likes: 100);
+      final unlikedVideo = createTestVideo(
+        id: videoId,
+        isLiked: false,
+        likes: 100,
+      );
       final likedVideo = unlikedVideo.copyWith(isLiked: true, likes: 101);
 
-      when(mockRepository.toggleLike(videoId))
-          .thenAnswer((_) async => likedVideo);
+      when(
+        mockRepository.toggleLike(videoId),
+      ).thenAnswer((_) async => likedVideo);
 
       // Act
       final result = await useCase(videoId);
@@ -47,12 +51,16 @@ void main() {
     test('should toggle like from true to false', () async {
       // Arrange
       const videoId = 'video-123';
-      final likedVideo =
-          createTestVideo(id: videoId, isLiked: true, likes: 101);
+      final likedVideo = createTestVideo(
+        id: videoId,
+        isLiked: true,
+        likes: 101,
+      );
       final unlikedVideo = likedVideo.copyWith(isLiked: false, likes: 100);
 
-      when(mockRepository.toggleLike(videoId))
-          .thenAnswer((_) async => unlikedVideo);
+      when(
+        mockRepository.toggleLike(videoId),
+      ).thenAnswer((_) async => unlikedVideo);
 
       // Act
       final result = await useCase(videoId);
@@ -84,8 +92,9 @@ void main() {
       final video = createTestVideo(id: videoId, isLiked: false, likes: 0);
       final likedVideo = video.copyWith(isLiked: true, likes: 1);
 
-      when(mockRepository.toggleLike(videoId))
-          .thenAnswer((_) async => likedVideo);
+      when(
+        mockRepository.toggleLike(videoId),
+      ).thenAnswer((_) async => likedVideo);
 
       // Act
       final result = await useCase(videoId);
@@ -102,8 +111,9 @@ void main() {
       final video = createTestVideo(id: videoId, isLiked: false, likes: 999999);
       final likedVideo = video.copyWith(isLiked: true, likes: 1000000);
 
-      when(mockRepository.toggleLike(videoId))
-          .thenAnswer((_) async => likedVideo);
+      when(
+        mockRepository.toggleLike(videoId),
+      ).thenAnswer((_) async => likedVideo);
 
       // Act
       final result = await useCase(videoId);
@@ -117,14 +127,12 @@ void main() {
     test('should propagate exception from repository', () async {
       // Arrange
       const videoId = 'video-123';
-      when(mockRepository.toggleLike(videoId))
-          .thenThrow(Exception('Failed to toggle like'));
+      when(
+        mockRepository.toggleLike(videoId),
+      ).thenThrow(Exception('Failed to toggle like'));
 
       // Act & Assert
-      expect(
-        () => useCase(videoId),
-        throwsA(isA<Exception>()),
-      );
+      expect(() => useCase(videoId), throwsA(isA<Exception>()));
       verify(mockRepository.toggleLike(videoId)).called(1);
     });
 
@@ -133,10 +141,7 @@ void main() {
       const videoId = '';
 
       // Act & Assert
-      expect(
-        () => useCase(videoId),
-        throwsA(isA<ArgumentError>()),
-      );
+      expect(() => useCase(videoId), throwsA(isA<ArgumentError>()));
     });
 
     test('should allow multiple toggle calls', () async {
@@ -162,10 +167,12 @@ void main() {
       final likedVideo1 = video1.copyWith(isLiked: true);
       final unlikedVideo2 = video2.copyWith(isLiked: false);
 
-      when(mockRepository.toggleLike('video-1'))
-          .thenAnswer((_) async => likedVideo1);
-      when(mockRepository.toggleLike('video-2'))
-          .thenAnswer((_) async => unlikedVideo2);
+      when(
+        mockRepository.toggleLike('video-1'),
+      ).thenAnswer((_) async => likedVideo1);
+      when(
+        mockRepository.toggleLike('video-2'),
+      ).thenAnswer((_) async => unlikedVideo2);
 
       // Act
       final result1 = await useCase('video-1');

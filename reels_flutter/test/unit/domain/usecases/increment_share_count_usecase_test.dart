@@ -29,8 +29,9 @@ void main() {
       final video = createTestVideo(id: videoId, shares: 50);
       final sharedVideo = video.copyWith(shares: 51);
 
-      when(mockRepository.incrementShareCount(videoId))
-          .thenAnswer((_) async => sharedVideo);
+      when(
+        mockRepository.incrementShareCount(videoId),
+      ).thenAnswer((_) async => sharedVideo);
 
       // Act
       final result = await useCase(videoId);
@@ -47,8 +48,9 @@ void main() {
       const videoId = 'specific-video-id';
       final video = createTestVideo(id: videoId);
 
-      when(mockRepository.incrementShareCount(videoId))
-          .thenAnswer((_) async => video);
+      when(
+        mockRepository.incrementShareCount(videoId),
+      ).thenAnswer((_) async => video);
 
       // Act
       await useCase(videoId);
@@ -63,8 +65,9 @@ void main() {
       final video = createTestVideo(id: videoId, shares: 0);
       final sharedVideo = video.copyWith(shares: 1);
 
-      when(mockRepository.incrementShareCount(videoId))
-          .thenAnswer((_) async => sharedVideo);
+      when(
+        mockRepository.incrementShareCount(videoId),
+      ).thenAnswer((_) async => sharedVideo);
 
       // Act
       final result = await useCase(videoId);
@@ -80,8 +83,9 @@ void main() {
       final video = createTestVideo(id: videoId, shares: 999999);
       final sharedVideo = video.copyWith(shares: 1000000);
 
-      when(mockRepository.incrementShareCount(videoId))
-          .thenAnswer((_) async => sharedVideo);
+      when(
+        mockRepository.incrementShareCount(videoId),
+      ).thenAnswer((_) async => sharedVideo);
 
       // Act
       final result = await useCase(videoId);
@@ -104,8 +108,9 @@ void main() {
       );
       final sharedVideo = video.copyWith(shares: 26);
 
-      when(mockRepository.incrementShareCount(videoId))
-          .thenAnswer((_) async => sharedVideo);
+      when(
+        mockRepository.incrementShareCount(videoId),
+      ).thenAnswer((_) async => sharedVideo);
 
       // Act
       final result = await useCase(videoId);
@@ -121,14 +126,12 @@ void main() {
     test('should propagate exception from repository', () async {
       // Arrange
       const videoId = 'video-123';
-      when(mockRepository.incrementShareCount(videoId))
-          .thenThrow(Exception('Failed to increment share'));
+      when(
+        mockRepository.incrementShareCount(videoId),
+      ).thenThrow(Exception('Failed to increment share'));
 
       // Act & Assert
-      expect(
-        () => useCase(videoId),
-        throwsA(isA<Exception>()),
-      );
+      expect(() => useCase(videoId), throwsA(isA<Exception>()));
       verify(mockRepository.incrementShareCount(videoId)).called(1);
     });
 
@@ -137,10 +140,7 @@ void main() {
       const videoId = '';
 
       // Act & Assert
-      expect(
-        () => useCase(videoId),
-        throwsA(isA<ArgumentError>()),
-      );
+      expect(() => useCase(videoId), throwsA(isA<ArgumentError>()));
     });
 
     test('should allow multiple share increments', () async {
@@ -148,8 +148,9 @@ void main() {
       const videoId = 'video-123';
       final video = createTestVideo(id: videoId);
 
-      when(mockRepository.incrementShareCount(videoId))
-          .thenAnswer((_) async => video);
+      when(
+        mockRepository.incrementShareCount(videoId),
+      ).thenAnswer((_) async => video);
 
       // Act
       await useCase(videoId);
@@ -167,10 +168,12 @@ void main() {
       final sharedVideo1 = video1.copyWith(shares: 11);
       final sharedVideo2 = video2.copyWith(shares: 21);
 
-      when(mockRepository.incrementShareCount('video-1'))
-          .thenAnswer((_) async => sharedVideo1);
-      when(mockRepository.incrementShareCount('video-2'))
-          .thenAnswer((_) async => sharedVideo2);
+      when(
+        mockRepository.incrementShareCount('video-1'),
+      ).thenAnswer((_) async => sharedVideo1);
+      when(
+        mockRepository.incrementShareCount('video-2'),
+      ).thenAnswer((_) async => sharedVideo2);
 
       // Act
       final result1 = await useCase('video-1');

@@ -82,8 +82,9 @@ void main() {
       test('should parse nested products data when present', () async {
         // Act
         final videos = await dataSource.getVideos();
-        final videosWithProducts =
-            videos.where((v) => v.products.isNotEmpty).toList();
+        final videosWithProducts = videos
+            .where((v) => v.products.isNotEmpty)
+            .toList();
 
         // Assert
         if (videosWithProducts.isNotEmpty) {
@@ -156,29 +157,33 @@ void main() {
         }
       });
 
-      test('should return complete video data including nested objects',
-          () async {
-        // Arrange
-        final allVideos = await dataSource.getVideos();
-        final firstVideoId = allVideos.first.id;
+      test(
+        'should return complete video data including nested objects',
+        () async {
+          // Arrange
+          final allVideos = await dataSource.getVideos();
+          final firstVideoId = allVideos.first.id;
 
-        // Act
-        final video = await dataSource.getVideoById(firstVideoId);
+          // Act
+          final video = await dataSource.getVideoById(firstVideoId);
 
-        // Assert
-        expect(video, isNotNull);
-        expect(video!.user.name, isNotEmpty);
-        expect(video.user.avatarUrl, isNotEmpty);
-        expect(video.products, isA<List>());
-      });
+          // Assert
+          expect(video, isNotNull);
+          expect(video!.user.name, isNotEmpty);
+          expect(video.user.avatarUrl, isNotEmpty);
+          expect(video.products, isA<List>());
+        },
+      );
     });
 
     group('toggleLike', () {
       test('should toggle like from false to true', () async {
         // Arrange
         final videos = await dataSource.getVideos();
-        final unlikedVideo =
-            videos.firstWhere((v) => !v.isLiked, orElse: () => videos.first);
+        final unlikedVideo = videos.firstWhere(
+          (v) => !v.isLiked,
+          orElse: () => videos.first,
+        );
         final originalLikes = unlikedVideo.likes;
 
         // Act
@@ -197,8 +202,10 @@ void main() {
       test('should toggle like from true to false', () async {
         // Arrange
         final videos = await dataSource.getVideos();
-        final likedVideo =
-            videos.firstWhere((v) => v.isLiked, orElse: () => videos.first);
+        final likedVideo = videos.firstWhere(
+          (v) => v.isLiked,
+          orElse: () => videos.first,
+        );
         final originalLikes = likedVideo.likes;
 
         // Act
@@ -261,8 +268,9 @@ void main() {
         final originalShares = originalVideo.shares;
 
         // Act
-        final updatedVideo =
-            await dataSource.incrementShareCount(originalVideo.id);
+        final updatedVideo = await dataSource.incrementShareCount(
+          originalVideo.id,
+        );
 
         // Assert
         expect(updatedVideo.id, originalVideo.id);
@@ -283,8 +291,9 @@ void main() {
         final originalVideo = videos.first;
 
         // Act
-        final updatedVideo =
-            await dataSource.incrementShareCount(originalVideo.id);
+        final updatedVideo = await dataSource.incrementShareCount(
+          originalVideo.id,
+        );
 
         // Assert - Check that other properties remain unchanged
         expect(updatedVideo.id, originalVideo.id);
@@ -300,12 +309,14 @@ void main() {
       test('should handle incrementing from zero', () async {
         // Arrange
         final videos = await dataSource.getVideos();
-        final videoWithLowShares =
-            videos.reduce((a, b) => a.shares < b.shares ? a : b);
+        final videoWithLowShares = videos.reduce(
+          (a, b) => a.shares < b.shares ? a : b,
+        );
 
         // Act
-        final updatedVideo =
-            await dataSource.incrementShareCount(videoWithLowShares.id);
+        final updatedVideo = await dataSource.incrementShareCount(
+          videoWithLowShares.id,
+        );
 
         // Assert
         expect(updatedVideo.shares, videoWithLowShares.shares + 1);
@@ -337,26 +348,17 @@ void main() {
 
         // Create a data source and call getVideos
         // If the asset exists, this will pass; if not, it will throw
-        expect(
-          () async => await dataSource.getVideos(),
-          returnsNormally,
-        );
+        expect(() async => await dataSource.getVideos(), returnsNormally);
       });
 
       test('should handle empty video id gracefully', () async {
         // Act & Assert
-        expect(
-          await dataSource.getVideoById(''),
-          isNull,
-        );
+        expect(await dataSource.getVideoById(''), isNull);
       });
 
       test('should throw for toggleLike with empty id', () async {
         // Act & Assert
-        expect(
-          () => dataSource.toggleLike(''),
-          throwsA(isA<Exception>()),
-        );
+        expect(() => dataSource.toggleLike(''), throwsA(isA<Exception>()));
       });
 
       test('should throw for incrementShareCount with empty id', () async {
@@ -387,16 +389,31 @@ void main() {
         // Assert - Verify each video is properly formed
         for (final video in videos) {
           expect(video.id, isNotEmpty, reason: 'Video id should not be empty');
-          expect(video.url, isNotEmpty,
-              reason: 'Video url should not be empty');
-          expect(video.title, isNotEmpty,
-              reason: 'Video title should not be empty');
-          expect(video.likes, isNonNegative,
-              reason: 'Likes should be non-negative');
-          expect(video.comments, isNonNegative,
-              reason: 'Comments should be non-negative');
-          expect(video.shares, isNonNegative,
-              reason: 'Shares should be non-negative');
+          expect(
+            video.url,
+            isNotEmpty,
+            reason: 'Video url should not be empty',
+          );
+          expect(
+            video.title,
+            isNotEmpty,
+            reason: 'Video title should not be empty',
+          );
+          expect(
+            video.likes,
+            isNonNegative,
+            reason: 'Likes should be non-negative',
+          );
+          expect(
+            video.comments,
+            isNonNegative,
+            reason: 'Comments should be non-negative',
+          );
+          expect(
+            video.shares,
+            isNonNegative,
+            reason: 'Shares should be non-negative',
+          );
         }
       });
     });

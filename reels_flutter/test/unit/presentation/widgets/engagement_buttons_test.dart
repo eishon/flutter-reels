@@ -41,11 +41,7 @@ void main() {
   }) {
     return MaterialApp(
       home: Scaffold(
-        body: EngagementButtons(
-          video: video,
-          onLike: onLike,
-          onShare: onShare,
-        ),
+        body: EngagementButtons(video: video, onLike: onLike, onShare: onShare),
       ),
     );
   }
@@ -53,11 +49,7 @@ void main() {
   group('EngagementButtons Widget', () {
     testWidgets('should display like button with count', (tester) async {
       await tester.pumpWidget(
-        createTestWidget(
-          video: testVideo,
-          onLike: () {},
-          onShare: () {},
-        ),
+        createTestWidget(video: testVideo, onLike: () {}, onShare: () {}),
       );
 
       expect(find.byIcon(Icons.favorite_border), findsOneWidget);
@@ -68,11 +60,7 @@ void main() {
       final likedVideo = testVideo.copyWith(isLiked: true);
 
       await tester.pumpWidget(
-        createTestWidget(
-          video: likedVideo,
-          onLike: () {},
-          onShare: () {},
-        ),
+        createTestWidget(video: likedVideo, onLike: () {}, onShare: () {}),
       );
 
       expect(find.byIcon(Icons.favorite), findsOneWidget);
@@ -81,11 +69,7 @@ void main() {
 
     testWidgets('should display share button with count', (tester) async {
       await tester.pumpWidget(
-        createTestWidget(
-          video: testVideo,
-          onLike: () {},
-          onShare: () {},
-        ),
+        createTestWidget(video: testVideo, onLike: () {}, onShare: () {}),
       );
 
       expect(find.byIcon(Icons.share_outlined), findsOneWidget);
@@ -94,19 +78,16 @@ void main() {
 
     testWidgets('should display horizontal more options icon', (tester) async {
       await tester.pumpWidget(
-        createTestWidget(
-          video: testVideo,
-          onLike: () {},
-          onShare: () {},
-        ),
+        createTestWidget(video: testVideo, onLike: () {}, onShare: () {}),
       );
 
       expect(find.byIcon(Icons.more_horiz), findsOneWidget);
       expect(find.byIcon(Icons.more_vert), findsNothing);
     });
 
-    testWidgets('should call onLike when like button is tapped',
-        (tester) async {
+    testWidgets('should call onLike when like button is tapped', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         createTestWidget(
           video: testVideo,
@@ -123,8 +104,9 @@ void main() {
       expect(likeCallCount, 1);
     });
 
-    testWidgets('should call onShare when share button is tapped',
-        (tester) async {
+    testWidgets('should call onShare when share button is tapped', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         createTestWidget(
           video: testVideo,
@@ -143,11 +125,7 @@ void main() {
 
     testWidgets('should animate like button when tapped', (tester) async {
       await tester.pumpWidget(
-        createTestWidget(
-          video: testVideo,
-          onLike: () {},
-          onShare: () {},
-        ),
+        createTestWidget(video: testVideo, onLike: () {}, onShare: () {}),
       );
 
       // Tap the like button

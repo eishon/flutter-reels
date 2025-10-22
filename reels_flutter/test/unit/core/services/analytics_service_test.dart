@@ -30,11 +30,10 @@ void main() {
             argThat(
               isA<AnalyticsEvent>()
                   .having((e) => e.eventName, 'eventName', eventType)
-                  .having(
-                    (e) => e.eventProperties,
-                    'eventProperties',
-                    {'key': 'value', 'count': '42'},
-                  ),
+                  .having((e) => e.eventProperties, 'eventProperties', {
+                    'key': 'value',
+                    'count': '42',
+                  }),
             ),
           ),
         ).called(1);
@@ -58,17 +57,14 @@ void main() {
         verify(
           mockApi.trackEvent(
             argThat(
-              isA<AnalyticsEvent>().having(
-                (e) => e.eventProperties,
-                'eventProperties',
-                {
-                  'string': 'text',
-                  'int': '123',
-                  'double': '45.67',
-                  'bool': 'true',
-                  'null': null,
-                },
-              ),
+              isA<AnalyticsEvent>()
+                  .having((e) => e.eventProperties, 'eventProperties', {
+                    'string': 'text',
+                    'int': '123',
+                    'double': '45.67',
+                    'bool': 'true',
+                    'null': null,
+                  }),
             ),
           ),
         ).called(1);

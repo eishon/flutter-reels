@@ -14,9 +14,7 @@ import 'package:reels_flutter/domain/repositories/video_repository.dart';
 class VideoRepositoryImpl implements VideoRepository {
   final VideoLocalDataSource localDataSource;
 
-  VideoRepositoryImpl({
-    required this.localDataSource,
-  });
+  VideoRepositoryImpl({required this.localDataSource});
 
   @override
   Future<List<VideoEntity>> getVideos() async {

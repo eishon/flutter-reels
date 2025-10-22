@@ -64,8 +64,9 @@ void main() {
 
       test('should not throw when api fails', () {
         // Arrange
-        when(mockApi.onScreenStateChanged(any))
-            .thenThrow(Exception('API error'));
+        when(
+          mockApi.onScreenStateChanged(any),
+        ).thenThrow(Exception('API error'));
 
         // Act & Assert
         expect(
@@ -130,8 +131,9 @@ void main() {
 
       test('should not throw when api fails', () {
         // Arrange
-        when(mockApi.onVideoStateChanged(any))
-            .thenThrow(Exception('API error'));
+        when(
+          mockApi.onVideoStateChanged(any),
+        ).thenThrow(Exception('API error'));
 
         // Act & Assert
         expect(
@@ -228,11 +230,7 @@ void main() {
         const duration = 120.0;
 
         // Act
-        service.videoPlaying(
-          videoId,
-          position: position,
-          duration: duration,
-        );
+        service.videoPlaying(videoId, position: position, duration: duration);
 
         // Assert
         verify(

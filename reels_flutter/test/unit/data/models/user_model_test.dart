@@ -58,10 +58,7 @@ void main() {
 
       test('should handle empty strings', () {
         // Arrange
-        final json = {
-          'userName': '',
-          'userAvatar': '',
-        };
+        final json = {'userName': '', 'userAvatar': ''};
 
         // Act
         final model = UserModel.fromJson(json);
@@ -96,8 +93,10 @@ void main() {
         final model = UserModel.fromJson(json);
 
         // Assert
-        expect(model.avatarUrl,
-            'https://example.com/avatar.jpg?size=large&format=webp');
+        expect(
+          model.avatarUrl,
+          'https://example.com/avatar.jpg?size=large&format=webp',
+        );
       });
 
       test('should handle very long names', () {
@@ -167,10 +166,7 @@ void main() {
 
       test('should handle empty strings', () {
         // Arrange
-        final model = UserModel(
-          name: '',
-          avatarUrl: '',
-        );
+        final model = UserModel(name: '', avatarUrl: '');
 
         // Act
         final json = model.toJson();
@@ -242,7 +238,9 @@ void main() {
         // Assert
         expect(entity.name, '👤 Special User @test');
         expect(
-            entity.avatarUrl, 'https://example.com/avatar.jpg?size=large&v=2');
+          entity.avatarUrl,
+          'https://example.com/avatar.jpg?size=large&v=2',
+        );
       });
     });
 
@@ -279,24 +277,25 @@ void main() {
       });
 
       test(
-          'should maintain data through full cycle: JSON -> Model -> Entity -> Model -> JSON',
-          () {
-        // Arrange
-        final originalJson = testUserJson;
+        'should maintain data through full cycle: JSON -> Model -> Entity -> Model -> JSON',
+        () {
+          // Arrange
+          final originalJson = testUserJson;
 
-        // Act
-        final model1 = UserModel.fromJson(originalJson);
-        final entity = model1.toEntity();
-        final model2 = UserModel(
-          name: entity.name,
-          avatarUrl: entity.avatarUrl,
-        );
-        final finalJson = model2.toJson();
+          // Act
+          final model1 = UserModel.fromJson(originalJson);
+          final entity = model1.toEntity();
+          final model2 = UserModel(
+            name: entity.name,
+            avatarUrl: entity.avatarUrl,
+          );
+          final finalJson = model2.toJson();
 
-        // Assert
-        expect(finalJson['userName'], originalJson['userName']);
-        expect(finalJson['userAvatar'], originalJson['userAvatar']);
-      });
+          // Assert
+          expect(finalJson['userName'], originalJson['userName']);
+          expect(finalJson['userAvatar'], originalJson['userAvatar']);
+        },
+      );
     });
 
     group('inheritance', () {

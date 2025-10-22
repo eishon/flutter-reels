@@ -63,14 +63,12 @@ void main() {
 
     test('should propagate exception from repository', () async {
       // Arrange
-      when(mockRepository.getVideos())
-          .thenThrow(Exception('Failed to load videos'));
+      when(
+        mockRepository.getVideos(),
+      ).thenThrow(Exception('Failed to load videos'));
 
       // Act & Assert
-      expect(
-        () => useCase(),
-        throwsA(isA<Exception>()),
-      );
+      expect(() => useCase(), throwsA(isA<Exception>()));
       verify(mockRepository.getVideos()).called(1);
     });
 

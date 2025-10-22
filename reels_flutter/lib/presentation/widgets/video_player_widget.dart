@@ -70,8 +70,9 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
       // Check if URL is a network URL or asset
       if (widget.videoUrl.startsWith('http://') ||
           widget.videoUrl.startsWith('https://')) {
-        _videoPlayerController =
-            VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl));
+        _videoPlayerController = VideoPlayerController.networkUrl(
+          Uri.parse(widget.videoUrl),
+        );
       } else {
         _videoPlayerController = VideoPlayerController.asset(widget.videoUrl);
       }
@@ -102,9 +103,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
         placeholder: Container(
           color: Colors.black,
           child: const Center(
-            child: CircularProgressIndicator(
-              color: Colors.white,
-            ),
+            child: CircularProgressIndicator(color: Colors.white),
           ),
         ),
         errorBuilder: (context, errorMessage) {
@@ -210,9 +209,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
       return Container(
         color: Colors.black,
         child: const Center(
-          child: CircularProgressIndicator(
-            color: Colors.white,
-          ),
+          child: CircularProgressIndicator(color: Colors.white),
         ),
       );
     }

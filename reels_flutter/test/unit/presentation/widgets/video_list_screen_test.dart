@@ -42,9 +42,7 @@ void main() {
   Widget createTestWidget() {
     return ChangeNotifierProvider<VideoProvider>.value(
       value: videoProvider,
-      child: const MaterialApp(
-        home: VideoListScreen(),
-      ),
+      child: const MaterialApp(home: VideoListScreen()),
     );
   }
 
@@ -93,8 +91,9 @@ void main() {
     });
 
     group('error state', () {
-      testWidgets('should show error message when loading fails',
-          (tester) async {
+      testWidgets('should show error message when loading fails', (
+        tester,
+      ) async {
         // Arrange
         when(mockGetVideosUseCase()).thenThrow(Exception('Network error'));
 
@@ -112,8 +111,9 @@ void main() {
 
       testWidgets('should show custom error message', (tester) async {
         // Arrange
-        when(mockGetVideosUseCase())
-            .thenThrow(Exception('Custom error message'));
+        when(
+          mockGetVideosUseCase(),
+        ).thenThrow(Exception('Custom error message'));
 
         // Act
         await tester.pumpWidget(createTestWidget());
@@ -124,8 +124,9 @@ void main() {
         expect(find.textContaining('Custom error message'), findsOneWidget);
       });
 
-      testWidgets('should retry loading when retry button tapped',
-          (tester) async {
+      testWidgets('should retry loading when retry button tapped', (
+        tester,
+      ) async {
         // Arrange - first call fails
         when(mockGetVideosUseCase()).thenThrow(Exception('Error'));
 
@@ -165,8 +166,9 @@ void main() {
         expect(find.text('No videos available'), findsOneWidget);
       });
 
-      testWidgets('should show empty icon with correct properties',
-          (tester) async {
+      testWidgets('should show empty icon with correct properties', (
+        tester,
+      ) async {
         // Arrange
         when(mockGetVideosUseCase()).thenAnswer((_) async => []);
 
@@ -227,8 +229,9 @@ void main() {
         expect(find.byIcon(Icons.error_outline), findsOneWidget);
       });
 
-      testWidgets('should transition from error to empty after retry',
-          (tester) async {
+      testWidgets('should transition from error to empty after retry', (
+        tester,
+      ) async {
         // Arrange - initial error
         when(mockGetVideosUseCase()).thenThrow(Exception('Error'));
         await tester.pumpWidget(createTestWidget());
@@ -250,8 +253,9 @@ void main() {
     });
 
     group('user interactions', () {
-      testWidgets('should call refresh when app bar refresh tapped',
-          (tester) async {
+      testWidgets('should call refresh when app bar refresh tapped', (
+        tester,
+      ) async {
         // Arrange
         when(mockGetVideosUseCase()).thenAnswer((_) async => []);
         await tester.pumpWidget(createTestWidget());
@@ -277,11 +281,11 @@ void main() {
         final refreshButton = find.byIcon(Icons.refresh);
         expect(refreshButton, findsOneWidget);
         expect(
-            tester.widget<IconButton>(find.ancestor(
-              of: refreshButton,
-              matching: find.byType(IconButton),
-            )),
-            isNotNull);
+          tester.widget<IconButton>(
+            find.ancestor(of: refreshButton, matching: find.byType(IconButton)),
+          ),
+          isNotNull,
+        );
       });
     });
 

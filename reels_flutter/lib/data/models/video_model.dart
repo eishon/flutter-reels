@@ -37,8 +37,10 @@ class VideoModel extends VideoEntity {
     if (json['products'] != null) {
       final productsJson = json['products'] as List;
       productModels.addAll(
-        productsJson.map((productJson) =>
-            ProductModel.fromJson(productJson as Map<String, dynamic>)),
+        productsJson.map(
+          (productJson) =>
+              ProductModel.fromJson(productJson as Map<String, dynamic>),
+        ),
       );
     }
 

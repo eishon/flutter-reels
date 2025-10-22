@@ -45,45 +45,35 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<AccessTokenService>(platformServices.accessTokenService);
   sl.registerSingleton<AnalyticsService>(platformServices.analyticsService);
   sl.registerSingleton<ButtonEventsService>(
-      platformServices.buttonEventsService);
+    platformServices.buttonEventsService,
+  );
   sl.registerSingleton<StateEventsService>(platformServices.stateEventsService);
   sl.registerSingleton<NavigationEventsService>(
-      platformServices.navigationEventsService);
+    platformServices.navigationEventsService,
+  );
 
   // Data sources
   // Registered as lazy singleton - created only when first accessed
-  sl.registerLazySingleton<VideoLocalDataSource>(
-    () => VideoLocalDataSource(),
-  );
+  sl.registerLazySingleton<VideoLocalDataSource>(() => VideoLocalDataSource());
 
   // Repositories
   // Registered as lazy singleton - created only when first accessed
   // Depends on VideoLocalDataSource
   sl.registerLazySingleton<VideoRepository>(
-    () => VideoRepositoryImpl(
-      localDataSource: sl<VideoLocalDataSource>(),
-    ),
+    () => VideoRepositoryImpl(localDataSource: sl<VideoLocalDataSource>()),
   );
 
   // Use cases
   // Registered as factory - new instance created each time
   // This is preferred for use cases as they're typically lightweight
 
-  sl.registerFactory(
-    () => GetVideosUseCase(sl<VideoRepository>()),
-  );
+  sl.registerFactory(() => GetVideosUseCase(sl<VideoRepository>()));
 
-  sl.registerFactory(
-    () => GetVideoByIdUseCase(sl<VideoRepository>()),
-  );
+  sl.registerFactory(() => GetVideoByIdUseCase(sl<VideoRepository>()));
 
-  sl.registerFactory(
-    () => ToggleLikeUseCase(sl<VideoRepository>()),
-  );
+  sl.registerFactory(() => ToggleLikeUseCase(sl<VideoRepository>()));
 
-  sl.registerFactory(
-    () => IncrementShareCountUseCase(sl<VideoRepository>()),
-  );
+  sl.registerFactory(() => IncrementShareCountUseCase(sl<VideoRepository>()));
 }
 
 /// Resets all registered dependencies.

@@ -22,9 +22,7 @@ void main() {
 
       test('should return null when callback returns null', () async {
         // Arrange
-        service = AccessTokenService(
-          getTokenCallback: () async => null,
-        );
+        service = AccessTokenService(getTokenCallback: () async => null);
 
         // Act
         final result = await service.getAccessToken();
@@ -48,9 +46,7 @@ void main() {
 
       test('should handle empty string token', () async {
         // Arrange
-        service = AccessTokenService(
-          getTokenCallback: () async => '',
-        );
+        service = AccessTokenService(getTokenCallback: () async => '');
 
         // Act
         final result = await service.getAccessToken();
@@ -99,10 +95,7 @@ void main() {
         );
 
         // Act & Assert - should not throw
-        expect(
-          () async => await service.getAccessToken(),
-          returnsNormally,
-        );
+        expect(() async => await service.getAccessToken(), returnsNormally);
       });
 
       test('should handle timeout error gracefully', () async {

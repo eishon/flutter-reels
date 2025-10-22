@@ -130,23 +130,25 @@ void main() {
     });
 
     group('toggleLike', () {
-      test('should call data source and convert updated model to entity',
-          () async {
-        // Arrange
-        const id = 'video-1';
-        final model = createTestVideoModel(id: id, isLiked: true, likes: 101);
-        when(mockDataSource.toggleLike(id)).thenAnswer((_) async => model);
+      test(
+        'should call data source and convert updated model to entity',
+        () async {
+          // Arrange
+          const id = 'video-1';
+          final model = createTestVideoModel(id: id, isLiked: true, likes: 101);
+          when(mockDataSource.toggleLike(id)).thenAnswer((_) async => model);
 
-        // Act
-        final result = await repository.toggleLike(id);
+          // Act
+          final result = await repository.toggleLike(id);
 
-        // Assert
-        expect(result, isA<VideoEntity>());
-        expect(result.id, id);
-        expect(result.isLiked, true);
-        expect(result.likes, 101);
-        verify(mockDataSource.toggleLike(id)).called(1);
-      });
+          // Assert
+          expect(result, isA<VideoEntity>());
+          expect(result.id, id);
+          expect(result.isLiked, true);
+          expect(result.likes, 101);
+          verify(mockDataSource.toggleLike(id)).called(1);
+        },
+      );
 
       test('should propagate exception from data source', () async {
         // Arrange
@@ -158,32 +160,38 @@ void main() {
     });
 
     group('incrementShareCount', () {
-      test('should call data source and convert updated model to entity',
-          () async {
-        // Arrange
-        const id = 'video-1';
-        final model = createTestVideoModel(id: id, shares: 51);
-        when(mockDataSource.incrementShareCount(id))
-            .thenAnswer((_) async => model);
+      test(
+        'should call data source and convert updated model to entity',
+        () async {
+          // Arrange
+          const id = 'video-1';
+          final model = createTestVideoModel(id: id, shares: 51);
+          when(
+            mockDataSource.incrementShareCount(id),
+          ).thenAnswer((_) async => model);
 
-        // Act
-        final result = await repository.incrementShareCount(id);
+          // Act
+          final result = await repository.incrementShareCount(id);
 
-        // Assert
-        expect(result, isA<VideoEntity>());
-        expect(result.id, id);
-        expect(result.shares, 51);
-        verify(mockDataSource.incrementShareCount(id)).called(1);
-      });
+          // Assert
+          expect(result, isA<VideoEntity>());
+          expect(result.id, id);
+          expect(result.shares, 51);
+          verify(mockDataSource.incrementShareCount(id)).called(1);
+        },
+      );
 
       test('should propagate exception from data source', () async {
         // Arrange
-        when(mockDataSource.incrementShareCount('id'))
-            .thenThrow(Exception('Error'));
+        when(
+          mockDataSource.incrementShareCount('id'),
+        ).thenThrow(Exception('Error'));
 
         // Act & Assert
-        expect(() => repository.incrementShareCount('id'),
-            throwsA(isA<Exception>()));
+        expect(
+          () => repository.incrementShareCount('id'),
+          throwsA(isA<Exception>()),
+        );
       });
     });
 

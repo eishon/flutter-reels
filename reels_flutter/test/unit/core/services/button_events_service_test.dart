@@ -30,14 +30,12 @@ void main() {
       test('should not throw when api fails', () {
         // Arrange
         const videoId = 'video_error';
-        when(mockApi.onBeforeLikeButtonClick(any))
-            .thenThrow(Exception('API error'));
+        when(
+          mockApi.onBeforeLikeButtonClick(any),
+        ).thenThrow(Exception('API error'));
 
         // Act & Assert
-        expect(
-          () => service.onBeforeLikeButtonClick(videoId),
-          returnsNormally,
-        );
+        expect(() => service.onBeforeLikeButtonClick(videoId), returnsNormally);
       });
     });
 
@@ -52,8 +50,9 @@ void main() {
         service.onAfterLikeButtonClick(videoId, isLiked, likeCount);
 
         // Assert
-        verify(mockApi.onAfterLikeButtonClick(videoId, isLiked, likeCount))
-            .called(1);
+        verify(
+          mockApi.onAfterLikeButtonClick(videoId, isLiked, likeCount),
+        ).called(1);
       });
 
       test('should handle unlike scenario', () {
@@ -66,14 +65,16 @@ void main() {
         service.onAfterLikeButtonClick(videoId, isLiked, likeCount);
 
         // Assert
-        verify(mockApi.onAfterLikeButtonClick(videoId, isLiked, likeCount))
-            .called(1);
+        verify(
+          mockApi.onAfterLikeButtonClick(videoId, isLiked, likeCount),
+        ).called(1);
       });
 
       test('should not throw when api fails', () {
         // Arrange
-        when(mockApi.onAfterLikeButtonClick(any, any, any))
-            .thenThrow(Exception('API error'));
+        when(
+          mockApi.onAfterLikeButtonClick(any, any, any),
+        ).thenThrow(Exception('API error'));
 
         // Act & Assert
         expect(
@@ -185,8 +186,9 @@ void main() {
         service.notifyAfterLikeClick(videoId, isLiked, likeCount);
 
         // Assert
-        verify(mockApi.onAfterLikeButtonClick(videoId, isLiked, likeCount))
-            .called(1);
+        verify(
+          mockApi.onAfterLikeButtonClick(videoId, isLiked, likeCount),
+        ).called(1);
       });
 
       test('notifyShareClick should call onShareButtonClick', () {

@@ -68,10 +68,7 @@ class _VideoDescriptionState extends State<VideoDescription> {
             fontSize: 16,
             fontWeight: FontWeight.bold,
             shadows: [
-              Shadow(
-                color: Colors.black.withOpacity(0.5),
-                blurRadius: 8,
-              ),
+              Shadow(color: Colors.black.withOpacity(0.5), blurRadius: 8),
             ],
           ),
         ),
@@ -99,10 +96,7 @@ class _VideoDescriptionState extends State<VideoDescription> {
             color: Colors.white,
             fontSize: 14,
             shadows: [
-              Shadow(
-                color: Colors.black.withOpacity(0.5),
-                blurRadius: 8,
-              ),
+              Shadow(color: Colors.black.withOpacity(0.5), blurRadius: 8),
             ],
           ),
           children: [
@@ -139,17 +133,11 @@ class _VideoDescriptionState extends State<VideoDescription> {
         );
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 12,
-          vertical: 6,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
           color: Colors.black.withOpacity(0.3),
           borderRadius: BorderRadius.circular(4),
-          border: Border.all(
-            color: Colors.white.withOpacity(0.3),
-            width: 1,
-          ),
+          border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -159,10 +147,7 @@ class _VideoDescriptionState extends State<VideoDescription> {
               size: 16,
               color: Colors.white,
               shadows: [
-                Shadow(
-                  color: Colors.black.withOpacity(0.5),
-                  blurRadius: 4,
-                ),
+                Shadow(color: Colors.black.withOpacity(0.5), blurRadius: 4),
               ],
             ),
             const SizedBox(width: 6),
@@ -177,10 +162,7 @@ class _VideoDescriptionState extends State<VideoDescription> {
                   color: Colors.white,
                   fontSize: 12,
                   shadows: [
-                    Shadow(
-                      color: Colors.black.withOpacity(0.5),
-                      blurRadius: 4,
-                    ),
+                    Shadow(color: Colors.black.withOpacity(0.5), blurRadius: 4),
                   ],
                 ),
               ),
