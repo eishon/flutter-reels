@@ -48,6 +48,17 @@ coverage/
 node_modules/
 
 # Build outputs
+*.apk
+*.aab
+*.aar
+*/build/
+*/.gradle/
+
+# Android build artifacts (should be ignored but sometimes leak through)
+example/android/.gradle/
+example/android/app/build/
+reels_android/.gradle/
+reels_android/build/
 *.aar
 *.framework
 *.xcframework

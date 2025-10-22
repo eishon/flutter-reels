@@ -1,6 +1,14 @@
-# Flutter Reels - Setup & Build Guide
+# Flutter Reels - Development Setup Guide
 
-This document captures all the setup requirements, build fixes, and artifacts needed to successfully build this project.
+**👨‍💻 For Contributors & Developers Only**
+
+This guide is for developers who want to contribute to Flutter Reels or build the project from source. 
+
+**If you just want to use Flutter Reels in your app**, see [ADD_TO_APP_GUIDE.md](./ADD_TO_APP_GUIDE.md) instead.
+
+---
+
+This document captures all the setup requirements, build fixes, and artifacts needed to successfully build this project from source.
 
 ---
 

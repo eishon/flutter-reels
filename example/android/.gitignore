@@ -1,0 +1,24 @@
+# Gradle files
+.gradle/
+build/
+local.properties
+
+# Android Studio
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Captures
+captures/
+
+# Keystore files
+*.jks
+*.keystore
+
+# External native build folder
+.externalNativeBuild
+.cxx/
+
+# Keep local.properties.template
+!local.properties.template
