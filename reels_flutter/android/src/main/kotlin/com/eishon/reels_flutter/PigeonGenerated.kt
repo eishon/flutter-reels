@@ -50,115 +50,122 @@ class FlutterError (
 ) : Throwable()
 
 /**
- * Configuration for the Reels SDK
+ * Analytics event data
  *
  * Generated class from Pigeon that represents data sent in messages.
  */
-data class ReelsConfig (
-  val autoPlay: Boolean,
-  val showControls: Boolean,
-  val loopVideos: Boolean
+data class AnalyticsEvent (
+  val eventName: String,
+  val eventProperties: Map<String?, String?>
 )
  {
   companion object {
-    fun fromList(pigeonVar_list: List<Any?>): ReelsConfig {
-      val autoPlay = pigeonVar_list[0] as Boolean
-      val showControls = pigeonVar_list[1] as Boolean
-      val loopVideos = pigeonVar_list[2] as Boolean
-      return ReelsConfig(autoPlay, showControls, loopVideos)
+    fun fromList(pigeonVar_list: List<Any?>): AnalyticsEvent {
+      val eventName = pigeonVar_list[0] as String
+      val eventProperties = pigeonVar_list[1] as Map<String?, String?>
+      return AnalyticsEvent(eventName, eventProperties)
     }
   }
   fun toList(): List<Any?> {
     return listOf(
-      autoPlay,
-      showControls,
-      loopVideos,
+      eventName,
+      eventProperties,
     )
   }
 }
 
 /**
- * Data model for a video in the reels
+ * Share data for social sharing
  *
  * Generated class from Pigeon that represents data sent in messages.
  */
-data class VideoData (
-  val id: String,
-  val url: String,
-  val thumbnailUrl: String? = null,
-  val title: String? = null,
-  val description: String? = null,
-  val authorName: String? = null,
-  val authorAvatarUrl: String? = null,
-  val likeCount: Long? = null,
-  val commentCount: Long? = null,
-  val shareCount: Long? = null,
-  val isLiked: Boolean? = null
+data class ShareData (
+  val videoId: String,
+  val videoUrl: String,
+  val title: String,
+  val description: String,
+  val thumbnailUrl: String? = null
 )
  {
   companion object {
-    fun fromList(pigeonVar_list: List<Any?>): VideoData {
-      val id = pigeonVar_list[0] as String
-      val url = pigeonVar_list[1] as String
-      val thumbnailUrl = pigeonVar_list[2] as String?
-      val title = pigeonVar_list[3] as String?
-      val description = pigeonVar_list[4] as String?
-      val authorName = pigeonVar_list[5] as String?
-      val authorAvatarUrl = pigeonVar_list[6] as String?
-      val likeCount = pigeonVar_list[7] as Long?
-      val commentCount = pigeonVar_list[8] as Long?
-      val shareCount = pigeonVar_list[9] as Long?
-      val isLiked = pigeonVar_list[10] as Boolean?
-      return VideoData(id, url, thumbnailUrl, title, description, authorName, authorAvatarUrl, likeCount, commentCount, shareCount, isLiked)
+    fun fromList(pigeonVar_list: List<Any?>): ShareData {
+      val videoId = pigeonVar_list[0] as String
+      val videoUrl = pigeonVar_list[1] as String
+      val title = pigeonVar_list[2] as String
+      val description = pigeonVar_list[3] as String
+      val thumbnailUrl = pigeonVar_list[4] as String?
+      return ShareData(videoId, videoUrl, title, description, thumbnailUrl)
     }
   }
   fun toList(): List<Any?> {
     return listOf(
-      id,
-      url,
-      thumbnailUrl,
+      videoId,
+      videoUrl,
       title,
       description,
-      authorName,
-      authorAvatarUrl,
-      likeCount,
-      commentCount,
-      shareCount,
-      isLiked,
+      thumbnailUrl,
     )
   }
 }
 
 /**
- * Product information for tagging in reels
+ * Screen state data for native tracking
  *
  * Generated class from Pigeon that represents data sent in messages.
  */
-data class ProductData (
-  val id: String,
-  val name: String,
-  val imageUrl: String? = null,
-  val price: Double? = null,
-  val currency: String? = null
+data class ScreenStateData (
+  val screenName: String,
+  val state: String,
+  val timestamp: Long? = null
 )
  {
   companion object {
-    fun fromList(pigeonVar_list: List<Any?>): ProductData {
-      val id = pigeonVar_list[0] as String
-      val name = pigeonVar_list[1] as String
-      val imageUrl = pigeonVar_list[2] as String?
-      val price = pigeonVar_list[3] as Double?
-      val currency = pigeonVar_list[4] as String?
-      return ProductData(id, name, imageUrl, price, currency)
+    fun fromList(pigeonVar_list: List<Any?>): ScreenStateData {
+      val screenName = pigeonVar_list[0] as String
+      val state = pigeonVar_list[1] as String
+      val timestamp = pigeonVar_list[2] as Long?
+      return ScreenStateData(screenName, state, timestamp)
     }
   }
   fun toList(): List<Any?> {
     return listOf(
-      id,
-      name,
-      imageUrl,
-      price,
-      currency,
+      screenName,
+      state,
+      timestamp,
+    )
+  }
+}
+
+/**
+ * Video state data for playback tracking
+ *
+ * Generated class from Pigeon that represents data sent in messages.
+ */
+data class VideoStateData (
+  val videoId: String,
+  val state: String,
+  val position: Long? = null,
+  val duration: Long? = null,
+  val timestamp: Long? = null
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): VideoStateData {
+      val videoId = pigeonVar_list[0] as String
+      val state = pigeonVar_list[1] as String
+      val position = pigeonVar_list[2] as Long?
+      val duration = pigeonVar_list[3] as Long?
+      val timestamp = pigeonVar_list[4] as Long?
+      return VideoStateData(videoId, state, position, duration, timestamp)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      videoId,
+      state,
+      position,
+      duration,
+      timestamp,
     )
   }
 }
@@ -167,17 +174,22 @@ private open class PigeonGeneratedPigeonCodec : StandardMessageCodec() {
     return when (type) {
       129.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          ReelsConfig.fromList(it)
+          AnalyticsEvent.fromList(it)
         }
       }
       130.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          VideoData.fromList(it)
+          ShareData.fromList(it)
         }
       }
       131.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          ProductData.fromList(it)
+          ScreenStateData.fromList(it)
+        }
+      }
+      132.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          VideoStateData.fromList(it)
         }
       }
       else -> super.readValueOfType(type, buffer)
@@ -185,16 +197,20 @@ private open class PigeonGeneratedPigeonCodec : StandardMessageCodec() {
   }
   override fun writeValue(stream: ByteArrayOutputStream, value: Any?)   {
     when (value) {
-      is ReelsConfig -> {
+      is AnalyticsEvent -> {
         stream.write(129)
         writeValue(stream, value.toList())
       }
-      is VideoData -> {
+      is ShareData -> {
         stream.write(130)
         writeValue(stream, value.toList())
       }
-      is ProductData -> {
+      is ScreenStateData -> {
         stream.write(131)
+        writeValue(stream, value.toList())
+      }
+      is VideoStateData -> {
+        stream.write(132)
         writeValue(stream, value.toList())
       }
       else -> super.writeValue(stream, value)
@@ -203,110 +219,29 @@ private open class PigeonGeneratedPigeonCodec : StandardMessageCodec() {
 }
 
 /**
- * API called by native platform to communicate with Flutter
+ * API for accessing user authentication token from native
  *
  * Generated interface from Pigeon that represents a handler of messages from Flutter.
  */
-interface ReelsFlutterApi {
-  /** Initialize the Reels SDK with configuration */
-  fun initialize(config: ReelsConfig)
-  /** Show reels with the provided video data */
-  fun showReels(videos: List<VideoData>)
-  /** Update a specific video's data (e.g., after a like/share) */
-  fun updateVideo(video: VideoData)
-  /** Close the reels view */
-  fun closeReels()
-  /** Update the configuration */
-  fun updateConfig(config: ReelsConfig)
+interface ReelsFlutterTokenApi {
+  /** Get the current access token from native platform */
+  fun getAccessToken(): String?
 
   companion object {
-    /** The codec used by ReelsFlutterApi. */
+    /** The codec used by ReelsFlutterTokenApi. */
     val codec: MessageCodec<Any?> by lazy {
       PigeonGeneratedPigeonCodec()
     }
-    /** Sets up an instance of `ReelsFlutterApi` to handle messages through the `binaryMessenger`. */
+    /** Sets up an instance of `ReelsFlutterTokenApi` to handle messages through the `binaryMessenger`. */
     @JvmOverloads
-    fun setUp(binaryMessenger: BinaryMessenger, api: ReelsFlutterApi?, messageChannelSuffix: String = "") {
+    fun setUp(binaryMessenger: BinaryMessenger, api: ReelsFlutterTokenApi?, messageChannelSuffix: String = "") {
       val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.reels_flutter.ReelsFlutterApi.initialize$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { message, reply ->
-            val args = message as List<Any?>
-            val configArg = args[0] as ReelsConfig
-            val wrapped: List<Any?> = try {
-              api.initialize(configArg)
-              listOf(null)
-            } catch (exception: Throwable) {
-              wrapError(exception)
-            }
-            reply.reply(wrapped)
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.reels_flutter.ReelsFlutterApi.showReels$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { message, reply ->
-            val args = message as List<Any?>
-            val videosArg = args[0] as List<VideoData>
-            val wrapped: List<Any?> = try {
-              api.showReels(videosArg)
-              listOf(null)
-            } catch (exception: Throwable) {
-              wrapError(exception)
-            }
-            reply.reply(wrapped)
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.reels_flutter.ReelsFlutterApi.updateVideo$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { message, reply ->
-            val args = message as List<Any?>
-            val videoArg = args[0] as VideoData
-            val wrapped: List<Any?> = try {
-              api.updateVideo(videoArg)
-              listOf(null)
-            } catch (exception: Throwable) {
-              wrapError(exception)
-            }
-            reply.reply(wrapped)
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.reels_flutter.ReelsFlutterApi.closeReels$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.reels_flutter.ReelsFlutterTokenApi.getAccessToken$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { _, reply ->
             val wrapped: List<Any?> = try {
-              api.closeReels()
-              listOf(null)
-            } catch (exception: Throwable) {
-              wrapError(exception)
-            }
-            reply.reply(wrapped)
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.reels_flutter.ReelsFlutterApi.updateConfig$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { message, reply ->
-            val args = message as List<Any?>
-            val configArg = args[0] as ReelsConfig
-            val wrapped: List<Any?> = try {
-              api.updateConfig(configArg)
-              listOf(null)
+              listOf(api.getAccessToken())
             } catch (exception: Throwable) {
               wrapError(exception)
             }
@@ -320,22 +255,53 @@ interface ReelsFlutterApi {
   }
 }
 /**
- * API called by Flutter to communicate with native platform
+ * API for sending analytics events to native analytics SDK
  *
  * Generated class from Pigeon that represents Flutter messages that can be called from Kotlin.
  */
-class ReelsNativeApi(private val binaryMessenger: BinaryMessenger, private val messageChannelSuffix: String = "") {
+class ReelsFlutterAnalyticsApi(private val binaryMessenger: BinaryMessenger, private val messageChannelSuffix: String = "") {
   companion object {
-    /** The codec used by ReelsNativeApi. */
+    /** The codec used by ReelsFlutterAnalyticsApi. */
     val codec: MessageCodec<Any?> by lazy {
       PigeonGeneratedPigeonCodec()
     }
   }
-  /** Called when a reel is viewed (displayed for significant time) */
-  fun onReelViewed(videoIdArg: String, callback: (Result<Unit>) -> Unit)
+  /** Track a custom analytics event */
+  fun trackEvent(eventArg: AnalyticsEvent, callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.reels_flutter.ReelsNativeApi.onReelViewed$separatedMessageChannelSuffix"
+    val channelName = "dev.flutter.pigeon.reels_flutter.ReelsFlutterAnalyticsApi.trackEvent$separatedMessageChannelSuffix"
+    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+    channel.send(listOf(eventArg)) {
+      if (it is List<*>) {
+        if (it.size > 1) {
+          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
+        } else {
+          callback(Result.success(Unit))
+        }
+      } else {
+        callback(Result.failure(createConnectionError(channelName)))
+      } 
+    }
+  }
+}
+/**
+ * API for notifying native about button interactions
+ *
+ * Generated class from Pigeon that represents Flutter messages that can be called from Kotlin.
+ */
+class ReelsFlutterButtonEventsApi(private val binaryMessenger: BinaryMessenger, private val messageChannelSuffix: String = "") {
+  companion object {
+    /** The codec used by ReelsFlutterButtonEventsApi. */
+    val codec: MessageCodec<Any?> by lazy {
+      PigeonGeneratedPigeonCodec()
+    }
+  }
+  /** Called before like button is clicked (for optimistic UI) */
+  fun onBeforeLikeButtonClick(videoIdArg: String, callback: (Result<Unit>) -> Unit)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    val channelName = "dev.flutter.pigeon.reels_flutter.ReelsFlutterButtonEventsApi.onBeforeLikeButtonClick$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
     channel.send(listOf(videoIdArg)) {
       if (it is List<*>) {
@@ -349,13 +315,13 @@ class ReelsNativeApi(private val binaryMessenger: BinaryMessenger, private val m
       } 
     }
   }
-  /** Called when user likes/unlikes a video */
-  fun onReelLiked(videoIdArg: String, isLikedArg: Boolean, callback: (Result<Unit>) -> Unit)
+  /** Called after like button click completes (with updated state) */
+  fun onAfterLikeButtonClick(videoIdArg: String, isLikedArg: Boolean, likeCountArg: Long, callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.reels_flutter.ReelsNativeApi.onReelLiked$separatedMessageChannelSuffix"
+    val channelName = "dev.flutter.pigeon.reels_flutter.ReelsFlutterButtonEventsApi.onAfterLikeButtonClick$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
-    channel.send(listOf(videoIdArg, isLikedArg)) {
+    channel.send(listOf(videoIdArg, isLikedArg, likeCountArg)) {
       if (it is List<*>) {
         if (it.size > 1) {
           callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
@@ -367,13 +333,13 @@ class ReelsNativeApi(private val binaryMessenger: BinaryMessenger, private val m
       } 
     }
   }
-  /** Called when user shares a video */
-  fun onReelShared(videoIdArg: String, callback: (Result<Unit>) -> Unit)
+  /** Called when share button is clicked */
+  fun onShareButtonClick(shareDataArg: ShareData, callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.reels_flutter.ReelsNativeApi.onReelShared$separatedMessageChannelSuffix"
+    val channelName = "dev.flutter.pigeon.reels_flutter.ReelsFlutterButtonEventsApi.onShareButtonClick$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
-    channel.send(listOf(videoIdArg)) {
+    channel.send(listOf(shareDataArg)) {
       if (it is List<*>) {
         if (it.size > 1) {
           callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
@@ -385,13 +351,26 @@ class ReelsNativeApi(private val binaryMessenger: BinaryMessenger, private val m
       } 
     }
   }
-  /** Called when user comments on a video */
-  fun onReelCommented(videoIdArg: String, callback: (Result<Unit>) -> Unit)
+}
+/**
+ * API for notifying native about screen and video state changes
+ *
+ * Generated class from Pigeon that represents Flutter messages that can be called from Kotlin.
+ */
+class ReelsFlutterStateApi(private val binaryMessenger: BinaryMessenger, private val messageChannelSuffix: String = "") {
+  companion object {
+    /** The codec used by ReelsFlutterStateApi. */
+    val codec: MessageCodec<Any?> by lazy {
+      PigeonGeneratedPigeonCodec()
+    }
+  }
+  /** Notify native when screen state changes */
+  fun onScreenStateChanged(stateArg: ScreenStateData, callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.reels_flutter.ReelsNativeApi.onReelCommented$separatedMessageChannelSuffix"
+    val channelName = "dev.flutter.pigeon.reels_flutter.ReelsFlutterStateApi.onScreenStateChanged$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
-    channel.send(listOf(videoIdArg)) {
+    channel.send(listOf(stateArg)) {
       if (it is List<*>) {
         if (it.size > 1) {
           callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
@@ -403,13 +382,13 @@ class ReelsNativeApi(private val binaryMessenger: BinaryMessenger, private val m
       } 
     }
   }
-  /** Called when a product in the reel is clicked */
-  fun onProductClicked(productIdArg: String, videoIdArg: String, callback: (Result<Unit>) -> Unit)
+  /** Notify native when video state changes */
+  fun onVideoStateChanged(stateArg: VideoStateData, callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.reels_flutter.ReelsNativeApi.onProductClicked$separatedMessageChannelSuffix"
+    val channelName = "dev.flutter.pigeon.reels_flutter.ReelsFlutterStateApi.onVideoStateChanged$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
-    channel.send(listOf(productIdArg, videoIdArg)) {
+    channel.send(listOf(stateArg)) {
       if (it is List<*>) {
         if (it.size > 1) {
           callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
@@ -421,11 +400,24 @@ class ReelsNativeApi(private val binaryMessenger: BinaryMessenger, private val m
       } 
     }
   }
-  /** Called when reels view is closed */
-  fun onReelsClosed(callback: (Result<Unit>) -> Unit)
+}
+/**
+ * API for handling navigation gestures
+ *
+ * Generated class from Pigeon that represents Flutter messages that can be called from Kotlin.
+ */
+class ReelsFlutterNavigationApi(private val binaryMessenger: BinaryMessenger, private val messageChannelSuffix: String = "") {
+  companion object {
+    /** The codec used by ReelsFlutterNavigationApi. */
+    val codec: MessageCodec<Any?> by lazy {
+      PigeonGeneratedPigeonCodec()
+    }
+  }
+  /** Called when user swipes left */
+  fun onSwipeLeft(callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.reels_flutter.ReelsNativeApi.onReelsClosed$separatedMessageChannelSuffix"
+    val channelName = "dev.flutter.pigeon.reels_flutter.ReelsFlutterNavigationApi.onSwipeLeft$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
     channel.send(null) {
       if (it is List<*>) {
@@ -439,37 +431,18 @@ class ReelsNativeApi(private val binaryMessenger: BinaryMessenger, private val m
       } 
     }
   }
-  /** Called when an error occurs */
-  fun onError(errorMessageArg: String, callback: (Result<Unit>) -> Unit)
+  /** Called when user swipes right */
+  fun onSwipeRight(callback: (Result<Unit>) -> Unit)
 {
     val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.reels_flutter.ReelsNativeApi.onError$separatedMessageChannelSuffix"
-    val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
-    channel.send(listOf(errorMessageArg)) {
-      if (it is List<*>) {
-        if (it.size > 1) {
-          callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
-        } else {
-          callback(Result.success(Unit))
-        }
-      } else {
-        callback(Result.failure(createConnectionError(channelName)))
-      } 
-    }
-  }
-  /** Request access token for authenticated API calls */
-  fun getAccessToken(callback: (Result<String?>) -> Unit)
-{
-    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
-    val channelName = "dev.flutter.pigeon.reels_flutter.ReelsNativeApi.getAccessToken$separatedMessageChannelSuffix"
+    val channelName = "dev.flutter.pigeon.reels_flutter.ReelsFlutterNavigationApi.onSwipeRight$separatedMessageChannelSuffix"
     val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
     channel.send(null) {
       if (it is List<*>) {
         if (it.size > 1) {
           callback(Result.failure(FlutterError(it[0] as String, it[1] as String, it[2] as String?)))
         } else {
-          val output = it[0] as String?
-          callback(Result.success(output))
+          callback(Result.success(Unit))
         }
       } else {
         callback(Result.failure(createConnectionError(channelName)))
