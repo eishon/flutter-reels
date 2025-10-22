@@ -49,9 +49,13 @@ jobs:
 
       - name: Check for uncommitted Pigeon changes
         run: |
-          if [[ -n $(git status --porcelain) ]]; then
+          # Exclude local.properties.template from git status check
+          CHANGED_FILES=$(git status --porcelain | grep -v "local.properties.template" || true)
+          if [[ -n "$CHANGED_FILES" ]]; then
             echo "❌ Pigeon generated code is out of sync!"
             echo "Please regenerate Pigeon code locally and commit the changes."
+            echo "Changed files:"
+            echo "$CHANGED_FILES"
             git diff
             exit 1
           else
@@ -90,10 +94,10 @@ jobs:
           cd reels_flutter
           flutter analyze --fatal-infos
 
-      - name: Run Flutter format check
+      - name: Run Dart format check
         run: |
           cd reels_flutter
-          flutter format --set-exit-if-changed --dry-run .
+          dart format --set-exit-if-changed --dry-run .
 
   # Job 3: Android Build Verification
   android-build:
@@ -223,8 +227,10 @@ jobs:
           cd example/ios
           if [ -d "Pods" ]; then
             echo "✅ CocoaPods installation successful"
-            echo "Installed pods:"
-            pod list
+            echo "Project pods installed:"
+            ls -la Pods/ | head -20
+            echo "..."
+            echo "Total pods: $(ls -1 Pods | wc -l)"
           else
             echo "❌ Pods directory not found"
             exit 1
