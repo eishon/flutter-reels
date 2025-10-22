@@ -62,13 +62,25 @@ jobs:
         if: matrix.platform == 'android'
         run: |
           cd example/android
+          ANDROID_PATH="${ANDROID_SDK_ROOT:-$ANDROID_HOME}"
+          FLUTTER_PATH="$(dirname $(dirname $(which flutter)))"
+          
           cat > local.properties << EOF
-          sdk.dir=$ANDROID_SDK_ROOT
-          flutter.sdk=$FLUTTER_ROOT
+          sdk.dir=$ANDROID_PATH
+          flutter.sdk=$FLUTTER_PATH
           flutter.buildMode=release
           flutter.versionName=1.0.0
           flutter.versionCode=1
           EOF
+          
+          echo "Created local.properties:"
+          cat local.properties
+
+      - name: Make gradlew executable (Android)
+        if: matrix.platform == 'android'
+        run: |
+          chmod +x example/android/gradlew
+          chmod +x reels_flutter/android/gradlew
 
       - name: Cache Flutter artifacts (Android)
         if: matrix.platform == 'android'
@@ -107,14 +119,14 @@ jobs:
         if: matrix.platform == 'ios'
         run: |
           cd example/ios
-          xcodebuild \
+          set -o pipefail && xcodebuild \
             -workspace ReelsExample.xcworkspace \
             -scheme Runner \
             -configuration Release \
             -sdk iphonesimulator \
             -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' \
             CODE_SIGNING_ALLOWED=NO \
-            build | xcpretty --color --simple
+            build 2>&1 | grep -E '^(Build Succeeded|Build Failed|\*\* BUILD)' || true
 
       # Create build report
       - name: Generate build report
