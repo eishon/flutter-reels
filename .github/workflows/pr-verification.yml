@@ -45,7 +45,7 @@ jobs:
           dart format lib/core/pigeon_generated.dart
           # Note: Kotlin and Swift files are generated but not formatted by dart format
           # They are output in their respective IDEs' formatting style
-
+2 c
       - name: Check for uncommitted Pigeon changes
         run: |
           # Exclude local.properties.template from git status check
@@ -93,6 +93,8 @@ jobs:
         run: |
           cd reels_flutter
           dart run pigeon --input pigeons/messages.dart
+          # Format to match CI standards
+          dart format lib/core/pigeon_generated.dart
 
       - name: Run Flutter analyze
         run: |
@@ -102,6 +104,7 @@ jobs:
       - name: Run Dart format check
         run: |
           cd reels_flutter
+          # Pigeon code is already formatted, check if anything else needs formatting
           dart format --set-exit-if-changed .
 
       - name: Run Flutter tests
