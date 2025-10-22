@@ -1,0 +1,10 @@
+# User-specific files
+Pods/Pods.xcodeproj/xcuserdata/
+Runner.xcodeproj/xcuserdata/
+
+# Generated pod files
+Pods/Local Podspecs/
+Pods/Target Support Files/
+
+# Local properties
+!local.properties.template
