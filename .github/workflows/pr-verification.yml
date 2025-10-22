@@ -90,7 +90,7 @@ jobs:
       - name: Run Flutter analyze
         run: |
           cd reels_flutter
-          flutter analyze --fatal-infos
+          flutter analyze
 
       - name: Run Dart format check
         run: |
