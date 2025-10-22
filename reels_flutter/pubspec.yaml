@@ -1,6 +1,6 @@
 name: reels_flutter
 description: "Flutter Reels - A hybrid Add-to-App module for video reels with native SDK wrappers"
-version: 0.1.0-beta.1
+version: 0.1.0-beta
 
 environment:
   sdk: ^3.9.2
