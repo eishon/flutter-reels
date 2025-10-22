@@ -2,7 +2,7 @@ name: PR Verification
 
 on:
   pull_request:
-    branches: [ master, main, develop, 'release/**' ]
+    # Run on all PRs regardless of target branch
     paths:
       - 'reels_android/**'
       - 'reels_ios/**'
@@ -45,7 +45,7 @@ jobs:
           dart format lib/core/pigeon_generated.dart
           # Note: Kotlin and Swift files are generated but not formatted by dart format
           # They are output in their respective IDEs' formatting style
-2 c
+
       - name: Check for uncommitted Pigeon changes
         run: |
           # Exclude local.properties.template from git status check
