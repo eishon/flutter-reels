@@ -40,12 +40,8 @@ jobs:
       - name: Regenerate Pigeon code
         run: |
           cd reels_flutter
-          flutter pub global run pigeon \
-            --input pigeons/messages.dart \
-            --dart_out lib/pigeon_generated.dart \
-            --kotlin_out ../reels_android/src/main/java/com/eishon/reels_android/PigeonGenerated.kt \
-            --kotlin_package com.eishon.reels_android \
-            --swift_out ../reels_ios/ReelsIOS/PigeonGenerated.swift
+          # Use @ConfigurePigeon annotation in pigeons/messages.dart for output paths
+          flutter pub global run pigeon --input pigeons/messages.dart
 
       - name: Check for uncommitted Pigeon changes
         run: |
@@ -97,7 +93,7 @@ jobs:
       - name: Run Dart format check
         run: |
           cd reels_flutter
-          dart format --set-exit-if-changed --dry-run .
+          dart format --set-exit-if-changed .
 
   # Job 3: Android Build Verification
   android-build:
@@ -165,8 +161,10 @@ jobs:
       - name: Build Android Example App (includes SDK)
         run: |
           cd example/android
+          # Increase heap space to avoid OutOfMemoryError during Jetify
+          export GRADLE_OPTS="-Xmx4096m -XX:MaxMetaspaceSize=512m"
           ./gradlew clean
-          ./gradlew :app:assembleDebug --stacktrace --info
+          ./gradlew :app:assembleDebug --stacktrace
 
       - name: Verify APK exists
         run: |
