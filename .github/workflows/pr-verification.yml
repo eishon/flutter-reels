@@ -237,7 +237,7 @@ jobs:
       - name: Build iOS app for simulator
         run: |
           cd example/ios
-          set -o pipefail && xcodebuild \
+          xcodebuild \
             -workspace ReelsExample.xcworkspace \
             -scheme Runner \
             -configuration Debug \
@@ -245,7 +245,7 @@ jobs:
             -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' \
             -allowProvisioningUpdates \
             CODE_SIGNING_ALLOWED=NO \
-            build 2>&1 | grep -E '^(Build Succeeded|Build Failed|\*\* BUILD)' || true
+            build
 
       - name: Verify build artifacts
         run: |
