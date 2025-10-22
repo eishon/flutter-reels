@@ -47,6 +47,11 @@ jobs:
           channel: 'stable'
           cache: true
 
+      - name: Clean Flutter module
+        run: |
+          cd reels_flutter
+          flutter clean
+
       - name: Get Flutter dependencies
         run: |
           cd reels_flutter
