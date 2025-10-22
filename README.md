@@ -1,20 +1,14 @@
-# Flutter Reels# Flutter Reels - Native SDK Integration# Flutter Reels
-
-
+# Flutter Reels - Native SDK Integration
 
 A Flutter-based reels library for native Android and iOS applications using the **Add-to-App** pattern with clean, native SDKs.
 
-
-
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)]()This project provides native Android and iOS SDKs for integrating Flutter-based reels functionality into native mobile applications.[![CI](https://github.com/eishon/flutter-reels/actions/workflows/ci.yml/badge.svg)](https://github.com/eishon/flutter-reels/actions/workflows/ci.yml)
-
+[![PR Verification](https://github.com/eishon/flutter-reels/actions/workflows/pr-verification.yml/badge.svg)](https://github.com/eishon/flutter-reels/actions/workflows/pr-verification.yml)
+[![Main Build](https://github.com/eishon/flutter-reels/actions/workflows/main-build.yml/badge.svg)](https://github.com/eishon/flutter-reels/actions/workflows/main-build.yml)
 [![Android](https://img.shields.io/badge/Android-5.0%2B-green)]()
-
-[![iOS](https://img.shields.io/badge/iOS-13.0%2B-blue)]()[![Build Android](https://github.com/eishon/flutter-reels/actions/workflows/build-android.yml/badge.svg)](https://github.com/eishon/flutter-reels/actions/workflows/build-android.yml)
-
+[![iOS](https://img.shields.io/badge/iOS-13.0%2B-blue)]()
 [![Flutter](https://img.shields.io/badge/Flutter-3.35.6-blue)]()
 
-## Project Structure[![Build iOS](https://github.com/eishon/flutter-reels/actions/workflows/build-ios.yml/badge.svg)](https://github.com/eishon/flutter-reels/actions/workflows/build-ios.yml)
+## Project Structure
 
 ---
 
