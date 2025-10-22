@@ -2,19 +2,10 @@ package com.eishon.reels_android
 
 import android.content.Context
 import android.util.Log
-// Pigeon generated classes (now in reels_android package for Add-to-App)
-import com.eishon.reels_android.AnalyticsEvent
-import com.eishon.reels_android.ReelsFlutterAnalyticsApi
-import com.eishon.reels_android.ReelsFlutterButtonEventsApi
-import com.eishon.reels_android.ReelsFlutterNavigationApi
-import com.eishon.reels_android.ReelsFlutterStateApi
-import com.eishon.reels_android.ReelsFlutterTokenApi
-import com.eishon.reels_android.ScreenStateData
-import com.eishon.reels_android.ShareData
-import com.eishon.reels_android.VideoStateData
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.dart.DartExecutor
 import io.flutter.plugin.common.BinaryMessenger
+// Pigeon generated classes are now in the same package (reels_android)
 
 /**
  * Main SDK class for integrating Flutter Reels into native Android apps.
@@ -103,7 +94,7 @@ class ReelsAndroidSDK private constructor() {
          * Setup all Pigeon API handlers
          */
         private fun setupPigeonAPIs(binaryMessenger: BinaryMessenger) {
-            // Host API: Provide access token to Flutter
+            // Host API: Provide access token to Flutter (Flutter calls, Kotlin implements)
             ReelsFlutterTokenApi.setUp(binaryMessenger, object : ReelsFlutterTokenApi {
                 override fun getAccessToken(): String? {
                     val token = accessTokenProvider?.invoke() ?: listener?.getAccessToken()
@@ -112,62 +103,8 @@ class ReelsAndroidSDK private constructor() {
                 }
             })
             
-            // Flutter API: Analytics events from Flutter
-            ReelsFlutterAnalyticsApi.setUp(binaryMessenger, object : ReelsFlutterAnalyticsApi {
-                override fun trackEvent(event: AnalyticsEvent) {
-                    Log.d(TAG, "Analytics event: ${event.eventName} with ${event.eventProperties.size} properties")
-                    // Native apps can forward to their analytics SDK here
-                }
-            })
-            
-            // Flutter API: Button interaction callbacks
-            ReelsFlutterButtonEventsApi.setUp(binaryMessenger, object : ReelsFlutterButtonEventsApi {
-                override fun onBeforeLikeButtonClick(videoId: String) {
-                    Log.d(TAG, "Before like click: $videoId")
-                    // Can be used for optimistic UI updates
-                }
-                
-                override fun onAfterLikeButtonClick(videoId: String, isLiked: Boolean, likeCount: Long) {
-                    Log.d(TAG, "After like click: $videoId, isLiked=$isLiked, count=$likeCount")
-                    listener?.onReelLiked(videoId, isLiked)
-                }
-                
-                override fun onShareButtonClick(shareData: ShareData) {
-                    Log.d(TAG, "Share button clicked: ${shareData.videoId}")
-                    listener?.onReelShared(shareData.videoId)
-                }
-            })
-            
-            // Flutter API: Screen and video state changes
-            ReelsFlutterStateApi.setUp(binaryMessenger, object : ReelsFlutterStateApi {
-                override fun onScreenStateChanged(state: ScreenStateData) {
-                    Log.d(TAG, "Screen state: ${state.screenName} - ${state.state}")
-                    when (state.state) {
-                        "disappeared" -> listener?.onReelsClosed()
-                        else -> {} // Handle other states if needed
-                    }
-                }
-                
-                override fun onVideoStateChanged(state: VideoStateData) {
-                    Log.d(TAG, "Video state: ${state.videoId} - ${state.state}")
-                    when (state.state) {
-                        "completed" -> listener?.onReelViewed(state.videoId)
-                        "error" -> listener?.onError("Video playback error: ${state.videoId}")
-                        else -> {} // Handle playing, paused, buffering, etc.
-                    }
-                }
-            })
-            
-            // Flutter API: Navigation gestures
-            ReelsFlutterNavigationApi.setUp(binaryMessenger, object : ReelsFlutterNavigationApi {
-                override fun onSwipeLeft() {
-                    Log.d(TAG, "Swipe left gesture")
-                }
-                
-                override fun onSwipeRight() {
-                    Log.d(TAG, "Swipe right gesture")
-                }
-            })
+            // Note: Flutter APIs (Kotlin calls, Flutter implements) will be called when needed
+            // They are instantiated with the binaryMessenger when we need to call Flutter
         }
         
         /**
@@ -193,12 +130,6 @@ class ReelsAndroidSDK private constructor() {
         @JvmStatic
         fun getEngineId(): String = "reels_engine"
         
-        /**
-         * Clean up resources
-         */
-        @JvmStatic
-        fun dispose() {
-            try {
         /**
          * Clean up resources
          */
