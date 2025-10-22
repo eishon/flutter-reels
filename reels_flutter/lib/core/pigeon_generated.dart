@@ -15,7 +15,11 @@ PlatformException _createConnectionError(String channelName) {
   );
 }
 
-List<Object?> wrapResponse({Object? result, PlatformException? error, bool empty = false}) {
+List<Object?> wrapResponse({
+  Object? result,
+  PlatformException? error,
+  bool empty = false,
+}) {
   if (empty) {
     return <Object?>[];
   }
@@ -27,27 +31,22 @@ List<Object?> wrapResponse({Object? result, PlatformException? error, bool empty
 
 /// Analytics event data
 class AnalyticsEvent {
-  AnalyticsEvent({
-    required this.eventName,
-    required this.eventProperties,
-  });
+  AnalyticsEvent({required this.eventName, required this.eventProperties});
 
   String eventName;
 
   Map<String?, String?> eventProperties;
 
   Object encode() {
-    return <Object?>[
-      eventName,
-      eventProperties,
-    ];
+    return <Object?>[eventName, eventProperties];
   }
 
   static AnalyticsEvent decode(Object result) {
     result as List<Object?>;
     return AnalyticsEvent(
       eventName: result[0]! as String,
-      eventProperties: (result[1] as Map<Object?, Object?>?)!.cast<String?, String?>(),
+      eventProperties: (result[1] as Map<Object?, Object?>?)!
+          .cast<String?, String?>(),
     );
   }
 }
@@ -73,13 +72,7 @@ class ShareData {
   String? thumbnailUrl;
 
   Object encode() {
-    return <Object?>[
-      videoId,
-      videoUrl,
-      title,
-      description,
-      thumbnailUrl,
-    ];
+    return <Object?>[videoId, videoUrl, title, description, thumbnailUrl];
   }
 
   static ShareData decode(Object result) {
@@ -109,11 +102,7 @@ class ScreenStateData {
   int? timestamp;
 
   Object encode() {
-    return <Object?>[
-      screenName,
-      state,
-      timestamp,
-    ];
+    return <Object?>[screenName, state, timestamp];
   }
 
   static ScreenStateData decode(Object result) {
@@ -147,13 +136,7 @@ class VideoStateData {
   int? timestamp;
 
   Object encode() {
-    return <Object?>[
-      videoId,
-      state,
-      position,
-      duration,
-      timestamp,
-    ];
+    return <Object?>[videoId, state, position, duration, timestamp];
   }
 
   static VideoStateData decode(Object result) {
@@ -168,7 +151,6 @@ class VideoStateData {
   }
 }
 
-
 class _PigeonCodec extends StandardMessageCodec {
   const _PigeonCodec();
   @override
@@ -176,16 +158,16 @@ class _PigeonCodec extends StandardMessageCodec {
     if (value is int) {
       buffer.putUint8(4);
       buffer.putInt64(value);
-    }    else if (value is AnalyticsEvent) {
+    } else if (value is AnalyticsEvent) {
       buffer.putUint8(129);
       writeValue(buffer, value.encode());
-    }    else if (value is ShareData) {
+    } else if (value is ShareData) {
       buffer.putUint8(130);
       writeValue(buffer, value.encode());
-    }    else if (value is ScreenStateData) {
+    } else if (value is ScreenStateData) {
       buffer.putUint8(131);
       writeValue(buffer, value.encode());
-    }    else if (value is VideoStateData) {
+    } else if (value is VideoStateData) {
       buffer.putUint8(132);
       writeValue(buffer, value.encode());
     } else {
@@ -196,13 +178,13 @@ class _PigeonCodec extends StandardMessageCodec {
   @override
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
-      case 129: 
+      case 129:
         return AnalyticsEvent.decode(readValue(buffer)!);
-      case 130: 
+      case 130:
         return ShareData.decode(readValue(buffer)!);
-      case 131: 
+      case 131:
         return ScreenStateData.decode(readValue(buffer)!);
-      case 132: 
+      case 132:
         return VideoStateData.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -215,9 +197,13 @@ class ReelsFlutterTokenApi {
   /// Constructor for [ReelsFlutterTokenApi].  The [binaryMessenger] named argument is
   /// available for dependency injection.  If it is left null, the default
   /// BinaryMessenger will be used which routes to the host platform.
-  ReelsFlutterTokenApi({BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
-      : pigeonVar_binaryMessenger = binaryMessenger,
-        pigeonVar_messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+  ReelsFlutterTokenApi({
+    BinaryMessenger? binaryMessenger,
+    String messageChannelSuffix = '',
+  }) : pigeonVar_binaryMessenger = binaryMessenger,
+       pigeonVar_messageChannelSuffix = messageChannelSuffix.isNotEmpty
+           ? '.$messageChannelSuffix'
+           : '';
   final BinaryMessenger? pigeonVar_binaryMessenger;
 
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
@@ -226,12 +212,14 @@ class ReelsFlutterTokenApi {
 
   /// Get the current access token from native platform
   Future<String?> getAccessToken() async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.reels_flutter.ReelsFlutterTokenApi.getAccessToken$pigeonVar_messageChannelSuffix';
-    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
-    );
+    final String pigeonVar_channelName =
+        'dev.flutter.pigeon.reels_flutter.ReelsFlutterTokenApi.getAccessToken$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel =
+        BasicMessageChannel<Object?>(
+          pigeonVar_channelName,
+          pigeonChannelCodec,
+          binaryMessenger: pigeonVar_binaryMessenger,
+        );
     final List<Object?>? pigeonVar_replyList =
         await pigeonVar_channel.send(null) as List<Object?>?;
     if (pigeonVar_replyList == null) {
@@ -255,29 +243,44 @@ abstract class ReelsFlutterAnalyticsApi {
   /// Track a custom analytics event
   void trackEvent(AnalyticsEvent event);
 
-  static void setUp(ReelsFlutterAnalyticsApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
-    messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+  static void setUp(
+    ReelsFlutterAnalyticsApi? api, {
+    BinaryMessenger? binaryMessenger,
+    String messageChannelSuffix = '',
+  }) {
+    messageChannelSuffix = messageChannelSuffix.isNotEmpty
+        ? '.$messageChannelSuffix'
+        : '';
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.reels_flutter.ReelsFlutterAnalyticsApi.trackEvent$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+      final BasicMessageChannel<Object?>
+      pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.reels_flutter.ReelsFlutterAnalyticsApi.trackEvent$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         pigeonVar_channel.setMessageHandler(null);
       } else {
         pigeonVar_channel.setMessageHandler((Object? message) async {
-          assert(message != null,
-          'Argument for dev.flutter.pigeon.reels_flutter.ReelsFlutterAnalyticsApi.trackEvent was null.');
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.reels_flutter.ReelsFlutterAnalyticsApi.trackEvent was null.',
+          );
           final List<Object?> args = (message as List<Object?>?)!;
           final AnalyticsEvent? arg_event = (args[0] as AnalyticsEvent?);
-          assert(arg_event != null,
-              'Argument for dev.flutter.pigeon.reels_flutter.ReelsFlutterAnalyticsApi.trackEvent was null, expected non-null AnalyticsEvent.');
+          assert(
+            arg_event != null,
+            'Argument for dev.flutter.pigeon.reels_flutter.ReelsFlutterAnalyticsApi.trackEvent was null, expected non-null AnalyticsEvent.',
+          );
           try {
             api.trackEvent(arg_event!);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
           }
         });
       }
@@ -298,85 +301,126 @@ abstract class ReelsFlutterButtonEventsApi {
   /// Called when share button is clicked
   void onShareButtonClick(ShareData shareData);
 
-  static void setUp(ReelsFlutterButtonEventsApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
-    messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+  static void setUp(
+    ReelsFlutterButtonEventsApi? api, {
+    BinaryMessenger? binaryMessenger,
+    String messageChannelSuffix = '',
+  }) {
+    messageChannelSuffix = messageChannelSuffix.isNotEmpty
+        ? '.$messageChannelSuffix'
+        : '';
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.reels_flutter.ReelsFlutterButtonEventsApi.onBeforeLikeButtonClick$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+      final BasicMessageChannel<Object?>
+      pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.reels_flutter.ReelsFlutterButtonEventsApi.onBeforeLikeButtonClick$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         pigeonVar_channel.setMessageHandler(null);
       } else {
         pigeonVar_channel.setMessageHandler((Object? message) async {
-          assert(message != null,
-          'Argument for dev.flutter.pigeon.reels_flutter.ReelsFlutterButtonEventsApi.onBeforeLikeButtonClick was null.');
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.reels_flutter.ReelsFlutterButtonEventsApi.onBeforeLikeButtonClick was null.',
+          );
           final List<Object?> args = (message as List<Object?>?)!;
           final String? arg_videoId = (args[0] as String?);
-          assert(arg_videoId != null,
-              'Argument for dev.flutter.pigeon.reels_flutter.ReelsFlutterButtonEventsApi.onBeforeLikeButtonClick was null, expected non-null String.');
+          assert(
+            arg_videoId != null,
+            'Argument for dev.flutter.pigeon.reels_flutter.ReelsFlutterButtonEventsApi.onBeforeLikeButtonClick was null, expected non-null String.',
+          );
           try {
             api.onBeforeLikeButtonClick(arg_videoId!);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
           }
         });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.reels_flutter.ReelsFlutterButtonEventsApi.onAfterLikeButtonClick$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+      final BasicMessageChannel<Object?>
+      pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.reels_flutter.ReelsFlutterButtonEventsApi.onAfterLikeButtonClick$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         pigeonVar_channel.setMessageHandler(null);
       } else {
         pigeonVar_channel.setMessageHandler((Object? message) async {
-          assert(message != null,
-          'Argument for dev.flutter.pigeon.reels_flutter.ReelsFlutterButtonEventsApi.onAfterLikeButtonClick was null.');
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.reels_flutter.ReelsFlutterButtonEventsApi.onAfterLikeButtonClick was null.',
+          );
           final List<Object?> args = (message as List<Object?>?)!;
           final String? arg_videoId = (args[0] as String?);
-          assert(arg_videoId != null,
-              'Argument for dev.flutter.pigeon.reels_flutter.ReelsFlutterButtonEventsApi.onAfterLikeButtonClick was null, expected non-null String.');
+          assert(
+            arg_videoId != null,
+            'Argument for dev.flutter.pigeon.reels_flutter.ReelsFlutterButtonEventsApi.onAfterLikeButtonClick was null, expected non-null String.',
+          );
           final bool? arg_isLiked = (args[1] as bool?);
-          assert(arg_isLiked != null,
-              'Argument for dev.flutter.pigeon.reels_flutter.ReelsFlutterButtonEventsApi.onAfterLikeButtonClick was null, expected non-null bool.');
+          assert(
+            arg_isLiked != null,
+            'Argument for dev.flutter.pigeon.reels_flutter.ReelsFlutterButtonEventsApi.onAfterLikeButtonClick was null, expected non-null bool.',
+          );
           final int? arg_likeCount = (args[2] as int?);
-          assert(arg_likeCount != null,
-              'Argument for dev.flutter.pigeon.reels_flutter.ReelsFlutterButtonEventsApi.onAfterLikeButtonClick was null, expected non-null int.');
+          assert(
+            arg_likeCount != null,
+            'Argument for dev.flutter.pigeon.reels_flutter.ReelsFlutterButtonEventsApi.onAfterLikeButtonClick was null, expected non-null int.',
+          );
           try {
-            api.onAfterLikeButtonClick(arg_videoId!, arg_isLiked!, arg_likeCount!);
+            api.onAfterLikeButtonClick(
+              arg_videoId!,
+              arg_isLiked!,
+              arg_likeCount!,
+            );
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
           }
         });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.reels_flutter.ReelsFlutterButtonEventsApi.onShareButtonClick$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+      final BasicMessageChannel<Object?>
+      pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.reels_flutter.ReelsFlutterButtonEventsApi.onShareButtonClick$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         pigeonVar_channel.setMessageHandler(null);
       } else {
         pigeonVar_channel.setMessageHandler((Object? message) async {
-          assert(message != null,
-          'Argument for dev.flutter.pigeon.reels_flutter.ReelsFlutterButtonEventsApi.onShareButtonClick was null.');
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.reels_flutter.ReelsFlutterButtonEventsApi.onShareButtonClick was null.',
+          );
           final List<Object?> args = (message as List<Object?>?)!;
           final ShareData? arg_shareData = (args[0] as ShareData?);
-          assert(arg_shareData != null,
-              'Argument for dev.flutter.pigeon.reels_flutter.ReelsFlutterButtonEventsApi.onShareButtonClick was null, expected non-null ShareData.');
+          assert(
+            arg_shareData != null,
+            'Argument for dev.flutter.pigeon.reels_flutter.ReelsFlutterButtonEventsApi.onShareButtonClick was null, expected non-null ShareData.',
+          );
           try {
             api.onShareButtonClick(arg_shareData!);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
           }
         });
       }
@@ -394,54 +438,78 @@ abstract class ReelsFlutterStateApi {
   /// Notify native when video state changes
   void onVideoStateChanged(VideoStateData state);
 
-  static void setUp(ReelsFlutterStateApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
-    messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+  static void setUp(
+    ReelsFlutterStateApi? api, {
+    BinaryMessenger? binaryMessenger,
+    String messageChannelSuffix = '',
+  }) {
+    messageChannelSuffix = messageChannelSuffix.isNotEmpty
+        ? '.$messageChannelSuffix'
+        : '';
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.reels_flutter.ReelsFlutterStateApi.onScreenStateChanged$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+      final BasicMessageChannel<Object?>
+      pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.reels_flutter.ReelsFlutterStateApi.onScreenStateChanged$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         pigeonVar_channel.setMessageHandler(null);
       } else {
         pigeonVar_channel.setMessageHandler((Object? message) async {
-          assert(message != null,
-          'Argument for dev.flutter.pigeon.reels_flutter.ReelsFlutterStateApi.onScreenStateChanged was null.');
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.reels_flutter.ReelsFlutterStateApi.onScreenStateChanged was null.',
+          );
           final List<Object?> args = (message as List<Object?>?)!;
           final ScreenStateData? arg_state = (args[0] as ScreenStateData?);
-          assert(arg_state != null,
-              'Argument for dev.flutter.pigeon.reels_flutter.ReelsFlutterStateApi.onScreenStateChanged was null, expected non-null ScreenStateData.');
+          assert(
+            arg_state != null,
+            'Argument for dev.flutter.pigeon.reels_flutter.ReelsFlutterStateApi.onScreenStateChanged was null, expected non-null ScreenStateData.',
+          );
           try {
             api.onScreenStateChanged(arg_state!);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
           }
         });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.reels_flutter.ReelsFlutterStateApi.onVideoStateChanged$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+      final BasicMessageChannel<Object?>
+      pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.reels_flutter.ReelsFlutterStateApi.onVideoStateChanged$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         pigeonVar_channel.setMessageHandler(null);
       } else {
         pigeonVar_channel.setMessageHandler((Object? message) async {
-          assert(message != null,
-          'Argument for dev.flutter.pigeon.reels_flutter.ReelsFlutterStateApi.onVideoStateChanged was null.');
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.reels_flutter.ReelsFlutterStateApi.onVideoStateChanged was null.',
+          );
           final List<Object?> args = (message as List<Object?>?)!;
           final VideoStateData? arg_state = (args[0] as VideoStateData?);
-          assert(arg_state != null,
-              'Argument for dev.flutter.pigeon.reels_flutter.ReelsFlutterStateApi.onVideoStateChanged was null, expected non-null VideoStateData.');
+          assert(
+            arg_state != null,
+            'Argument for dev.flutter.pigeon.reels_flutter.ReelsFlutterStateApi.onVideoStateChanged was null, expected non-null VideoStateData.',
+          );
           try {
             api.onVideoStateChanged(arg_state!);
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
           }
         });
       }
@@ -459,12 +527,21 @@ abstract class ReelsFlutterNavigationApi {
   /// Called when user swipes right
   void onSwipeRight();
 
-  static void setUp(ReelsFlutterNavigationApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
-    messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+  static void setUp(
+    ReelsFlutterNavigationApi? api, {
+    BinaryMessenger? binaryMessenger,
+    String messageChannelSuffix = '',
+  }) {
+    messageChannelSuffix = messageChannelSuffix.isNotEmpty
+        ? '.$messageChannelSuffix'
+        : '';
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.reels_flutter.ReelsFlutterNavigationApi.onSwipeLeft$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+      final BasicMessageChannel<Object?>
+      pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.reels_flutter.ReelsFlutterNavigationApi.onSwipeLeft$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         pigeonVar_channel.setMessageHandler(null);
       } else {
@@ -474,16 +551,21 @@ abstract class ReelsFlutterNavigationApi {
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
           }
         });
       }
     }
     {
-      final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.reels_flutter.ReelsFlutterNavigationApi.onSwipeRight$messageChannelSuffix', pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+      final BasicMessageChannel<Object?>
+      pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.reels_flutter.ReelsFlutterNavigationApi.onSwipeRight$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         pigeonVar_channel.setMessageHandler(null);
       } else {
@@ -493,8 +575,10 @@ abstract class ReelsFlutterNavigationApi {
             return wrapResponse(empty: true);
           } on PlatformException catch (e) {
             return wrapResponse(error: e);
-          }          catch (e) {
-            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          } catch (e) {
+            return wrapResponse(
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
           }
         });
       }
