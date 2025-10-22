@@ -57,6 +57,7 @@ node_modules/
 # Android build artifacts (should be ignored but sometimes leak through)
 example/android/.gradle/
 example/android/app/build/
+example/android/build/
 reels_android/.gradle/
 reels_android/build/
 *.aar

@@ -6,5 +6,10 @@ Runner.xcodeproj/xcuserdata/
 Pods/Local Podspecs/
 Pods/Target Support Files/
 
+# Pod manifest and lock files (regenerated on pod install)
+Podfile.lock
+Pods/Manifest.lock
+Pods/Pods.xcodeproj/project.pbxproj
+
 # Local properties
 !local.properties.template
