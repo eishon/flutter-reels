@@ -43,6 +43,8 @@ jobs:
           dart run pigeon --input pigeons/messages.dart
           # Format the generated code to match repository formatting
           dart format lib/core/pigeon_generated.dart
+          # Note: Kotlin and Swift files are generated but not formatted by dart format
+          # They are output in their respective IDEs' formatting style
 
       - name: Check for uncommitted Pigeon changes
         run: |
