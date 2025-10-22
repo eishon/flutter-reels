@@ -25,4 +25,16 @@ class NavigationEventsService {
       print('[ReelsFlutter] Error on swipe right: $e');
     }
   }
+
+  // Legacy compatibility wrapper methods
+
+  /// Notify swipe left (legacy method name)
+  void notifySwipeLeft({int? currentIndex}) {
+    onSwipeLeft();
+  }
+
+  /// Notify swipe right (legacy method name)
+  void notifySwipeRight({int? currentIndex}) {
+    onSwipeRight();
+  }
 }

@@ -50,4 +50,33 @@ class ButtonEventsService {
       print('[ReelsFlutter] Error on share: $e');
     }
   }
+
+  // Legacy compatibility wrapper methods
+
+  /// Notify before like click (legacy method name)
+  void notifyBeforeLikeClick(String videoId) {
+    onBeforeLikeButtonClick(videoId);
+  }
+
+  /// Notify after like click (legacy method name)
+  void notifyAfterLikeClick(String videoId, bool isLiked, int likeCount) {
+    onAfterLikeButtonClick(videoId, isLiked, likeCount);
+  }
+
+  /// Notify share click (legacy method name)
+  void notifyShareClick({
+    required String videoId,
+    required String videoUrl,
+    required String title,
+    required String description,
+    String? thumbnailUrl,
+  }) {
+    onShareButtonClick(
+      videoId: videoId,
+      videoUrl: videoUrl,
+      title: title,
+      description: description,
+      thumbnailUrl: thumbnailUrl,
+    );
+  }
 }

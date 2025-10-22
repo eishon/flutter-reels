@@ -108,4 +108,16 @@ class StateEventsService {
       duration: duration,
     );
   }
+
+  // Legacy compatibility wrapper methods
+
+  /// Notify screen focused (legacy method name)
+  void notifyScreenFocused({required String screenName}) {
+    screenFocused(screenName);
+  }
+
+  /// Notify screen unfocused (legacy method name)
+  void notifyScreenUnfocused({required String screenName}) {
+    screenUnfocused(screenName);
+  }
 }

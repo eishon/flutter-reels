@@ -43,7 +43,7 @@ jobs:
           # Use @ConfigurePigeon annotation in pigeons/messages.dart for output paths
           flutter pub global run pigeon --input pigeons/messages.dart
           # Format the generated code to match repository formatting
-          dart format lib/src/pigeon_generated.dart android/src/main/kotlin/ ios/Classes/
+          dart format lib/core/pigeon_generated.dart android/src/main/kotlin/ ios/Classes/
 
       - name: Check for uncommitted Pigeon changes
         run: |
@@ -60,11 +60,11 @@ jobs:
             echo "✅ Pigeon generated code is up to date"
           fi
 
-  # Job 2: Flutter Module Analysis
+  # Job 2: Flutter Module Analysis & Tests
   flutter-analysis:
-    name: Flutter Module Analysis
+    name: Flutter Module Analysis & Tests
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
 
     steps:
       - name: Checkout code
@@ -96,6 +96,21 @@ jobs:
         run: |
           cd reels_flutter
           dart format --set-exit-if-changed .
+
+      - name: Run Flutter tests
+        run: |
+          cd reels_flutter
+          flutter test --coverage
+          echo "✅ All tests passed"
+
+      - name: Upload coverage to Codecov (optional)
+        if: success()
+        continue-on-error: true
+        uses: codecov/codecov-action@v4
+        with:
+          file: reels_flutter/coverage/lcov.info
+          flags: flutter
+          name: flutter-tests
 
   # Job 3: Android Build Verification
   android-build:

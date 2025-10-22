@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'ReelsIOS'
-  s.version          = '0.1.1-beta'
+  s.version          = '0.1.3-beta'
   s.summary          = 'Flutter Reels iOS SDK'
   s.description      = <<-DESC
   Native iOS wrapper for Flutter Reels module - Hybrid Add-to-App architecture

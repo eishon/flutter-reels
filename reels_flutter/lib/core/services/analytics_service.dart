@@ -52,4 +52,57 @@ class AnalyticsService {
     }
     trackEvent('click', data);
   }
+
+  /// Track like event
+  void trackLike({
+    required String videoId,
+    required bool isLiked,
+    int? likeCount,
+  }) {
+    trackEvent('like', {
+      'video_id': videoId,
+      'is_liked': isLiked,
+      if (likeCount != null) 'like_count': likeCount,
+      'timestamp': DateTime.now().millisecondsSinceEpoch,
+    });
+  }
+
+  /// Track share event
+  void trackShare({required String videoId}) {
+    trackEvent('share', {
+      'video_id': videoId,
+      'timestamp': DateTime.now().millisecondsSinceEpoch,
+    });
+  }
+
+  /// Track error event
+  void trackError({
+    required String error,
+    String? context,
+    Map<String?, Object?>? additionalData,
+  }) {
+    final data = <String?, Object?>{
+      'error': error,
+      if (context != null) 'context': context,
+      'timestamp': DateTime.now().millisecondsSinceEpoch,
+    };
+    if (additionalData != null) {
+      data.addAll(additionalData);
+    }
+    trackEvent('error', data);
+  }
+
+  /// Track video appear event (when video becomes visible)
+  void trackVideoAppear({
+    required String videoId,
+    int? position,
+    String? screenName,
+  }) {
+    trackEvent('appear', {
+      'video_id': videoId,
+      if (position != null) 'position': position,
+      if (screenName != null) 'screen': screenName,
+      'timestamp': DateTime.now().millisecondsSinceEpoch,
+    });
+  }
 }

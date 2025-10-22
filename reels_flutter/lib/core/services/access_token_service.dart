@@ -14,4 +14,9 @@ class AccessTokenService {
       return null;
     }
   }
+
+  /// Legacy method name - same as getAccessToken
+  Future<String?> getToken() async {
+    return await getAccessToken();
+  }
 }
