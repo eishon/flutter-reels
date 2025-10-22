@@ -1,0 +1,69 @@
+name: Auto-Format Pigeon Code
+
+on:
+  push:
+    branches:
+      - '**'  # Run on all branches
+    paths:
+      - 'reels_flutter/pigeons/messages.dart'
+      - 'reels_flutter/lib/core/pigeon_generated.dart'
+
+  # Allow manual trigger
+  workflow_dispatch:
+
+jobs:
+  auto-format:
+    name: Auto-Format Pigeon Generated Files
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.6'
+          channel: 'stable'
+          cache: true
+
+      - name: Install dependencies
+        run: |
+          cd reels_flutter
+          flutter pub get
+
+      - name: Regenerate and format Pigeon code
+        run: |
+          cd reels_flutter
+          # Regenerate pigeon code
+          dart run pigeon --input pigeons/messages.dart
+          # Format the generated files
+          dart format lib/core/pigeon_generated.dart
+
+      - name: Check for changes
+        id: check_changes
+        run: |
+          if git diff --quiet reels_flutter/lib/core/pigeon_generated.dart; then
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "✅ No formatting changes needed"
+          else
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "📝 Formatting changes detected"
+          fi
+
+      - name: Commit formatted code
+        if: steps.check_changes.outputs.has_changes == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add reels_flutter/lib/core/pigeon_generated.dart
+          git commit -m "chore: Auto-format pigeon_generated.dart [skip ci]"
+          
+      - name: Push changes
+        if: steps.check_changes.outputs.has_changes == 'true'
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}

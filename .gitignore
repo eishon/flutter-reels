@@ -48,6 +48,18 @@ coverage/
 node_modules/
 
 # Build outputs
+*.apk
+*.aab
+*.aar
+*/build/
+*/.gradle/
+
+# Android build artifacts (should be ignored but sometimes leak through)
+example/android/.gradle/
+example/android/app/build/
+example/android/build/
+reels_android/.gradle/
+reels_android/build/
 *.aar
 *.framework
 *.xcframework
@@ -56,3 +68,11 @@ artifacts/
 # Environment-specific files (use templates instead)
 **/local.properties
 !**/local.properties.template
+
+# iOS Pods (user-specific and generated files)
+**/ios/Pods/Local Podspecs/
+**/ios/Pods/Pods.xcodeproj/xcuserdata/
+**/ios/Pods/Target Support Files/
+
+# Legacy Flutter projects
+legacy/

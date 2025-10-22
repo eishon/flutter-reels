@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace 'com.eishon.reels.example'
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.eishon.reels.example"
-        minSdk 21
-        targetSdk 34
+        minSdk 24
+        targetSdk 35
         versionCode 1
         versionName "1.0"
 
@@ -41,6 +41,9 @@ dependencies {
     
     // Add reels_android library
     implementation project(':reels_android')
+    
+    // Add Flutter module (required for FlutterActivity and FlutterEngine)
+    implementation project(':flutter')
     
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

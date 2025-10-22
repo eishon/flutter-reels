@@ -42,6 +42,9 @@ build/
 .ios/
 .flutter-plugins-dependencies
 
+# Old Pigeon generated code (now uses lib/core/)
+lib/src/
+
 # Symbolication related
 app.*.symbols
 

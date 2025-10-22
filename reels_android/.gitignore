@@ -1,0 +1,17 @@
+# Gradle files
+.gradle/
+build/
+local.properties
+
+# Android Studio
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Captures
+captures/
+
+# External native build folder
+.externalNativeBuild
+.cxx/

@@ -1,6 +1,14 @@
-# Flutter Reels - Setup & Build Guide
+# Flutter Reels - Development Setup Guide
 
-This document captures all the setup requirements, build fixes, and artifacts needed to successfully build this project.
+**👨‍💻 For Contributors & Developers Only**
+
+This guide is for developers who want to contribute to Flutter Reels or build the project from source. 
+
+**If you just want to use Flutter Reels in your app**, see [ADD_TO_APP_GUIDE.md](./ADD_TO_APP_GUIDE.md) instead.
+
+---
+
+This document captures all the setup requirements, build fixes, and artifacts needed to successfully build this project from source.
 
 ---
 
@@ -68,6 +76,22 @@ flutter.versionCode=1
 cd reels_flutter
 flutter pub get
 ```
+
+### 4. Generate Pigeon Code (Platform Channel Communication)
+
+After `flutter clean` or when changing Pigeon definitions:
+
+```bash
+cd reels_flutter
+dart run pigeon --input pigeons/messages.dart
+```
+
+> **When to run this**:
+> - After `flutter clean` (it removes `lib/core/pigeon_generated.dart`)
+> - When you modify `pigeons/messages.dart`
+> - If you see Pigeon-related compile errors
+> 
+> **Note**: CI/CD automatically regenerates this, so you only need it for local development.
 
 ---
 

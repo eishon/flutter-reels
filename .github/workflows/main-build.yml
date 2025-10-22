@@ -57,6 +57,11 @@ jobs:
           cd reels_flutter
           flutter pub get
 
+      - name: Regenerate Pigeon code (needed after flutter clean)
+        run: |
+          cd reels_flutter
+          dart run pigeon --input pigeons/messages.dart
+
       # Android Build Steps
       - name: Create local.properties (Android)
         if: matrix.platform == 'android'

@@ -2,12 +2,14 @@ import 'package:pigeon/pigeon.dart';
 
 @ConfigurePigeon(
   PigeonOptions(
-    dartOut: 'lib/src/pigeon_generated.dart',
+    dartOut: 'lib/core/pigeon_generated.dart',
     dartOptions: DartOptions(),
+    // Generate Kotlin files directly in reels_android module for Add-to-App integration
     kotlinOut:
-        'android/src/main/kotlin/com/eishon/reels_flutter/PigeonGenerated.kt',
-    kotlinOptions: KotlinOptions(package: 'com.eishon.reels_flutter'),
-    swiftOut: 'ios/Classes/PigeonGenerated.swift',
+        '../reels_android/src/main/java/com/eishon/reels_android/PigeonGenerated.kt',
+    kotlinOptions: KotlinOptions(package: 'com.eishon.reels_android'),
+    // Generate Swift files directly in reels_ios module for Add-to-App integration
+    swiftOut: '../reels_ios/Sources/ReelsIOS/PigeonGenerated.swift',
     swiftOptions: SwiftOptions(),
     dartPackageName: 'reels_flutter',
   ),
