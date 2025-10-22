@@ -1,15 +1,17 @@
 import 'package:pigeon/pigeon.dart';
 
-@ConfigurePigeon(PigeonOptions(
-  dartOut: 'lib/src/pigeon_generated.dart',
-  dartOptions: DartOptions(),
-  kotlinOut: 'android/src/main/kotlin/com/eishon/reels_flutter/PigeonGenerated.kt',
-  kotlinOptions: KotlinOptions(package: 'com.eishon.reels_flutter'),
-  swiftOut: 'ios/Classes/PigeonGenerated.swift',
-  swiftOptions: SwiftOptions(),
-  dartPackageName: 'reels_flutter',
-))
-
+@ConfigurePigeon(
+  PigeonOptions(
+    dartOut: 'lib/src/pigeon_generated.dart',
+    dartOptions: DartOptions(),
+    kotlinOut:
+        'android/src/main/kotlin/com/eishon/reels_flutter/PigeonGenerated.kt',
+    kotlinOptions: KotlinOptions(package: 'com.eishon.reels_flutter'),
+    swiftOut: 'ios/Classes/PigeonGenerated.swift',
+    swiftOptions: SwiftOptions(),
+    dartPackageName: 'reels_flutter',
+  ),
+)
 /// Configuration for the Reels SDK
 class ReelsConfig {
   const ReelsConfig({
