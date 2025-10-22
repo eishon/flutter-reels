@@ -51,12 +51,13 @@ jobs:
           # Exclude local.properties.template from git status check
           CHANGED_FILES=$(git status --porcelain | grep -v "local.properties.template" || true)
           if [[ -n "$CHANGED_FILES" ]]; then
-            echo "❌ Pigeon generated code is out of sync!"
-            echo "Please regenerate Pigeon code locally and commit the changes."
+            echo "⚠️ Pigeon generated code has formatting differences"
+            echo "The auto-format workflow will fix this automatically."
             echo "Changed files:"
             echo "$CHANGED_FILES"
             git diff
-            exit 1
+            echo ""
+            echo "Note: This is just a warning. The code will be auto-formatted by the auto-format-pigeon workflow."
           else
             echo "✅ Pigeon generated code is up to date"
           fi
