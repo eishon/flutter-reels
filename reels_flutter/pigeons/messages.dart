@@ -12,108 +12,114 @@ import 'package:pigeon/pigeon.dart';
     dartPackageName: 'reels_flutter',
   ),
 )
-/// Configuration for the Reels SDK
-class ReelsConfig {
-  const ReelsConfig({
-    required this.autoPlay,
-    required this.showControls,
-    required this.loopVideos,
+// ============================================================================
+// DATA MODELS
+// ============================================================================
+/// Analytics event data
+class AnalyticsEvent {
+  const AnalyticsEvent({
+    required this.eventName,
+    required this.eventProperties,
   });
 
-  final bool autoPlay;
-  final bool showControls;
-  final bool loopVideos;
+  final String eventName;
+  final Map<String?, String?> eventProperties;
 }
 
-/// Data model for a video in the reels
-class VideoData {
-  const VideoData({
-    required this.id,
-    required this.url,
+/// Share data for social sharing
+class ShareData {
+  const ShareData({
+    required this.videoId,
+    required this.videoUrl,
+    required this.title,
+    required this.description,
     this.thumbnailUrl,
-    this.title,
-    this.description,
-    this.authorName,
-    this.authorAvatarUrl,
-    this.likeCount,
-    this.commentCount,
-    this.shareCount,
-    this.isLiked,
   });
 
-  final String id;
-  final String url;
+  final String videoId;
+  final String videoUrl;
+  final String title;
+  final String description;
   final String? thumbnailUrl;
-  final String? title;
-  final String? description;
-  final String? authorName;
-  final String? authorAvatarUrl;
-  final int? likeCount;
-  final int? commentCount;
-  final int? shareCount;
-  final bool? isLiked;
 }
 
-/// Product information for tagging in reels
-class ProductData {
-  const ProductData({
-    required this.id,
-    required this.name,
-    this.imageUrl,
-    this.price,
-    this.currency,
+/// Screen state data for native tracking
+class ScreenStateData {
+  const ScreenStateData({
+    required this.screenName,
+    required this.state,
+    this.timestamp,
   });
 
-  final String id;
-  final String name;
-  final String? imageUrl;
-  final double? price;
-  final String? currency;
+  final String screenName;
+  final String state; // appeared, disappeared, focused, unfocused
+  final int? timestamp;
 }
 
-/// API called by native platform to communicate with Flutter
+/// Video state data for playback tracking
+class VideoStateData {
+  const VideoStateData({
+    required this.videoId,
+    required this.state,
+    this.position,
+    this.duration,
+    this.timestamp,
+  });
+
+  final String videoId;
+  final String state; // playing, paused, stopped, buffering, completed
+  final int? position; // in seconds
+  final int? duration; // in seconds
+  final int? timestamp;
+}
+
+// ============================================================================
+// HOST APIs (Flutter calls Native)
+// ============================================================================
+
+/// API for accessing user authentication token from native
 @HostApi()
-abstract class ReelsFlutterApi {
-  /// Initialize the Reels SDK with configuration
-  void initialize(ReelsConfig config);
-
-  /// Show reels with the provided video data
-  void showReels(List<VideoData> videos);
-
-  /// Update a specific video's data (e.g., after a like/share)
-  void updateVideo(VideoData video);
-
-  /// Close the reels view
-  void closeReels();
-
-  /// Update the configuration
-  void updateConfig(ReelsConfig config);
+abstract class ReelsFlutterTokenApi {
+  /// Get the current access token from native platform
+  String? getAccessToken();
 }
 
-/// API called by Flutter to communicate with native platform
+/// API for sending analytics events to native analytics SDK
 @FlutterApi()
-abstract class ReelsNativeApi {
-  /// Called when a reel is viewed (displayed for significant time)
-  void onReelViewed(String videoId);
+abstract class ReelsFlutterAnalyticsApi {
+  /// Track a custom analytics event
+  void trackEvent(AnalyticsEvent event);
+}
 
-  /// Called when user likes/unlikes a video
-  void onReelLiked(String videoId, bool isLiked);
+/// API for notifying native about button interactions
+@FlutterApi()
+abstract class ReelsFlutterButtonEventsApi {
+  /// Called before like button is clicked (for optimistic UI)
+  void onBeforeLikeButtonClick(String videoId);
 
-  /// Called when user shares a video
-  void onReelShared(String videoId);
+  /// Called after like button click completes (with updated state)
+  void onAfterLikeButtonClick(String videoId, bool isLiked, int likeCount);
 
-  /// Called when user comments on a video
-  void onReelCommented(String videoId);
+  /// Called when share button is clicked
+  void onShareButtonClick(ShareData shareData);
+}
 
-  /// Called when a product in the reel is clicked
-  void onProductClicked(String productId, String videoId);
+/// API for notifying native about screen and video state changes
+@FlutterApi()
+abstract class ReelsFlutterStateApi {
+  /// Notify native when screen state changes
+  void onScreenStateChanged(ScreenStateData state);
 
-  /// Called when reels view is closed
-  void onReelsClosed();
+  /// Notify native when video state changes
+  void onVideoStateChanged(VideoStateData state);
+}
 
-  /// Called when an error occurs
-  void onError(String errorMessage);
+/// API for handling navigation gestures
+@FlutterApi()
+abstract class ReelsFlutterNavigationApi {
+  /// Called when user swipes left
+  void onSwipeLeft();
 
-  /// Request access token for authenticated API calls
-  String? getAccessToken();
+  /// Called when user swipes right
+  void onSwipeRight();
 }

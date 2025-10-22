@@ -68,132 +68,134 @@ private func nilOrValue<T>(_ value: Any?) -> T? {
   return value as! T?
 }
 
-/// Configuration for the Reels SDK
+/// Analytics event data
 ///
 /// Generated class from Pigeon that represents data sent in messages.
-struct ReelsConfig {
-  var autoPlay: Bool
-  var showControls: Bool
-  var loopVideos: Bool
+struct AnalyticsEvent {
+  var eventName: String
+  var eventProperties: [String?: String?]
 
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
-  static func fromList(_ pigeonVar_list: [Any?]) -> ReelsConfig? {
-    let autoPlay = pigeonVar_list[0] as! Bool
-    let showControls = pigeonVar_list[1] as! Bool
-    let loopVideos = pigeonVar_list[2] as! Bool
+  static func fromList(_ pigeonVar_list: [Any?]) -> AnalyticsEvent? {
+    let eventName = pigeonVar_list[0] as! String
+    let eventProperties = pigeonVar_list[1] as! [String?: String?]
 
-    return ReelsConfig(
-      autoPlay: autoPlay,
-      showControls: showControls,
-      loopVideos: loopVideos
+    return AnalyticsEvent(
+      eventName: eventName,
+      eventProperties: eventProperties
     )
   }
   func toList() -> [Any?] {
     return [
-      autoPlay,
-      showControls,
-      loopVideos,
+      eventName,
+      eventProperties,
     ]
   }
 }
 
-/// Data model for a video in the reels
+/// Share data for social sharing
 ///
 /// Generated class from Pigeon that represents data sent in messages.
-struct VideoData {
-  var id: String
-  var url: String
+struct ShareData {
+  var videoId: String
+  var videoUrl: String
+  var title: String
+  var description: String
   var thumbnailUrl: String? = nil
-  var title: String? = nil
-  var description: String? = nil
-  var authorName: String? = nil
-  var authorAvatarUrl: String? = nil
-  var likeCount: Int64? = nil
-  var commentCount: Int64? = nil
-  var shareCount: Int64? = nil
-  var isLiked: Bool? = nil
 
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
-  static func fromList(_ pigeonVar_list: [Any?]) -> VideoData? {
-    let id = pigeonVar_list[0] as! String
-    let url = pigeonVar_list[1] as! String
-    let thumbnailUrl: String? = nilOrValue(pigeonVar_list[2])
-    let title: String? = nilOrValue(pigeonVar_list[3])
-    let description: String? = nilOrValue(pigeonVar_list[4])
-    let authorName: String? = nilOrValue(pigeonVar_list[5])
-    let authorAvatarUrl: String? = nilOrValue(pigeonVar_list[6])
-    let likeCount: Int64? = nilOrValue(pigeonVar_list[7])
-    let commentCount: Int64? = nilOrValue(pigeonVar_list[8])
-    let shareCount: Int64? = nilOrValue(pigeonVar_list[9])
-    let isLiked: Bool? = nilOrValue(pigeonVar_list[10])
+  static func fromList(_ pigeonVar_list: [Any?]) -> ShareData? {
+    let videoId = pigeonVar_list[0] as! String
+    let videoUrl = pigeonVar_list[1] as! String
+    let title = pigeonVar_list[2] as! String
+    let description = pigeonVar_list[3] as! String
+    let thumbnailUrl: String? = nilOrValue(pigeonVar_list[4])
 
-    return VideoData(
-      id: id,
-      url: url,
-      thumbnailUrl: thumbnailUrl,
+    return ShareData(
+      videoId: videoId,
+      videoUrl: videoUrl,
       title: title,
       description: description,
-      authorName: authorName,
-      authorAvatarUrl: authorAvatarUrl,
-      likeCount: likeCount,
-      commentCount: commentCount,
-      shareCount: shareCount,
-      isLiked: isLiked
+      thumbnailUrl: thumbnailUrl
     )
   }
   func toList() -> [Any?] {
     return [
-      id,
-      url,
-      thumbnailUrl,
+      videoId,
+      videoUrl,
       title,
       description,
-      authorName,
-      authorAvatarUrl,
-      likeCount,
-      commentCount,
-      shareCount,
-      isLiked,
+      thumbnailUrl,
     ]
   }
 }
 
-/// Product information for tagging in reels
+/// Screen state data for native tracking
 ///
 /// Generated class from Pigeon that represents data sent in messages.
-struct ProductData {
-  var id: String
-  var name: String
-  var imageUrl: String? = nil
-  var price: Double? = nil
-  var currency: String? = nil
+struct ScreenStateData {
+  var screenName: String
+  var state: String
+  var timestamp: Int64? = nil
 
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
-  static func fromList(_ pigeonVar_list: [Any?]) -> ProductData? {
-    let id = pigeonVar_list[0] as! String
-    let name = pigeonVar_list[1] as! String
-    let imageUrl: String? = nilOrValue(pigeonVar_list[2])
-    let price: Double? = nilOrValue(pigeonVar_list[3])
-    let currency: String? = nilOrValue(pigeonVar_list[4])
+  static func fromList(_ pigeonVar_list: [Any?]) -> ScreenStateData? {
+    let screenName = pigeonVar_list[0] as! String
+    let state = pigeonVar_list[1] as! String
+    let timestamp: Int64? = nilOrValue(pigeonVar_list[2])
 
-    return ProductData(
-      id: id,
-      name: name,
-      imageUrl: imageUrl,
-      price: price,
-      currency: currency
+    return ScreenStateData(
+      screenName: screenName,
+      state: state,
+      timestamp: timestamp
     )
   }
   func toList() -> [Any?] {
     return [
-      id,
-      name,
-      imageUrl,
-      price,
-      currency,
+      screenName,
+      state,
+      timestamp,
+    ]
+  }
+}
+
+/// Video state data for playback tracking
+///
+/// Generated class from Pigeon that represents data sent in messages.
+struct VideoStateData {
+  var videoId: String
+  var state: String
+  var position: Int64? = nil
+  var duration: Int64? = nil
+  var timestamp: Int64? = nil
+
+
+  // swift-format-ignore: AlwaysUseLowerCamelCase
+  static func fromList(_ pigeonVar_list: [Any?]) -> VideoStateData? {
+    let videoId = pigeonVar_list[0] as! String
+    let state = pigeonVar_list[1] as! String
+    let position: Int64? = nilOrValue(pigeonVar_list[2])
+    let duration: Int64? = nilOrValue(pigeonVar_list[3])
+    let timestamp: Int64? = nilOrValue(pigeonVar_list[4])
+
+    return VideoStateData(
+      videoId: videoId,
+      state: state,
+      position: position,
+      duration: duration,
+      timestamp: timestamp
+    )
+  }
+  func toList() -> [Any?] {
+    return [
+      videoId,
+      state,
+      position,
+      duration,
+      timestamp,
     ]
   }
 }
@@ -202,11 +204,13 @@ private class PigeonGeneratedPigeonCodecReader: FlutterStandardReader {
   override func readValue(ofType type: UInt8) -> Any? {
     switch type {
     case 129:
-      return ReelsConfig.fromList(self.readValue() as! [Any?])
+      return AnalyticsEvent.fromList(self.readValue() as! [Any?])
     case 130:
-      return VideoData.fromList(self.readValue() as! [Any?])
+      return ShareData.fromList(self.readValue() as! [Any?])
     case 131:
-      return ProductData.fromList(self.readValue() as! [Any?])
+      return ScreenStateData.fromList(self.readValue() as! [Any?])
+    case 132:
+      return VideoStateData.fromList(self.readValue() as! [Any?])
     default:
       return super.readValue(ofType: type)
     }
@@ -215,14 +219,17 @@ private class PigeonGeneratedPigeonCodecReader: FlutterStandardReader {
 
 private class PigeonGeneratedPigeonCodecWriter: FlutterStandardWriter {
   override func writeValue(_ value: Any) {
-    if let value = value as? ReelsConfig {
+    if let value = value as? AnalyticsEvent {
       super.writeByte(129)
       super.writeValue(value.toList())
-    } else if let value = value as? VideoData {
+    } else if let value = value as? ShareData {
       super.writeByte(130)
       super.writeValue(value.toList())
-    } else if let value = value as? ProductData {
+    } else if let value = value as? ScreenStateData {
       super.writeByte(131)
+      super.writeValue(value.toList())
+    } else if let value = value as? VideoStateData {
+      super.writeByte(132)
       super.writeValue(value.toList())
     } else {
       super.writeValue(value)
@@ -244,130 +251,44 @@ class PigeonGeneratedPigeonCodec: FlutterStandardMessageCodec, @unchecked Sendab
   static let shared = PigeonGeneratedPigeonCodec(readerWriter: PigeonGeneratedPigeonCodecReaderWriter())
 }
 
-/// API called by native platform to communicate with Flutter
+/// API for accessing user authentication token from native
 ///
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
-protocol ReelsFlutterApi {
-  /// Initialize the Reels SDK with configuration
-  func initialize(config: ReelsConfig) throws
-  /// Show reels with the provided video data
-  func showReels(videos: [VideoData]) throws
-  /// Update a specific video's data (e.g., after a like/share)
-  func updateVideo(video: VideoData) throws
-  /// Close the reels view
-  func closeReels() throws
-  /// Update the configuration
-  func updateConfig(config: ReelsConfig) throws
+protocol ReelsFlutterTokenApi {
+  /// Get the current access token from native platform
+  func getAccessToken() throws -> String?
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
-class ReelsFlutterApiSetup {
+class ReelsFlutterTokenApiSetup {
   static var codec: FlutterStandardMessageCodec { PigeonGeneratedPigeonCodec.shared }
-  /// Sets up an instance of `ReelsFlutterApi` to handle messages through the `binaryMessenger`.
-  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: ReelsFlutterApi?, messageChannelSuffix: String = "") {
+  /// Sets up an instance of `ReelsFlutterTokenApi` to handle messages through the `binaryMessenger`.
+  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: ReelsFlutterTokenApi?, messageChannelSuffix: String = "") {
     let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
-    /// Initialize the Reels SDK with configuration
-    let initializeChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.reels_flutter.ReelsFlutterApi.initialize\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    /// Get the current access token from native platform
+    let getAccessTokenChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.reels_flutter.ReelsFlutterTokenApi.getAccessToken\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
-      initializeChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let configArg = args[0] as! ReelsConfig
+      getAccessTokenChannel.setMessageHandler { _, reply in
         do {
-          try api.initialize(config: configArg)
-          reply(wrapResult(nil))
+          let result = try api.getAccessToken()
+          reply(wrapResult(result))
         } catch {
           reply(wrapError(error))
         }
       }
     } else {
-      initializeChannel.setMessageHandler(nil)
-    }
-    /// Show reels with the provided video data
-    let showReelsChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.reels_flutter.ReelsFlutterApi.showReels\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      showReelsChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let videosArg = args[0] as! [VideoData]
-        do {
-          try api.showReels(videos: videosArg)
-          reply(wrapResult(nil))
-        } catch {
-          reply(wrapError(error))
-        }
-      }
-    } else {
-      showReelsChannel.setMessageHandler(nil)
-    }
-    /// Update a specific video's data (e.g., after a like/share)
-    let updateVideoChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.reels_flutter.ReelsFlutterApi.updateVideo\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      updateVideoChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let videoArg = args[0] as! VideoData
-        do {
-          try api.updateVideo(video: videoArg)
-          reply(wrapResult(nil))
-        } catch {
-          reply(wrapError(error))
-        }
-      }
-    } else {
-      updateVideoChannel.setMessageHandler(nil)
-    }
-    /// Close the reels view
-    let closeReelsChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.reels_flutter.ReelsFlutterApi.closeReels\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      closeReelsChannel.setMessageHandler { _, reply in
-        do {
-          try api.closeReels()
-          reply(wrapResult(nil))
-        } catch {
-          reply(wrapError(error))
-        }
-      }
-    } else {
-      closeReelsChannel.setMessageHandler(nil)
-    }
-    /// Update the configuration
-    let updateConfigChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.reels_flutter.ReelsFlutterApi.updateConfig\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      updateConfigChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let configArg = args[0] as! ReelsConfig
-        do {
-          try api.updateConfig(config: configArg)
-          reply(wrapResult(nil))
-        } catch {
-          reply(wrapError(error))
-        }
-      }
-    } else {
-      updateConfigChannel.setMessageHandler(nil)
+      getAccessTokenChannel.setMessageHandler(nil)
     }
   }
 }
-/// API called by Flutter to communicate with native platform
+/// API for sending analytics events to native analytics SDK
 ///
 /// Generated protocol from Pigeon that represents Flutter messages that can be called from Swift.
-protocol ReelsNativeApiProtocol {
-  /// Called when a reel is viewed (displayed for significant time)
-  func onReelViewed(videoId videoIdArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void)
-  /// Called when user likes/unlikes a video
-  func onReelLiked(videoId videoIdArg: String, isLiked isLikedArg: Bool, completion: @escaping (Result<Void, PigeonError>) -> Void)
-  /// Called when user shares a video
-  func onReelShared(videoId videoIdArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void)
-  /// Called when user comments on a video
-  func onReelCommented(videoId videoIdArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void)
-  /// Called when a product in the reel is clicked
-  func onProductClicked(productId productIdArg: String, videoId videoIdArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void)
-  /// Called when reels view is closed
-  func onReelsClosed(completion: @escaping (Result<Void, PigeonError>) -> Void)
-  /// Called when an error occurs
-  func onError(errorMessage errorMessageArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void)
-  /// Request access token for authenticated API calls
-  func getAccessToken(completion: @escaping (Result<String?, PigeonError>) -> Void)
+protocol ReelsFlutterAnalyticsApiProtocol {
+  /// Track a custom analytics event
+  func trackEvent(event eventArg: AnalyticsEvent, completion: @escaping (Result<Void, PigeonError>) -> Void)
 }
-class ReelsNativeApi: ReelsNativeApiProtocol {
+class ReelsFlutterAnalyticsApi: ReelsFlutterAnalyticsApiProtocol {
   private let binaryMessenger: FlutterBinaryMessenger
   private let messageChannelSuffix: String
   init(binaryMessenger: FlutterBinaryMessenger, messageChannelSuffix: String = "") {
@@ -377,9 +298,50 @@ class ReelsNativeApi: ReelsNativeApiProtocol {
   var codec: PigeonGeneratedPigeonCodec {
     return PigeonGeneratedPigeonCodec.shared
   }
-  /// Called when a reel is viewed (displayed for significant time)
-  func onReelViewed(videoId videoIdArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void) {
-    let channelName: String = "dev.flutter.pigeon.reels_flutter.ReelsNativeApi.onReelViewed\(messageChannelSuffix)"
+  /// Track a custom analytics event
+  func trackEvent(event eventArg: AnalyticsEvent, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.reels_flutter.ReelsFlutterAnalyticsApi.trackEvent\(messageChannelSuffix)"
+    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
+    channel.sendMessage([eventArg] as [Any?]) { response in
+      guard let listResponse = response as? [Any?] else {
+        completion(.failure(createConnectionError(withChannelName: channelName)))
+        return
+      }
+      if listResponse.count > 1 {
+        let code: String = listResponse[0] as! String
+        let message: String? = nilOrValue(listResponse[1])
+        let details: String? = nilOrValue(listResponse[2])
+        completion(.failure(PigeonError(code: code, message: message, details: details)))
+      } else {
+        completion(.success(Void()))
+      }
+    }
+  }
+}
+/// API for notifying native about button interactions
+///
+/// Generated protocol from Pigeon that represents Flutter messages that can be called from Swift.
+protocol ReelsFlutterButtonEventsApiProtocol {
+  /// Called before like button is clicked (for optimistic UI)
+  func onBeforeLikeButtonClick(videoId videoIdArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void)
+  /// Called after like button click completes (with updated state)
+  func onAfterLikeButtonClick(videoId videoIdArg: String, isLiked isLikedArg: Bool, likeCount likeCountArg: Int64, completion: @escaping (Result<Void, PigeonError>) -> Void)
+  /// Called when share button is clicked
+  func onShareButtonClick(shareData shareDataArg: ShareData, completion: @escaping (Result<Void, PigeonError>) -> Void)
+}
+class ReelsFlutterButtonEventsApi: ReelsFlutterButtonEventsApiProtocol {
+  private let binaryMessenger: FlutterBinaryMessenger
+  private let messageChannelSuffix: String
+  init(binaryMessenger: FlutterBinaryMessenger, messageChannelSuffix: String = "") {
+    self.binaryMessenger = binaryMessenger
+    self.messageChannelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
+  }
+  var codec: PigeonGeneratedPigeonCodec {
+    return PigeonGeneratedPigeonCodec.shared
+  }
+  /// Called before like button is clicked (for optimistic UI)
+  func onBeforeLikeButtonClick(videoId videoIdArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.reels_flutter.ReelsFlutterButtonEventsApi.onBeforeLikeButtonClick\(messageChannelSuffix)"
     let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
     channel.sendMessage([videoIdArg] as [Any?]) { response in
       guard let listResponse = response as? [Any?] else {
@@ -396,11 +358,11 @@ class ReelsNativeApi: ReelsNativeApiProtocol {
       }
     }
   }
-  /// Called when user likes/unlikes a video
-  func onReelLiked(videoId videoIdArg: String, isLiked isLikedArg: Bool, completion: @escaping (Result<Void, PigeonError>) -> Void) {
-    let channelName: String = "dev.flutter.pigeon.reels_flutter.ReelsNativeApi.onReelLiked\(messageChannelSuffix)"
+  /// Called after like button click completes (with updated state)
+  func onAfterLikeButtonClick(videoId videoIdArg: String, isLiked isLikedArg: Bool, likeCount likeCountArg: Int64, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.reels_flutter.ReelsFlutterButtonEventsApi.onAfterLikeButtonClick\(messageChannelSuffix)"
     let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
-    channel.sendMessage([videoIdArg, isLikedArg] as [Any?]) { response in
+    channel.sendMessage([videoIdArg, isLikedArg, likeCountArg] as [Any?]) { response in
       guard let listResponse = response as? [Any?] else {
         completion(.failure(createConnectionError(withChannelName: channelName)))
         return
@@ -415,11 +377,11 @@ class ReelsNativeApi: ReelsNativeApiProtocol {
       }
     }
   }
-  /// Called when user shares a video
-  func onReelShared(videoId videoIdArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void) {
-    let channelName: String = "dev.flutter.pigeon.reels_flutter.ReelsNativeApi.onReelShared\(messageChannelSuffix)"
+  /// Called when share button is clicked
+  func onShareButtonClick(shareData shareDataArg: ShareData, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.reels_flutter.ReelsFlutterButtonEventsApi.onShareButtonClick\(messageChannelSuffix)"
     let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
-    channel.sendMessage([videoIdArg] as [Any?]) { response in
+    channel.sendMessage([shareDataArg] as [Any?]) { response in
       guard let listResponse = response as? [Any?] else {
         completion(.failure(createConnectionError(withChannelName: channelName)))
         return
@@ -434,11 +396,31 @@ class ReelsNativeApi: ReelsNativeApiProtocol {
       }
     }
   }
-  /// Called when user comments on a video
-  func onReelCommented(videoId videoIdArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void) {
-    let channelName: String = "dev.flutter.pigeon.reels_flutter.ReelsNativeApi.onReelCommented\(messageChannelSuffix)"
+}
+/// API for notifying native about screen and video state changes
+///
+/// Generated protocol from Pigeon that represents Flutter messages that can be called from Swift.
+protocol ReelsFlutterStateApiProtocol {
+  /// Notify native when screen state changes
+  func onScreenStateChanged(state stateArg: ScreenStateData, completion: @escaping (Result<Void, PigeonError>) -> Void)
+  /// Notify native when video state changes
+  func onVideoStateChanged(state stateArg: VideoStateData, completion: @escaping (Result<Void, PigeonError>) -> Void)
+}
+class ReelsFlutterStateApi: ReelsFlutterStateApiProtocol {
+  private let binaryMessenger: FlutterBinaryMessenger
+  private let messageChannelSuffix: String
+  init(binaryMessenger: FlutterBinaryMessenger, messageChannelSuffix: String = "") {
+    self.binaryMessenger = binaryMessenger
+    self.messageChannelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
+  }
+  var codec: PigeonGeneratedPigeonCodec {
+    return PigeonGeneratedPigeonCodec.shared
+  }
+  /// Notify native when screen state changes
+  func onScreenStateChanged(state stateArg: ScreenStateData, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.reels_flutter.ReelsFlutterStateApi.onScreenStateChanged\(messageChannelSuffix)"
     let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
-    channel.sendMessage([videoIdArg] as [Any?]) { response in
+    channel.sendMessage([stateArg] as [Any?]) { response in
       guard let listResponse = response as? [Any?] else {
         completion(.failure(createConnectionError(withChannelName: channelName)))
         return
@@ -453,11 +435,11 @@ class ReelsNativeApi: ReelsNativeApiProtocol {
       }
     }
   }
-  /// Called when a product in the reel is clicked
-  func onProductClicked(productId productIdArg: String, videoId videoIdArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void) {
-    let channelName: String = "dev.flutter.pigeon.reels_flutter.ReelsNativeApi.onProductClicked\(messageChannelSuffix)"
+  /// Notify native when video state changes
+  func onVideoStateChanged(state stateArg: VideoStateData, completion: @escaping (Result<Void, PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.reels_flutter.ReelsFlutterStateApi.onVideoStateChanged\(messageChannelSuffix)"
     let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
-    channel.sendMessage([productIdArg, videoIdArg] as [Any?]) { response in
+    channel.sendMessage([stateArg] as [Any?]) { response in
       guard let listResponse = response as? [Any?] else {
         completion(.failure(createConnectionError(withChannelName: channelName)))
         return
@@ -472,9 +454,29 @@ class ReelsNativeApi: ReelsNativeApiProtocol {
       }
     }
   }
-  /// Called when reels view is closed
-  func onReelsClosed(completion: @escaping (Result<Void, PigeonError>) -> Void) {
-    let channelName: String = "dev.flutter.pigeon.reels_flutter.ReelsNativeApi.onReelsClosed\(messageChannelSuffix)"
+}
+/// API for handling navigation gestures
+///
+/// Generated protocol from Pigeon that represents Flutter messages that can be called from Swift.
+protocol ReelsFlutterNavigationApiProtocol {
+  /// Called when user swipes left
+  func onSwipeLeft(completion: @escaping (Result<Void, PigeonError>) -> Void)
+  /// Called when user swipes right
+  func onSwipeRight(completion: @escaping (Result<Void, PigeonError>) -> Void)
+}
+class ReelsFlutterNavigationApi: ReelsFlutterNavigationApiProtocol {
+  private let binaryMessenger: FlutterBinaryMessenger
+  private let messageChannelSuffix: String
+  init(binaryMessenger: FlutterBinaryMessenger, messageChannelSuffix: String = "") {
+    self.binaryMessenger = binaryMessenger
+    self.messageChannelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
+  }
+  var codec: PigeonGeneratedPigeonCodec {
+    return PigeonGeneratedPigeonCodec.shared
+  }
+  /// Called when user swipes left
+  func onSwipeLeft(completion: @escaping (Result<Void, PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.reels_flutter.ReelsFlutterNavigationApi.onSwipeLeft\(messageChannelSuffix)"
     let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
     channel.sendMessage(nil) { response in
       guard let listResponse = response as? [Any?] else {
@@ -491,28 +493,9 @@ class ReelsNativeApi: ReelsNativeApiProtocol {
       }
     }
   }
-  /// Called when an error occurs
-  func onError(errorMessage errorMessageArg: String, completion: @escaping (Result<Void, PigeonError>) -> Void) {
-    let channelName: String = "dev.flutter.pigeon.reels_flutter.ReelsNativeApi.onError\(messageChannelSuffix)"
-    let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
-    channel.sendMessage([errorMessageArg] as [Any?]) { response in
-      guard let listResponse = response as? [Any?] else {
-        completion(.failure(createConnectionError(withChannelName: channelName)))
-        return
-      }
-      if listResponse.count > 1 {
-        let code: String = listResponse[0] as! String
-        let message: String? = nilOrValue(listResponse[1])
-        let details: String? = nilOrValue(listResponse[2])
-        completion(.failure(PigeonError(code: code, message: message, details: details)))
-      } else {
-        completion(.success(Void()))
-      }
-    }
-  }
-  /// Request access token for authenticated API calls
-  func getAccessToken(completion: @escaping (Result<String?, PigeonError>) -> Void) {
-    let channelName: String = "dev.flutter.pigeon.reels_flutter.ReelsNativeApi.getAccessToken\(messageChannelSuffix)"
+  /// Called when user swipes right
+  func onSwipeRight(completion: @escaping (Result<Void, PigeonError>) -> Void) {
+    let channelName: String = "dev.flutter.pigeon.reels_flutter.ReelsFlutterNavigationApi.onSwipeRight\(messageChannelSuffix)"
     let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
     channel.sendMessage(nil) { response in
       guard let listResponse = response as? [Any?] else {
@@ -525,8 +508,7 @@ class ReelsNativeApi: ReelsNativeApiProtocol {
         let details: String? = nilOrValue(listResponse[2])
         completion(.failure(PigeonError(code: code, message: message, details: details)))
       } else {
-        let result: String? = nilOrValue(listResponse[0])
-        completion(.success(result))
+        completion(.success(Void()))
       }
     }
   }
