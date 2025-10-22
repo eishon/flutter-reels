@@ -1,0 +1,12 @@
+{
+  "": {
+    "swift-dependencies": "/Users/eishon/Works/flutter/personal/flutter-reels/reels_ios/.build/index-build/arm64-apple-macosx/debug/ReelsIOS.build/master.swiftdeps"
+  },
+  "/Users/eishon/Works/flutter/personal/flutter-reels/reels_ios/Sources/ReelsIOS/ReelsIOSSDK.swift": {
+    "dependencies": "/Users/eishon/Works/flutter/personal/flutter-reels/reels_ios/.build/index-build/arm64-apple-macosx/debug/ReelsIOS.build/ReelsIOSSDK.d",
+    "object": "/Users/eishon/Works/flutter/personal/flutter-reels/reels_ios/.build/index-build/arm64-apple-macosx/debug/ReelsIOS.build/ReelsIOSSDK.swift.o",
+    "swiftmodule": "/Users/eishon/Works/flutter/personal/flutter-reels/reels_ios/.build/index-build/arm64-apple-macosx/debug/ReelsIOS.build/ReelsIOSSDK~partial.swiftmodule",
+    "swift-dependencies": "/Users/eishon/Works/flutter/personal/flutter-reels/reels_ios/.build/index-build/arm64-apple-macosx/debug/ReelsIOS.build/ReelsIOSSDK.swiftdeps",
+    "diagnostics": "/Users/eishon/Works/flutter/personal/flutter-reels/reels_ios/.build/index-build/arm64-apple-macosx/debug/ReelsIOS.build/ReelsIOSSDK.dia"
+  }
+}

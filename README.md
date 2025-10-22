@@ -1,171 +1,340 @@
-# Flutter Reels
+# Flutter Reels - Native SDK Integration# Flutter Reels
 
-[![CI](https://github.com/eishon/flutter-reels/actions/workflows/ci.yml/badge.svg)](https://github.com/eishon/flutter-reels/actions/workflows/ci.yml)
+
+
+This project provides native Android and iOS SDKs for integrating Flutter-based reels functionality into native mobile applications.[![CI](https://github.com/eishon/flutter-reels/actions/workflows/ci.yml/badge.svg)](https://github.com/eishon/flutter-reels/actions/workflows/ci.yml)
+
 [![Build Android](https://github.com/eishon/flutter-reels/actions/workflows/build-android.yml/badge.svg)](https://github.com/eishon/flutter-reels/actions/workflows/build-android.yml)
-[![Build iOS](https://github.com/eishon/flutter-reels/actions/workflows/build-ios.yml/badge.svg)](https://github.com/eishon/flutter-reels/actions/workflows/build-ios.yml)
 
-A Flutter module designed to be integrated into native Android and iOS applications. This module provides a reels/stories viewing experience that can be seamlessly embedded in your existing native apps.
+## Project Structure[![Build iOS](https://github.com/eishon/flutter-reels/actions/workflows/build-ios.yml/badge.svg)](https://github.com/eishon/flutter-reels/actions/workflows/build-ios.yml)
 
-## 📋 Overview
 
-This repository contains a Flutter module (`flutter_reels`) that can be distributed as a library for native Android and iOS projects. The module is built with native integration in mind and includes automated CI/CD pipelines for easy distribution.
 
-## 🚀 Quick Start
+```A Flutter module designed to be integrated into native Android and iOS applications. This module provides a reels/stories viewing experience that can be seamlessly embedded in your existing native apps.
 
-### For Integration
+flutter-reels/
+
+├── reels_flutter/          # Flutter module with reels functionality## 📋 Overview
+
+├── reels_android/          # Android native SDK wrapper
+
+├── reels_ios/              # iOS native SDK wrapper  This repository contains a Flutter module (`flutter_reels`) that can be distributed as a library for native Android and iOS projects. The module is built with native integration in mind and includes automated CI/CD pipelines for easy distribution.
+
+├── example/
+
+│   ├── android/           # Android example app## 🚀 Quick Start
+
+│   └── ios/               # iOS example app
+
+└── legacy/                # Previous project version (archived)### For Integration
+
+```
 
 Visit the [flutter_reels](./flutter_reels) directory for detailed integration instructions for both Android and iOS.
 
+## Architecture
+
 **Quick Links:**
-- [**🚀 Native Initialization Quick Start**](./NATIVE_INITIALIZATION.md) ⭐ **START HERE** (Step-by-step setup)
+
+The project follows a three-tier architecture:- [**🚀 Native Initialization Quick Start**](./NATIVE_INITIALIZATION.md) ⭐ **START HERE** (Step-by-step setup)
+
 - [**Native Integration Guide**](./NATIVE_INTEGRATION.md) (Complete native platform integration)
-- [**Pigeon API Documentation**](./flutter_reels/pigeon/README.md) (Platform communication APIs)
-- [Android Integration Guide](./flutter_reels/README.md#for-android-native)
-- [iOS Integration Guide](./flutter_reels/README.md#for-ios-native)
+
+1. **reels_flutter**: Flutter module containing the core reels UI and logic- [**Pigeon API Documentation**](./flutter_reels/pigeon/README.md) (Platform communication APIs)
+
+2. **reels_android / reels_ios**: Native wrapper SDKs that embed the Flutter module- [Android Integration Guide](./flutter_reels/README.md#for-android-native)
+
+3. **example apps**: Demonstration apps showing how to integrate the native SDKs- [iOS Integration Guide](./flutter_reels/README.md#for-ios-native)
+
 - [Gradle Integration Guide](./GRADLE_INTEGRATION.md) (Android Dependency)
-- [CocoaPods Integration Guide](./COCOAPODS_INTEGRATION.md) (iOS Dependency)
+
+### Communication Layer- [CocoaPods Integration Guide](./COCOAPODS_INTEGRATION.md) (iOS Dependency)
+
 - [Multi-Instance Navigation](./MULTI_INSTANCE_NAVIGATION.md) (Advanced navigation patterns)
-- [GitHub Packages Setup](./GITHUB_PACKAGES_SETUP.md) (For Private Repository Access)
 
-### For Development
+- **Pigeon**: Type-safe platform channel communication between Flutter and native code- [GitHub Packages Setup](./GITHUB_PACKAGES_SETUP.md) (For Private Repository Access)
 
-```bash
+- Native SDKs provide clean APIs for initialization and interaction
+
+- Flutter module handles the UI rendering and business logic### For Development
+
+
+
+## Package Naming```bash
+
 # Clone the repository
-git clone https://github.com/eishon/flutter-reels.git
-cd flutter-reels/flutter_reels
 
-# Get dependencies
+All packages use the `com.eishon` organization:git clone https://github.com/eishon/flutter-reels.git
+
+- Android: `com.eishon.reels_android`cd flutter-reels/flutter_reels
+
+- iOS: `com.eishon.reels_ios` (ReelsIOS)
+
+- Example apps: `com.eishon.reels.example`# Get dependencies
+
 flutter pub get
 
+## Current Status
+
 # Run the module in standalone mode
-flutter run
-```
 
-## 📦 Releases & Distribution
+### ✅ Completedflutter run
 
-### For Private Repository Access
+- [x] Project structure created```
+
+- [x] Flutter module initialized
+
+- [x] Android native SDK structure## 📦 Releases & Distribution
+
+- [x] iOS native SDK structure (SPM + CocoaPods)
+
+- [x] Android example app structure### For Private Repository Access
+
+- [x] iOS example app structure
 
 This repository is currently **private**. To use it in your projects:
 
-1. **GitHub Packages** (Recommended for Private Repos)
-   - See [GitHub Packages Setup Guide](./GITHUB_PACKAGES_SETUP.md)
-   - Requires Personal Access Token (PAT)
-   - Works with Gradle (Android) and CocoaPods (iOS)
+### 🚧 In Progress
 
-2. **Direct Downloads**
-   - Pre-built releases available on [Releases](https://github.com/eishon/flutter-reels/releases) page
-   - Requires repository access
-   - **Android AAR**: Ready-to-use Android Archive files
-   - **iOS Frameworks**: XCFramework bundles for iOS integration
+- [ ] Pigeon API definitions1. **GitHub Packages** (Recommended for Private Repos)
 
-### For Public Repository
+- [ ] Flutter module integration with native wrappers   - See [GitHub Packages Setup Guide](./GITHUB_PACKAGES_SETUP.md)
 
-If you make this repository public, users can use simple dependency management:
-- **Android**: One-line Gradle dependency
-- **iOS**: One-line CocoaPods dependency
-- No authentication required
+- [ ] Pigeon communication implementation   - Requires Personal Access Token (PAT)
+
+- [ ] GitHub Actions for publishing AAR/framework   - Works with Gradle (Android) and CocoaPods (iOS)
+
+
+
+### 📋 Pending2. **Direct Downloads**
+
+- [ ] Core reels functionality   - Pre-built releases available on [Releases](https://github.com/eishon/flutter-reels/releases) page
+
+- [ ] Video playback   - Requires repository access
+
+- [ ] Engagement features (like, share, comment)   - **Android AAR**: Ready-to-use Android Archive files
+
+- [ ] Product tagging   - **iOS Frameworks**: XCFramework bundles for iOS integration
+
+
+
+## Development Roadmap### For Public Repository
+
+
+
+### Phase 1: Infrastructure (Current)If you make this repository public, users can use simple dependency management:
+
+1. Setup project structure- **Android**: One-line Gradle dependency
+
+2. Implement Pigeon communication- **iOS**: One-line CocoaPods dependency
+
+3. Integrate Flutter module with native wrappers- No authentication required
+
+4. Create CI/CD pipelines for publishing
 
 ### Creating a New Release
 
-To create a new release:
+### Phase 2: Functionality (Next)
 
-```bash
-# Tag your commit with a version
+1. Implement reels UI in Flutter moduleTo create a new release:
+
+2. Add video playback capabilities
+
+3. Implement engagement features```bash
+
+4. Add product tagging support# Tag your commit with a version
+
 git tag v1.0.0
-git push origin v1.0.0
+
+## Buildinggit push origin v1.0.0
+
 ```
 
-The GitHub Actions workflows will automatically:
-1. Build Android AAR files
-2. Build iOS frameworks
-3. Create a GitHub release with all artifacts
-4. Generate release notes
+### Flutter Module
+
+```bashThe GitHub Actions workflows will automatically:
+
+cd reels_flutter1. Build Android AAR files
+
+flutter pub get2. Build iOS frameworks
+
+flutter build aar  # For Android3. Create a GitHub release with all artifacts
+
+flutter build ios-framework  # For iOS4. Generate release notes
+
+```
 
 ## 🔧 Development Workflow
 
-### Prerequisites
+### Android SDK
 
-- Flutter SDK 3.16.5 or higher
-- For Android:
+```bash### Prerequisites
+
+cd example/android
+
+./gradlew :reels_android:assembleRelease- Flutter SDK 3.16.5 or higher
+
+```- For Android:
+
   - Android Studio
-  - Java 17+
-  - Android SDK (API 21+)
-- For iOS:
-  - macOS
-  - Xcode 14.0+
+
+### iOS SDK  - Java 17+
+
+```bash  - Android SDK (API 21+)
+
+cd reels_ios- For iOS:
+
+pod lib lint  - macOS
+
+```  - Xcode 14.0+
+
   - CocoaPods
+
+## Example Apps
 
 ### Project Structure
 
-```
-flutter-reels/
-├── .github/
-│   └── workflows/          # GitHub Actions CI/CD workflows
-│       ├── ci.yml          # Continuous integration
+### Android
+
+```bash```
+
+cd example/androidflutter-reels/
+
+./gradlew :app:assembleDebug├── .github/
+
+./gradlew :app:installDebug│   └── workflows/          # GitHub Actions CI/CD workflows
+
+```│       ├── ci.yml          # Continuous integration
+
 │       ├── build-android.yml
-│       ├── build-ios.yml
-│       └── release.yml     # Release automation
-├── flutter_reels/          # The Flutter module
-│   ├── lib/
-│   │   └── main.dart       # Main entry point
-│   ├── test/               # Unit tests
-│   ├── .android/           # Android-specific files
+
+### iOS│       ├── build-ios.yml
+
+```bash│       └── release.yml     # Release automation
+
+cd example/ios/ios├── flutter_reels/          # The Flutter module
+
+pod install│   ├── lib/
+
+open Runner.xcworkspace│   │   └── main.dart       # Main entry point
+
+# Build and run from Xcode│   ├── test/               # Unit tests
+
+```│   ├── .android/           # Android-specific files
+
 │   ├── .ios/               # iOS-specific files
-│   └── pubspec.yaml        # Dependencies
+
+## Integration Guide│   └── pubspec.yaml        # Dependencies
+
 └── README.md               # This file
-```
 
-### Running Tests
+### Android Integration```
 
-```bash
-cd flutter_reels
-flutter test
-```
 
-### Code Analysis
+
+```kotlin### Running Tests
+
+import com.eishon.reels_android.ReelsAndroidSDK
 
 ```bash
-cd flutter_reels
-flutter analyze
+
+class MainActivity : AppCompatActivity() {cd flutter_reels
+
+    override fun onCreate(savedInstanceState: Bundle?) {flutter test
+
+        super.onCreate(savedInstanceState)```
+
+        
+
+        // Initialize Reels SDK### Code Analysis
+
+        ReelsAndroidSDK.initialize()
+
+    }```bash
+
+}cd flutter_reels
+
+```flutter analyze
+
 ```
+
+### iOS Integration
 
 ### Building for Production
 
-#### Android:
-```bash
-cd flutter_reels
-flutter build aar --release
-```
+```swift
 
-Output location: `build/host/outputs/repo/`
+import ReelsIOS#### Android:
 
-#### iOS:
 ```bash
-cd flutter_reels
+
+class AppDelegate: UIApplicationDelegate {cd flutter_reels
+
+    func application(_ application: UIApplication, flutter build aar --release
+
+                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {```
+
+        // Initialize Reels SDK
+
+        ReelsIOSSDK.shared.initialize()Output location: `build/host/outputs/repo/`
+
+        return true
+
+    }#### iOS:
+
+}```bash
+
+```cd flutter_reels
+
 flutter build ios-framework --release
-```
 
-Output location: `build/ios/framework/Release/`
+## Requirements```
 
-## 🤖 CI/CD
 
-This project uses GitHub Actions for continuous integration and deployment:
 
-### Workflows
+### AndroidOutput location: `build/ios/framework/Release/`
 
-1. **CI** (`ci.yml`): Runs on every push and PR
-   - Code formatting check
+- Android SDK 21+ (Android 5.0+)
+
+- Compile SDK 34## 🤖 CI/CD
+
+- Kotlin 1.9.0+
+
+- Java 17This project uses GitHub Actions for continuous integration and deployment:
+
+
+
+### iOS### Workflows
+
+- iOS 12.0+
+
+- Swift 5.0+1. **CI** (`ci.yml`): Runs on every push and PR
+
+- CocoaPods or Swift Package Manager   - Code formatting check
+
    - Static analysis
-   - Unit tests
-   - Test coverage report
+
+### Flutter   - Unit tests
+
+- Flutter SDK 3.35.6+   - Test coverage report
+
+- Dart SDK 3.3.0+
 
 2. **Build Android** (`build-android.yml`): Builds Android AAR
-   - Triggered on tags and manual dispatch
+
+## License   - Triggered on tags and manual dispatch
+
    - Uploads AAR artifacts
 
+[License information to be added]
+
 3. **Build iOS** (`build-ios.yml`): Builds iOS frameworks
-   - Triggered on tags and manual dispatch
+
+## Contributing   - Triggered on tags and manual dispatch
+
    - Uploads framework artifacts
+
+[Contributing guidelines to be added]
 
 4. **Release** (`release.yml`): Creates GitHub releases
    - Triggered on version tags (`v*`)
