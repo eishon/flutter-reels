@@ -1,0 +1,132 @@
+name: Main Branch Build
+
+on:
+  push:
+    branches: [ master, main ]
+    paths:
+      - 'reels_android/**'
+      - 'reels_ios/**'
+      - 'reels_flutter/**'
+      - 'example/**'
+
+  # Allow manual trigger
+  workflow_dispatch:
+
+jobs:
+  # Build and test all platforms
+  build-all:
+    name: Build All Platforms
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: android
+            os: ubuntu-latest
+          - platform: ios
+            os: macos-14
+
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java 17 (Android only)
+        if: matrix.platform == 'android'
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.6'
+          channel: 'stable'
+          cache: true
+
+      - name: Get Flutter dependencies
+        run: |
+          cd reels_flutter
+          flutter pub get
+
+      # Android Build Steps
+      - name: Create local.properties (Android)
+        if: matrix.platform == 'android'
+        run: |
+          cd example/android
+          cat > local.properties << EOF
+          sdk.dir=$ANDROID_SDK_ROOT
+          flutter.sdk=$FLUTTER_ROOT
+          flutter.buildMode=release
+          flutter.versionName=1.0.0
+          flutter.versionCode=1
+          EOF
+
+      - name: Cache Flutter artifacts (Android)
+        if: matrix.platform == 'android'
+        run: |
+          cd reels_flutter
+          flutter precache --android
+
+      - name: Build Android Release APK
+        if: matrix.platform == 'android'
+        run: |
+          cd example/android
+          ./gradlew :app:assembleRelease --stacktrace
+
+      - name: Upload Android APK
+        if: matrix.platform == 'android'
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-release-apk
+          path: example/android/app/build/outputs/apk/release/app-release-unsigned.apk
+          retention-days: 30
+
+      # iOS Build Steps
+      - name: Cache Flutter artifacts (iOS)
+        if: matrix.platform == 'ios'
+        run: |
+          cd reels_flutter
+          flutter precache --ios
+
+      - name: Install CocoaPods (iOS)
+        if: matrix.platform == 'ios'
+        run: |
+          cd example/ios
+          pod install --repo-update
+
+      - name: Build iOS Release
+        if: matrix.platform == 'ios'
+        run: |
+          cd example/ios
+          xcodebuild \
+            -workspace ReelsExample.xcworkspace \
+            -scheme Runner \
+            -configuration Release \
+            -sdk iphonesimulator \
+            -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' \
+            CODE_SIGNING_ALLOWED=NO \
+            build | xcpretty --color --simple
+
+      # Create build report
+      - name: Generate build report
+        run: |
+          echo "# Build Report - ${{ matrix.platform }}" > build-report.md
+          echo "" >> build-report.md
+          echo "**Date:** $(date)" >> build-report.md
+          echo "**Platform:** ${{ matrix.platform }}" >> build-report.md
+          echo "**Flutter Version:** 3.35.6" >> build-report.md
+          echo "**Branch:** ${{ github.ref_name }}" >> build-report.md
+          echo "**Commit:** ${{ github.sha }}" >> build-report.md
+          echo "" >> build-report.md
+          echo "✅ Build completed successfully" >> build-report.md
+
+      - name: Upload build report
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-report-${{ matrix.platform }}
+          path: build-report.md
+          retention-days: 30

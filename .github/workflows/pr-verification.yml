@@ -1,0 +1,283 @@
+name: PR Verification
+
+on:
+  pull_request:
+    branches: [ master, main, develop ]
+    paths:
+      - 'reels_android/**'
+      - 'reels_ios/**'
+      - 'reels_flutter/**'
+      - 'example/**'
+      - '.github/workflows/**'
+
+  # Allow manual trigger
+  workflow_dispatch:
+
+jobs:
+  # Job 1: Verify Pigeon Code Generation
+  pigeon-verification:
+    name: Verify Pigeon Generated Code
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.6'
+          channel: 'stable'
+          cache: true
+
+      - name: Install Pigeon
+        run: |
+          cd reels_flutter
+          flutter pub get
+          flutter pub global activate pigeon 22.7.4
+
+      - name: Regenerate Pigeon code
+        run: |
+          cd reels_flutter
+          flutter pub global run pigeon \
+            --input pigeons/messages.dart \
+            --dart_out lib/pigeon_generated.dart \
+            --kotlin_out ../reels_android/src/main/java/com/eishon/reels_android/PigeonGenerated.kt \
+            --kotlin_package com.eishon.reels_android \
+            --swift_out ../reels_ios/ReelsIOS/PigeonGenerated.swift
+
+      - name: Check for uncommitted Pigeon changes
+        run: |
+          if [[ -n $(git status --porcelain) ]]; then
+            echo "❌ Pigeon generated code is out of sync!"
+            echo "Please regenerate Pigeon code locally and commit the changes."
+            git diff
+            exit 1
+          else
+            echo "✅ Pigeon generated code is up to date"
+          fi
+
+  # Job 2: Flutter Module Analysis
+  flutter-analysis:
+    name: Flutter Module Analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.6'
+          channel: 'stable'
+          cache: true
+
+      - name: Get Flutter dependencies
+        run: |
+          cd reels_flutter
+          flutter pub get
+
+      - name: Run Flutter analyze
+        run: |
+          cd reels_flutter
+          flutter analyze --fatal-infos
+
+      - name: Run Flutter format check
+        run: |
+          cd reels_flutter
+          flutter format --set-exit-if-changed --dry-run .
+
+  # Job 3: Android Build Verification
+  android-build:
+    name: Android Add-to-App Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.6'
+          channel: 'stable'
+          cache: true
+
+      - name: Create local.properties
+        run: |
+          cd example/android
+          cat > local.properties << EOF
+          sdk.dir=$ANDROID_SDK_ROOT
+          flutter.sdk=$FLUTTER_ROOT
+          flutter.buildMode=debug
+          flutter.versionName=1.0.0
+          flutter.versionCode=1
+          EOF
+          cat local.properties
+
+      - name: Get Flutter dependencies
+        run: |
+          cd reels_flutter
+          flutter pub get
+
+      - name: Cache Flutter build artifacts
+        run: |
+          cd reels_flutter
+          flutter precache --android
+
+      - name: Build Android SDK
+        run: |
+          cd reels_android
+          ../example/android/gradlew build
+
+      - name: Build Android Example App
+        run: |
+          cd example/android
+          ./gradlew clean
+          ./gradlew :app:assembleDebug --stacktrace
+
+      - name: Verify APK exists
+        run: |
+          if [ -f example/android/app/build/outputs/apk/debug/app-debug.apk ]; then
+            echo "✅ Android APK built successfully"
+            ls -lh example/android/app/build/outputs/apk/debug/app-debug.apk
+          else
+            echo "❌ Android APK not found"
+            exit 1
+          fi
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-debug-apk
+          path: example/android/app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 7
+
+  # Job 4: iOS Build Verification
+  ios-build:
+    name: iOS Add-to-App Build
+    runs-on: macos-14
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.6'
+          channel: 'stable'
+          cache: true
+
+      - name: Get Flutter dependencies
+        run: |
+          cd reels_flutter
+          flutter pub get
+
+      - name: Cache Flutter build artifacts
+        run: |
+          cd reels_flutter
+          flutter precache --ios
+
+      - name: Install CocoaPods dependencies
+        run: |
+          cd example/ios
+          pod install --repo-update
+
+      - name: Verify Pods installation
+        run: |
+          cd example/ios
+          if [ -d "Pods" ]; then
+            echo "✅ CocoaPods installation successful"
+            echo "Installed pods:"
+            pod list
+          else
+            echo "❌ Pods directory not found"
+            exit 1
+          fi
+
+      - name: Build iOS app for simulator
+        run: |
+          cd example/ios
+          xcodebuild \
+            -workspace ReelsExample.xcworkspace \
+            -scheme Runner \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' \
+            -allowProvisioningUpdates \
+            CODE_SIGNING_ALLOWED=NO \
+            build | xcpretty --color --simple
+
+      - name: Verify build artifacts
+        run: |
+          if [ -d "example/ios/build/Release-iphonesimulator/Runner.app" ] || \
+             [ -d "example/ios/build/Debug-iphonesimulator/Runner.app" ]; then
+            echo "✅ iOS app built successfully"
+          else
+            echo "❌ iOS app not found"
+            exit 1
+          fi
+
+  # Job 5: Integration Summary
+  integration-summary:
+    name: Integration Test Summary
+    runs-on: ubuntu-latest
+    needs: [pigeon-verification, flutter-analysis, android-build, ios-build]
+    if: always()
+    timeout-minutes: 5
+
+    steps:
+      - name: Check all jobs status
+        run: |
+          echo "## 🔍 PR Verification Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ needs.pigeon-verification.result }}" == "success" ]; then
+            echo "✅ Pigeon Code Generation: PASSED" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Pigeon Code Generation: FAILED" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          if [ "${{ needs.flutter-analysis.result }}" == "success" ]; then
+            echo "✅ Flutter Analysis: PASSED" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Flutter Analysis: FAILED" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          if [ "${{ needs.android-build.result }}" == "success" ]; then
+            echo "✅ Android Add-to-App Build: PASSED" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Android Add-to-App Build: FAILED" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          if [ "${{ needs.ios-build.result }}" == "success" ]; then
+            echo "✅ iOS Add-to-App Build: PASSED" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ iOS Add-to-App Build: FAILED" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ needs.pigeon-verification.result }}" == "success" ] && \
+             [ "${{ needs.flutter-analysis.result }}" == "success" ] && \
+             [ "${{ needs.android-build.result }}" == "success" ] && \
+             [ "${{ needs.ios-build.result }}" == "success" ]; then
+            echo "### ✅ All checks passed! PR is ready to merge." >> $GITHUB_STEP_SUMMARY
+            exit 0
+          else
+            echo "### ❌ Some checks failed. Please review the errors above." >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi

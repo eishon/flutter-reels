@@ -1,18 +1,13 @@
-# Android Local Properties Template
-# Copy this file to local.properties and update paths for your system
+# Flutter Module Configuration Template
+# Copy this file to local.properties and update the paths
 
 # Path to Android SDK
-# macOS example: /Users/USERNAME/Library/Android/sdk
-# Linux example: /home/USERNAME/Android/Sdk
-# Windows example: C:\Users\USERNAME\AppData\Local\Android\Sdk
 sdk.dir=/path/to/android-sdk
 
-# Path to Flutter SDK (required for Add-to-App)
-# macOS/Linux example: /Users/USERNAME/flutter
-# Windows example: C:\Users\USERNAME\flutter
+# Path to Flutter SDK
 flutter.sdk=/path/to/flutter
 
-# Build configuration (optional)
+# Build configuration
 flutter.buildMode=debug
 flutter.versionName=1.0.0
 flutter.versionCode=1
