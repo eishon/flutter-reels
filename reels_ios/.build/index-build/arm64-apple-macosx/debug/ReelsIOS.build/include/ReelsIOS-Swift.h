@@ -279,6 +279,7 @@ typedef unsigned int swift_uint4  __attribute__((__ext_vector_type__(4)));
 #if __has_warning("-Watimport-in-framework-header")
 #pragma clang diagnostic ignored "-Watimport-in-framework-header"
 #endif
+@import Foundation;
 @import ObjectiveC;
 #endif
 
@@ -302,17 +303,122 @@ typedef unsigned int swift_uint4  __attribute__((__ext_vector_type__(4)));
 
 #if defined(__OBJC__)
 
-/// Reels iOS SDK
-/// Main entry point for the Flutter Reels iOS library
+@class NSString;
+/// Product information for tagging
+SWIFT_CLASS("_TtC8ReelsIOS11ProductInfo")
+@interface ProductInfo : NSObject
+@property (nonatomic, readonly, copy) NSString * _Nonnull id;
+@property (nonatomic, readonly, copy) NSString * _Nonnull name;
+@property (nonatomic, readonly, copy) NSString * _Nullable imageUrl;
+@property (nonatomic, readonly) double price;
+@property (nonatomic, readonly, copy) NSString * _Nullable currency;
+- (nonnull instancetype)initWithId:(NSString * _Nonnull)id name:(NSString * _Nonnull)name imageUrl:(NSString * _Nullable)imageUrl price:(double)price currency:(NSString * _Nullable)currency OBJC_DESIGNATED_INITIALIZER;
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
++ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
+@end
+
+/// Configuration for Reels SDK behavior
+SWIFT_CLASS("_TtC8ReelsIOS11ReelsConfig")
+@interface ReelsConfig : NSObject
+@property (nonatomic, readonly) BOOL autoPlay;
+@property (nonatomic, readonly) BOOL showControls;
+@property (nonatomic, readonly) BOOL loopVideos;
+- (nonnull instancetype)initWithAutoPlay:(BOOL)autoPlay showControls:(BOOL)showControls loopVideos:(BOOL)loopVideos OBJC_DESIGNATED_INITIALIZER;
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
++ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
+@end
+
+/// Delegate protocol for reels events
+SWIFT_PROTOCOL("_TtP8ReelsIOS13ReelsDelegate_")
+@protocol ReelsDelegate
+@optional
+- (void)onReelViewedWithVideoId:(NSString * _Nonnull)videoId;
+- (void)onReelLikedWithVideoId:(NSString * _Nonnull)videoId isLiked:(BOOL)isLiked;
+- (void)onReelSharedWithVideoId:(NSString * _Nonnull)videoId;
+- (void)onReelCommentedWithVideoId:(NSString * _Nonnull)videoId;
+- (void)onProductClickedWithProductId:(NSString * _Nonnull)productId videoId:(NSString * _Nonnull)videoId;
+- (void)onReelsClosed;
+- (void)onErrorWithErrorMessage:(NSString * _Nonnull)errorMessage;
+- (NSString * _Nullable)getAccessToken SWIFT_WARN_UNUSED_RESULT;
+@end
+
+/// Errors thrown by Reels SDK
+typedef SWIFT_ENUM(NSInteger, ReelsError, closed) {
+  ReelsErrorNotInitialized = 0,
+  ReelsErrorInvalidConfiguration = 1,
+  ReelsErrorFlutterEngineError = 2,
+};
+static NSString * _Nonnull const ReelsErrorDomain = @"ReelsIOS.ReelsError";
+
+@class VideoInfo;
+/// Main SDK class for integrating Flutter Reels into native iOS apps.
+/// This SDK wraps the Flutter module and Pigeon communication, providing a clean
+/// native iOS API. Users don’t need to understand Flutter or Pigeon internals.
+/// Usage:
+/// \code
+/// // Initialize once in your AppDelegate
+/// ReelsIOSSDK.shared.initialize()
+///
+/// // Show reels
+/// let videos = [VideoInfo(id: "1", url: "https://...")]
+/// ReelsIOSSDK.shared.showReels(videos: videos)
+///
+/// // Listen to events
+/// ReelsIOSSDK.shared.delegate = self
+///
+/// \endcode
 SWIFT_CLASS("_TtC8ReelsIOS11ReelsIOSSDK")
 @interface ReelsIOSSDK : NSObject
 /// Shared singleton instance
 SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) ReelsIOSSDK * _Nonnull shared;)
 + (ReelsIOSSDK * _Nonnull)shared SWIFT_WARN_UNUSED_RESULT;
+/// Delegate to receive reels events
+@property (nonatomic, weak) id <ReelsDelegate> _Nullable delegate;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
-/// Initialize the SDK
-- (void)initialize;
+/// Initialize the Reels SDK.
+/// Must be called before using any other SDK methods.
+/// \param config Optional configuration for reels behavior
+///
+- (void)initializeWithConfig:(ReelsConfig * _Nonnull)config;
+/// Show reels with the provided video list.
+/// \param videos Array of videos to display
+///
+///
+/// throws:
+/// ReelsError if SDK not initialized
+- (BOOL)showReelsWithVideos:(NSArray<VideoInfo *> * _Nonnull)videos error:(NSError * _Nullable * _Nullable)error;
+/// Update a specific video’s data (e.g., after user likes it)
+/// \param video Updated video information
+///
+- (BOOL)updateVideoWithVideo:(VideoInfo * _Nonnull)video error:(NSError * _Nullable * _Nullable)error;
+/// Close the reels view
+- (BOOL)closeReelsAndReturnError:(NSError * _Nullable * _Nullable)error;
+/// Update SDK configuration
+/// \param config New configuration
+///
+- (BOOL)updateConfigWithConfig:(ReelsConfig * _Nonnull)config error:(NSError * _Nullable * _Nullable)error;
+/// Clean up resources
+- (void)dispose;
+@end
+
+/// Video information for reels
+SWIFT_CLASS("_TtC8ReelsIOS9VideoInfo")
+@interface VideoInfo : NSObject
+@property (nonatomic, readonly, copy) NSString * _Nonnull id;
+@property (nonatomic, readonly, copy) NSString * _Nonnull url;
+@property (nonatomic, readonly, copy) NSString * _Nullable thumbnailUrl;
+@property (nonatomic, readonly, copy) NSString * _Nullable title;
+@property (nonatomic, readonly, copy) NSString * _Nullable description;
+@property (nonatomic, readonly, copy) NSString * _Nullable authorName;
+@property (nonatomic, readonly, copy) NSString * _Nullable authorAvatarUrl;
+@property (nonatomic, readonly) NSInteger likeCount;
+@property (nonatomic, readonly) NSInteger commentCount;
+@property (nonatomic, readonly) NSInteger shareCount;
+@property (nonatomic, readonly) BOOL isLiked;
+- (nonnull instancetype)initWithId:(NSString * _Nonnull)id url:(NSString * _Nonnull)url thumbnailUrl:(NSString * _Nullable)thumbnailUrl title:(NSString * _Nullable)title description:(NSString * _Nullable)description authorName:(NSString * _Nullable)authorName authorAvatarUrl:(NSString * _Nullable)authorAvatarUrl likeCount:(NSInteger)likeCount commentCount:(NSInteger)commentCount shareCount:(NSInteger)shareCount isLiked:(BOOL)isLiked OBJC_DESIGNATED_INITIALIZER;
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
++ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
 
 #endif
