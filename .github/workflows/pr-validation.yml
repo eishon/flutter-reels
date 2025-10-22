@@ -15,10 +15,10 @@ jobs:
 
       - name: Validate PR title
         run: |
-          PR_TITLE="${{ github.event.pull_request.title }}"
+          PR_TITLE='${{ github.event.pull_request.title }}'
           
           # Check if PR title follows conventional commit format
-          if [[ ! "$PR_TITLE" =~ ^(feat|fix|docs|style|refactor|perf|test|chore|build|ci|revert)(\(.+\))?: .+ ]]; then
+          if ! echo "$PR_TITLE" | grep -qE '^(feat|fix|docs|style|refactor|perf|test|chore|build|ci|revert)(\(.+\))?: .+'; then
             echo "::warning::PR title should follow conventional commit format"
             echo "::warning::Example: feat: add new feature"
             echo "::warning::Types: feat, fix, docs, style, refactor, perf, test, chore, build, ci, revert"
