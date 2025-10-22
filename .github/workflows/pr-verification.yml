@@ -35,15 +35,14 @@ jobs:
         run: |
           cd reels_flutter
           flutter pub get
-          flutter pub global activate pigeon 22.7.4
 
       - name: Regenerate Pigeon code
         run: |
           cd reels_flutter
-          # Use @ConfigurePigeon annotation in pigeons/messages.dart for output paths
-          flutter pub global run pigeon --input pigeons/messages.dart
+          # Use dart run pigeon (uses version from pubspec.yaml)
+          dart run pigeon --input pigeons/messages.dart
           # Format the generated code to match repository formatting
-          dart format lib/core/pigeon_generated.dart android/src/main/kotlin/ ios/Classes/
+          dart format lib/core/pigeon_generated.dart
 
       - name: Check for uncommitted Pigeon changes
         run: |
@@ -86,6 +85,11 @@ jobs:
         run: |
           cd reels_flutter
           flutter pub get
+
+      - name: Regenerate Pigeon code (needed after flutter clean)
+        run: |
+          cd reels_flutter
+          dart run pigeon --input pigeons/messages.dart
 
       - name: Run Flutter analyze
         run: |

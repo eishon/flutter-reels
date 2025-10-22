@@ -77,6 +77,22 @@ cd reels_flutter
 flutter pub get
 ```
 
+### 4. Generate Pigeon Code (Platform Channel Communication)
+
+After `flutter clean` or when changing Pigeon definitions:
+
+```bash
+cd reels_flutter
+dart run pigeon --input pigeons/messages.dart
+```
+
+> **When to run this**:
+> - After `flutter clean` (it removes `lib/core/pigeon_generated.dart`)
+> - When you modify `pigeons/messages.dart`
+> - If you see Pigeon-related compile errors
+> 
+> **Note**: CI/CD automatically regenerates this, so you only need it for local development.
+
 ---
 
 ## Android Build Setup
