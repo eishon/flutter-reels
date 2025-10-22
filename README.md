@@ -16,17 +16,17 @@ A Flutter-based reels library for native Android and iOS applications using the 
 
 ## 🎯 Features
 
-```A Flutter module designed to be integrated into native Android and iOS applications. This module provides a reels/stories viewing experience that can be seamlessly embedded in your existing native apps.
-
 - ✅ **Clean Native APIs** - No Flutter or Pigeon knowledge required for users
-
-- ✅ **Add-to-App Integration** - Flutter module embedded in native appsflutter-reels/
-
+- ✅ **Add-to-App Integration** - Flutter module embedded in native apps
 - ✅ **Type-Safe Communication** - Pigeon-based platform channels (hidden from users)
-
-- ✅ **Android SDK** - Kotlin-based wrapper with idiomatic API├── reels_flutter/          # Flutter module with reels functionality## 📋 Overview
-
+- ✅ **Android SDK** - Kotlin-based wrapper with idiomatic API
 - ✅ **iOS SDK** - Swift-based wrapper with Objective-C compatibility
+- ✅ **CI/CD Ready** - Automated testing and build verification
+- ✅ **Example Apps** - Complete integration examples for both platforms
+
+## 📋 Overview
+
+A Flutter module designed to be integrated into native Android and iOS applications. This module provides a reels/stories viewing experience that can be seamlessly embedded in your existing native apps.
 
 - ✅ **Example Apps** - Complete integration examples for both platforms├── reels_android/          # Android native SDK wrapper
 
