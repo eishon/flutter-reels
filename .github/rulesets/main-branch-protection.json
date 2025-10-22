@@ -26,7 +26,16 @@
       "parameters": {
         "required_status_checks": [
           {
-            "context": "analyze-and-test"
+            "context": "PR Verification / Verify Pigeon Generated Code"
+          },
+          {
+            "context": "PR Verification / Flutter Module Analysis"
+          },
+          {
+            "context": "PR Verification / Android Add-to-App Build"
+          },
+          {
+            "context": "PR Verification / iOS Add-to-App Build"
           }
         ],
         "strict_required_status_checks_policy": false
