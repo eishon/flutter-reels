@@ -2,15 +2,16 @@ package com.eishon.reels_android
 
 import android.content.Context
 import android.util.Log
-import com.eishon.reels_flutter.AnalyticsEvent
-import com.eishon.reels_flutter.ReelsFlutterAnalyticsApi
-import com.eishon.reels_flutter.ReelsFlutterButtonEventsApi
-import com.eishon.reels_flutter.ReelsFlutterNavigationApi
-import com.eishon.reels_flutter.ReelsFlutterStateApi
-import com.eishon.reels_flutter.ReelsFlutterTokenApi
-import com.eishon.reels_flutter.ScreenStateData
-import com.eishon.reels_flutter.ShareData
-import com.eishon.reels_flutter.VideoStateData
+// Pigeon generated classes (now in reels_android package for Add-to-App)
+import com.eishon.reels_android.AnalyticsEvent
+import com.eishon.reels_android.ReelsFlutterAnalyticsApi
+import com.eishon.reels_android.ReelsFlutterButtonEventsApi
+import com.eishon.reels_android.ReelsFlutterNavigationApi
+import com.eishon.reels_android.ReelsFlutterStateApi
+import com.eishon.reels_android.ReelsFlutterTokenApi
+import com.eishon.reels_android.ScreenStateData
+import com.eishon.reels_android.ShareData
+import com.eishon.reels_android.VideoStateData
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.dart.DartExecutor
 import io.flutter.plugin.common.BinaryMessenger

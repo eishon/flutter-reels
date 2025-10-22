@@ -2,7 +2,7 @@
 // See also: https://pub.dev/packages/pigeon
 @file:Suppress("UNCHECKED_CAST", "ArrayInDataClass")
 
-package com.eishon.reels_flutter
+package com.eishon.reels_android
 
 import android.util.Log
 import io.flutter.plugin.common.BasicMessageChannel
