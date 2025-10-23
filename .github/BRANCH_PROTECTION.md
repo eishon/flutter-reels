@@ -96,6 +96,16 @@ The branch protection is integrated with the CI workflow:
   - Unit tests with coverage
   - AAR build check
 
+### Automated Workflows
+
+In addition to the required CI checks, the following workflows run automatically:
+
+- **Auto-Format Pigeon** (`.github/workflows/auto-format-pigeon.yml`)
+  - Automatically regenerates Pigeon code when `pigeons/messages.dart` is modified
+  - Formats generated files with `dart format`
+  - Commits changes back to the branch with `[skip ci]` to prevent loops
+  - Ensures type-safe platform communication code is always up-to-date
+
 ## Troubleshooting
 
 ### "Protected branch update failed"
