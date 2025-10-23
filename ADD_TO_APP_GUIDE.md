@@ -487,10 +487,10 @@ Pigeon generates type-safe platform channels between Flutter and native code. Th
    - Native provides the implementation
    - Example: Getting authentication tokens from native
 
-2. **@FlutterApi** - Flutter implements these APIs; Native calls them
-   - Direction: Native ← Flutter
-   - Flutter calls native to notify of events
-   - Example: Sending analytics events, button clicks
+2. **@FlutterApi** - Flutter calls native to notify of events
+   - Direction: Flutter → Native (Flutter notifies native)
+   - Native receives events from Flutter
+   - Example: Sending analytics events, button clicks, state changes
 
 ### Available Pigeon APIs
 
@@ -537,22 +537,7 @@ ReelsFlutterTokenApiSetup.setUp(
 
 Track user interactions and video views in your analytics platform.
 
-```kotlin
-// Android - Create instance and receive events
-val analyticsApi = ReelsFlutterAnalyticsApi(flutterEngine.dartExecutor.binaryMessenger)
-
-// Flutter will call this when tracking events
-// You need to register this in your Flutter integration
-// The Flutter side sends events via this channel automatically
-```
-
-```swift
-// iOS - Create instance to receive events
-let analyticsApi = ReelsFlutterAnalyticsApi(binaryMessenger: flutterEngine.binaryMessenger)
-
-// Flutter will send events through this channel
-// Events are received automatically when Flutter tracks them
-```
+**Note**: Flutter automatically sends events through this API. The native SDKs (reels_android/reels_ios) handle receiving these events internally. For custom analytics integration, you can monitor these events by extending the native SDK implementation.
 
 **AnalyticsEvent Data Model:**
 ```kotlin
@@ -576,30 +561,9 @@ struct AnalyticsEvent {
 
 Handle like and share button interactions.
 
-```kotlin
-// Android - Listen for button events
-// These methods are called by Flutter automatically when buttons are clicked
-// Example usage in your native SDK wrapper:
-class ReelsButtonHandler {
-    private val buttonEventsApi = ReelsFlutterButtonEventsApi(binaryMessenger)
-    
-    // Note: Flutter calls the native side, not the other way around
-    // You would typically handle these in your SDK implementation
-}
-```
+**Note**: Flutter automatically calls these methods when users interact with buttons. The native SDKs (reels_android/reels_ios) handle these events internally. For custom handling, extend the native SDK implementation.
 
-```swift
-// iOS - Listen for button events
-class ReelsButtonHandler {
-    private let buttonEventsApi: ReelsFlutterButtonEventsApi
-    
-    init(binaryMessenger: FlutterBinaryMessenger) {
-        self.buttonEventsApi = ReelsFlutterButtonEventsApi(binaryMessenger: binaryMessenger)
-    }
-}
-```
-
-**Available Methods:**
+**Available Methods (called by Flutter):**
 - `onBeforeLikeButtonClick(videoId: String)` - Called before like action (for optimistic UI)
 - `onAfterLikeButtonClick(videoId: String, isLiked: Boolean, likeCount: Long)` - Called after like completes
 - `onShareButtonClick(shareData: ShareData)` - Called when share button is clicked
@@ -632,7 +596,9 @@ struct ShareData {
 
 Track screen and video playback states.
 
-**Available Methods:**
+**Note**: Flutter automatically sends state changes through this API. The native SDKs handle these internally.
+
+**Available Methods (called by Flutter):**
 - `onScreenStateChanged(state: ScreenStateData)` - Screen lifecycle events
 - `onVideoStateChanged(state: VideoStateData)` - Video playback state changes
 
@@ -683,7 +649,9 @@ struct VideoStateData {
 
 Handle swipe gestures for custom navigation.
 
-**Available Methods:**
+**Note**: Flutter automatically sends navigation gestures through this API. The native SDKs handle these internally.
+
+**Available Methods (called by Flutter):**
 - `onSwipeLeft()` - User swiped left
 - `onSwipeRight()` - User swiped right
 
@@ -700,28 +668,19 @@ class MainActivity : FlutterActivity() {
         
         val messenger = flutterEngine.dartExecutor.binaryMessenger
         
-        // 1. Provide authentication token to Flutter (HostApi)
+        // Provide authentication token to Flutter
+        // This is the main Pigeon integration you need for authentication
         ReelsFlutterTokenApi.setUp(messenger, object : ReelsFlutterTokenApi {
             override fun getAccessToken(): String? {
+                // Return your current auth token
+                // This is called by Flutter when it needs authentication
                 return AuthManager.getCurrentToken()
             }
         })
         
-        // 2. Set up analytics tracking (FlutterApi)
-        val analyticsApi = ReelsFlutterAnalyticsApi(messenger)
-        // Flutter will send events - handle them in your analytics platform
-        
-        // 3. Handle button events (FlutterApi)
-        val buttonEventsApi = ReelsFlutterButtonEventsApi(messenger)
-        // Note: Flutter sends these events. Set up listeners if you need to respond.
-        
-        // 4. Handle state changes (FlutterApi)
-        val stateApi = ReelsFlutterStateApi(messenger)
-        // Note: Flutter sends these events. Set up listeners if you need to respond.
-        
-        // 5. Handle navigation (FlutterApi)
-        val navigationApi = ReelsFlutterNavigationApi(messenger)
-        // Note: Flutter sends these events. Set up listeners if you need to respond.
+        // Note: The other Pigeon APIs (Analytics, ButtonEvents, State, Navigation)
+        // are handled internally by the reels_android SDK. You don't need to set them up
+        // unless you're building a custom native SDK wrapper.
     }
 }
 ```
@@ -742,27 +701,16 @@ class AppDelegate: FlutterAppDelegate {
         let flutterEngine = (window?.rootViewController as! FlutterViewController).engine!
         let messenger = flutterEngine.binaryMessenger
         
-        // 1. Provide authentication token to Flutter (HostApi)
+        // Provide authentication token to Flutter
+        // This is the main Pigeon integration you need for authentication
         ReelsFlutterTokenApiSetup.setUp(
             binaryMessenger: messenger,
             api: TokenProvider()
         )
         
-        // 2. Set up analytics tracking (FlutterApi)
-        let analyticsApi = ReelsFlutterAnalyticsApi(binaryMessenger: messenger)
-        // Flutter will send events through this channel
-        
-        // 3. Handle button events (FlutterApi)
-        let buttonEventsApi = ReelsFlutterButtonEventsApi(binaryMessenger: messenger)
-        // Flutter will send button events through this channel
-        
-        // 4. Handle state changes (FlutterApi)
-        let stateApi = ReelsFlutterStateApi(binaryMessenger: messenger)
-        // Flutter will send state changes through this channel
-        
-        // 5. Handle navigation (FlutterApi)
-        let navigationApi = ReelsFlutterNavigationApi(binaryMessenger: messenger)
-        // Flutter will send navigation events through this channel
+        // Note: The other Pigeon APIs (Analytics, ButtonEvents, State, Navigation)
+        // are handled internally by the reels_ios SDK. You don't need to set them up
+        // unless you're building a custom native SDK wrapper.
         
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
@@ -771,6 +719,8 @@ class AppDelegate: FlutterAppDelegate {
 // Token provider implementation
 class TokenProvider: ReelsFlutterTokenApi {
     func getAccessToken() throws -> String? {
+        // Return your current auth token
+        // This is called by Flutter when it needs authentication
         return AuthManager.shared.currentToken
     }
 }
