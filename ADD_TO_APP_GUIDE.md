@@ -180,6 +180,34 @@ dependencyResolutionManagement {
 
 > **Why PREFER_PROJECT?** This allows the Flutter Gradle Plugin to add its own Maven repositories for Flutter engine artifacts.
 
+### Advanced Android Integration
+
+For advanced use cases like custom analytics or authentication, you can use the Pigeon APIs directly. See the **Advanced: Pigeon API Integration** section below.
+
+Example - Providing authentication tokens:
+
+```kotlin
+import com.eishon.reels_android.*
+import io.flutter.embedding.engine.FlutterEngine
+
+class MainActivity : FlutterActivity() {
+    
+    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+        super.configureFlutterEngine(flutterEngine)
+        
+        // Provide authentication token to Flutter
+        ReelsFlutterTokenApi.setUp(
+            flutterEngine.dartExecutor.binaryMessenger,
+            object : ReelsFlutterTokenApi {
+                override fun getAccessToken(): String? {
+                    return AuthManager.getCurrentToken()
+                }
+            }
+        )
+    }
+}
+```
+
 ### That's It for Android! 🎉
 
 No Flutter commands to run, no AAR files to build. Just add the dependencies and start using the SDK!
@@ -335,6 +363,42 @@ class ViewController: UIViewController {
         // Present the reels screen
         flutterViewController.modalPresentationStyle = .fullScreen
         present(flutterViewController, animated: true)
+    }
+}
+```
+
+### Advanced iOS Integration
+
+For advanced use cases like custom analytics or authentication, you can use the Pigeon APIs directly. See the **Advanced: Pigeon API Integration** section below.
+
+Example - Providing authentication tokens:
+
+```swift
+import ReelsIOS
+import Flutter
+
+class AppDelegate: FlutterAppDelegate {
+    
+    override func application(
+        _ application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+    ) -> Bool {
+        
+        let flutterEngine = (window?.rootViewController as! FlutterViewController).engine!
+        
+        // Provide authentication token to Flutter
+        ReelsFlutterTokenApiSetup.setUp(
+            binaryMessenger: flutterEngine.binaryMessenger,
+            api: TokenProvider()
+        )
+        
+        return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+    }
+}
+
+class TokenProvider: ReelsFlutterTokenApi {
+    func getAccessToken() throws -> String? {
+        return AuthManager.shared.currentToken
     }
 }
 ```
@@ -989,7 +1053,16 @@ class MainActivity : AppCompatActivity() {
 
 ### Do I need to learn Pigeon?
 
-**No!** Pigeon is only used internally for platform communication. The native SDKs provide clean, type-safe APIs that hide all Pigeon complexity.
+**For basic usage**: No! The native SDKs provide clean, type-safe APIs that hide all Pigeon complexity.
+
+**For advanced integration**: Understanding the Pigeon API can help you:
+- Implement custom analytics tracking
+- Handle button events (like/share)
+- Respond to video state changes
+- Provide authentication tokens to Flutter
+- Handle navigation gestures
+
+See the **Advanced: Pigeon API Integration** section below for details.
 
 **However**, if you want to extend the SDK with custom functionality, understanding the Pigeon API can be helpful. See the "Advanced: Understanding the Pigeon API" section above.
 
@@ -1006,6 +1079,308 @@ Currently, the UI is provided by the Flutter module. Customization options are p
 ### Does this work with SwiftUI?
 
 Yes! You can wrap the reels view in a `UIViewControllerRepresentable` for SwiftUI integration.
+
+---
+
+## 🔌 Advanced: Pigeon API Integration
+
+This section is for advanced users who want to integrate directly with the Flutter module using Pigeon APIs for custom analytics, event handling, and authentication.
+
+### Understanding Pigeon Communication
+
+Pigeon generates type-safe platform channels between Flutter and native code. There are two types of APIs:
+
+1. **@HostApi** - Native implements these APIs; Flutter calls them
+   - Direction: Flutter → Native
+   - Native provides the implementation
+   - Example: Getting authentication tokens from native
+
+2. **@FlutterApi** - Flutter calls native to notify of events
+   - Direction: Flutter → Native (Flutter notifies native)
+   - Native receives events from Flutter
+   - Example: Sending analytics events, button clicks, state changes
+
+### Available Pigeon APIs
+
+All APIs are defined in `reels_flutter/pigeons/messages.dart` and auto-generated to:
+- **Kotlin**: `reels_android/src/main/java/com/eishon/reels_android/PigeonGenerated.kt`
+- **Swift**: `reels_ios/Sources/ReelsIOS/PigeonGenerated.swift`
+
+#### 1. ReelsFlutterTokenApi (@HostApi)
+**Native implements, Flutter calls**
+
+Provides authentication tokens to Flutter when needed.
+
+```kotlin
+// Android - Implement the interface
+class MyTokenProvider : ReelsFlutterTokenApi {
+    override fun getAccessToken(): String? {
+        // Return current valid token or null if not authenticated
+        return AuthManager.getCurrentToken()
+    }
+}
+
+// Register with Flutter
+ReelsFlutterTokenApi.setUp(flutterEngine.dartExecutor.binaryMessenger, MyTokenProvider())
+```
+
+```swift
+// iOS - Implement the protocol
+class MyTokenProvider: ReelsFlutterTokenApi {
+    func getAccessToken() throws -> String? {
+        // Return current valid token or null if not authenticated
+        return AuthManager.shared.currentToken
+    }
+}
+
+// Register with Flutter
+ReelsFlutterTokenApiSetup.setUp(
+    binaryMessenger: flutterEngine.binaryMessenger,
+    api: MyTokenProvider()
+)
+```
+
+#### 2. ReelsFlutterAnalyticsApi (@FlutterApi)
+**Flutter calls native to send analytics events**
+
+Track user interactions and video views in your analytics platform.
+
+**Note**: Flutter automatically sends events through this API. The native SDKs (reels_android/reels_ios) handle receiving these events internally. For custom analytics integration, you can monitor these events by extending the native SDK implementation.
+
+**AnalyticsEvent Data Model:**
+```kotlin
+// Kotlin
+data class AnalyticsEvent(
+    val eventName: String,           // e.g., "video_viewed", "button_clicked"
+    val eventProperties: Map<String?, String?>  // Event metadata
+)
+```
+
+```swift
+// Swift
+struct AnalyticsEvent {
+    var eventName: String           // e.g., "video_viewed", "button_clicked"
+    var eventProperties: [String?: String?]  // Event metadata
+}
+```
+
+#### 3. ReelsFlutterButtonEventsApi (@FlutterApi)
+**Flutter calls native when buttons are clicked**
+
+Handle like and share button interactions.
+
+**Note**: Flutter automatically calls these methods when users interact with buttons. The native SDKs (reels_android/reels_ios) handle these events internally. For custom handling, extend the native SDK implementation.
+
+**Available Methods (called by Flutter):**
+- `onBeforeLikeButtonClick(videoId: String)` - Called before like action (for optimistic UI)
+- `onAfterLikeButtonClick(videoId: String, isLiked: Boolean, likeCount: Long)` - Called after like completes
+- `onShareButtonClick(shareData: ShareData)` - Called when share button is clicked
+
+**ShareData Model:**
+```kotlin
+// Kotlin
+data class ShareData(
+    val videoId: String,
+    val videoUrl: String,
+    val title: String,
+    val description: String,
+    val thumbnailUrl: String? = null
+)
+```
+
+```swift
+// Swift
+struct ShareData {
+    var videoId: String
+    var videoUrl: String
+    var title: String
+    var description: String
+    var thumbnailUrl: String? = nil
+}
+```
+
+#### 4. ReelsFlutterStateApi (@FlutterApi)
+**Flutter calls native to notify of state changes**
+
+Track screen and video playback states.
+
+**Note**: Flutter automatically sends state changes through this API. The native SDKs handle these internally.
+
+**Available Methods (called by Flutter):**
+- `onScreenStateChanged(state: ScreenStateData)` - Screen lifecycle events
+- `onVideoStateChanged(state: VideoStateData)` - Video playback state changes
+
+**ScreenStateData Model:**
+```kotlin
+// Kotlin
+data class ScreenStateData(
+    val screenName: String,         // Screen identifier
+    val state: String,              // "appeared", "disappeared", "focused", "unfocused"
+    val timestamp: Long? = null     // Optional timestamp
+)
+```
+
+```swift
+// Swift
+struct ScreenStateData {
+    var screenName: String         // Screen identifier
+    var state: String              // "appeared", "disappeared", "focused", "unfocused"
+    var timestamp: Int64? = nil    // Optional timestamp
+}
+```
+
+**VideoStateData Model:**
+```kotlin
+// Kotlin
+data class VideoStateData(
+    val videoId: String,
+    val state: String,              // "playing", "paused", "stopped", "buffering", "completed"
+    val position: Long? = null,     // Current position in seconds
+    val duration: Long? = null,     // Total duration in seconds
+    val timestamp: Long? = null     // Optional timestamp
+)
+```
+
+```swift
+// Swift
+struct VideoStateData {
+    var videoId: String
+    var state: String              // "playing", "paused", "stopped", "buffering", "completed"
+    var position: Int64? = nil     // Current position in seconds
+    var duration: Int64? = nil     // Total duration in seconds
+    var timestamp: Int64? = nil    // Optional timestamp
+}
+```
+
+#### 5. ReelsFlutterNavigationApi (@FlutterApi)
+**Flutter calls native for navigation gestures**
+
+Handle swipe gestures for custom navigation.
+
+**Note**: Flutter automatically sends navigation gestures through this API. The native SDKs handle these internally.
+
+**Available Methods (called by Flutter):**
+- `onSwipeLeft()` - User swiped left
+- `onSwipeRight()` - User swiped right
+
+### Complete Android Integration Example
+
+```kotlin
+import com.eishon.reels_android.*
+import io.flutter.embedding.engine.FlutterEngine
+
+class MainActivity : FlutterActivity() {
+    
+    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+        super.configureFlutterEngine(flutterEngine)
+        
+        val messenger = flutterEngine.dartExecutor.binaryMessenger
+        
+        // Provide authentication token to Flutter
+        // This is the main Pigeon integration you need for authentication
+        ReelsFlutterTokenApi.setUp(messenger, object : ReelsFlutterTokenApi {
+            override fun getAccessToken(): String? {
+                // Return your current auth token
+                // This is called by Flutter when it needs authentication
+                return AuthManager.getCurrentToken()
+            }
+        })
+        
+        // Note: The other Pigeon APIs (Analytics, ButtonEvents, State, Navigation)
+        // are handled internally by the reels_android SDK. You don't need to set them up
+        // unless you're building a custom native SDK wrapper.
+    }
+}
+```
+
+### Complete iOS Integration Example
+
+```swift
+import ReelsIOS
+import Flutter
+
+class AppDelegate: FlutterAppDelegate {
+    
+    override func application(
+        _ application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+    ) -> Bool {
+        
+        let flutterEngine = (window?.rootViewController as! FlutterViewController).engine!
+        let messenger = flutterEngine.binaryMessenger
+        
+        // Provide authentication token to Flutter
+        // This is the main Pigeon integration you need for authentication
+        ReelsFlutterTokenApiSetup.setUp(
+            binaryMessenger: messenger,
+            api: TokenProvider()
+        )
+        
+        // Note: The other Pigeon APIs (Analytics, ButtonEvents, State, Navigation)
+        // are handled internally by the reels_ios SDK. You don't need to set them up
+        // unless you're building a custom native SDK wrapper.
+        
+        return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+    }
+}
+
+// Token provider implementation
+class TokenProvider: ReelsFlutterTokenApi {
+    func getAccessToken() throws -> String? {
+        // Return your current auth token
+        // This is called by Flutter when it needs authentication
+        return AuthManager.shared.currentToken
+    }
+}
+```
+
+### Regenerating Pigeon Code
+
+If you need to modify the Pigeon interfaces or regenerate the code:
+
+```bash
+cd reels_flutter
+dart run pigeon --input pigeons/messages.dart
+```
+
+This will regenerate:
+- `lib/core/pigeon_generated.dart` (Flutter/Dart)
+- `../reels_android/src/main/java/com/eishon/reels_android/PigeonGenerated.kt` (Android)
+- `../reels_ios/Sources/ReelsIOS/PigeonGenerated.swift` (iOS)
+
+**Note**: The repository includes a GitHub Actions workflow (`.github/workflows/auto-format-pigeon.yml`) that automatically formats and validates Pigeon code.
+
+### Pigeon Troubleshooting
+
+#### Problem: Methods not found or signature mismatch
+
+**Solution**: 
+1. Check that you're using the correct API names (`ReelsFlutter*Api` not `FlutterReels*Api`)
+2. Regenerate Pigeon code: `cd reels_flutter && dart run pigeon --input pigeons/messages.dart`
+3. Clean and rebuild your project
+
+#### Problem: HostApi vs FlutterApi confusion
+
+**Solution**: Remember:
+- **@HostApi**: Native implements, Flutter calls (e.g., `ReelsFlutterTokenApi`)
+  - You must call `setUp()` with your implementation
+- **@FlutterApi**: Flutter calls native (e.g., `ReelsFlutterAnalyticsApi`)
+  - You create an instance to receive events
+
+#### Problem: Events not being received
+
+**Solution**:
+1. Verify the Flutter engine is initialized before setting up Pigeon APIs
+2. Check that you're using the correct `BinaryMessenger` instance
+3. Ensure methods are called after `configureFlutterEngine` (Android) or engine initialization (iOS)
+
+#### Problem: Compilation errors after regenerating
+
+**Solution**:
+1. Clean build: `flutter clean` (in reels_flutter)
+2. Android: `./gradlew clean` (in reels_android)
+3. iOS: `pod deintegrate && pod install` (in reels_ios)
+4. Rebuild the project
 
 ---
 
