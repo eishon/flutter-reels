@@ -20,16 +20,25 @@ Flutter Reels provides native SDKs (`reels_android` and `reels_ios`) that embed 
 
 ```
 Your Native App (Kotlin/Swift)
-        ↓
+        ↓ [Initialize SDK, Set Listener, Show Reels]
 reels_android / reels_ios (Native SDK)
-    [Clean API - This is what you use!]
-        ↓
-    [Flutter Engine + Pigeon - Hidden from you]
-        ↓
+    [Clean, Type-Safe API]
+    [Handles Pigeon Setup Automatically]
+        ↓ [Pigeon Communication Channels]
+    Flutter Engine + Pigeon
+    [Type-Safe Platform Channels]
+    [5 APIs: Token, Analytics, Button Events, State, Navigation]
+        ↓ [UI Rendering & Business Logic]
 reels_flutter Module (Reels UI)
+    [Video Playback, Interactions, Animations]
 ```
 
 **You only interact with the top layer** - everything else is handled automatically!
+
+**Communication Flow:**
+1. **Your App → Native SDK**: Clean Kotlin/Swift API calls
+2. **Native SDK ↔ Flutter Module**: Type-safe Pigeon communication (automatic)
+3. **Flutter Module → Your App**: Event callbacks through listener/delegate
 
 ---
 
@@ -84,54 +93,73 @@ dependencies {
 
 ```kotlin
 import com.eishon.reels_android.*
+import android.util.Log
+import io.flutter.embedding.android.FlutterActivity
 
 class MainActivity : AppCompatActivity() {
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
         
-        // 1. Initialize the SDK
+        // 1. Initialize the SDK with optional access token provider
         ReelsAndroidSDK.initialize(
             context = this,
-            config = ReelsConfig(
-                autoPlay = true,
-                showControls = true,
-                loopVideos = true
-            )
+            accessTokenProvider = {
+                // Return user's authentication token
+                // This will be called when Flutter needs the token
+                getUserAuthToken()
+            }
         )
         
         // 2. Set up event listener (optional)
         ReelsAndroidSDK.setListener(object : ReelsListener {
             override fun onReelViewed(videoId: String) {
-                Log.d(TAG, "User viewed video: $videoId")
+                Log.d(TAG, "User completed viewing video: $videoId")
+                // Track analytics, update view count, etc.
             }
             
             override fun onReelLiked(videoId: String, isLiked: Boolean) {
                 Log.d(TAG, "Video $videoId liked: $isLiked")
+                // Sync like state with your backend
             }
             
             override fun onReelShared(videoId: String) {
                 Log.d(TAG, "User shared video: $videoId")
+                // Track share analytics
+            }
+            
+            override fun onReelsClosed() {
+                Log.d(TAG, "User closed reels screen")
+            }
+            
+            override fun onError(errorMessage: String) {
+                Log.e(TAG, "Reels error: $errorMessage")
+            }
+            
+            // Alternative way to provide access token
+            override fun getAccessToken(): String? {
+                return getUserAuthToken()
             }
         })
         
-        // 3. Show reels
-        val videos = listOf(
-            VideoInfo(
-                id = "1",
-                url = "https://example.com/video1.mp4",
-                title = "Amazing Video",
-                description = "Check this out!",
-                thumbnailUrl = "https://example.com/thumb1.jpg"
-            ),
-            VideoInfo(
-                id = "2",
-                url = "https://example.com/video2.mp4",
-                title = "Another Great Video"
-            )
-        )
-        
-        ReelsAndroidSDK.showReels(videos)
+        // 3. Show reels using FlutterActivity
+        findViewById<Button>(R.id.btnShowReels).setOnClickListener {
+            val intent = FlutterActivity
+                .withCachedEngine(ReelsAndroidSDK.getEngineId())
+                .build(this)
+            startActivity(intent)
+        }
+    }
+    
+    private fun getUserAuthToken(): String? {
+        // Return your user's authentication token
+        // Return null if user is not authenticated
+        return "user_token_123"
+    }
+    
+    companion object {
+        private const val TAG = "MainActivity"
     }
 }
 ```
@@ -211,26 +239,34 @@ open YourApp.xcworkspace
 
 ```swift
 import ReelsIOS
+import Flutter
 
 class AppDelegate: UIApplicationDelegate {
+    
+    var window: UIWindow?
     
     func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
         
-        // 1. Initialize the SDK
-        let config = ReelsConfig(
-            autoPlay: true,
-            showControls: true,
-            loopVideos: true
-        )
-        ReelsIOSSDK.shared.initialize(config: config)
+        // 1. Initialize the SDK with optional access token provider
+        ReelsIOSSDK.shared.initialize(accessTokenProvider: {
+            // Return user's authentication token
+            // This will be called when Flutter needs the token
+            return self.getUserAuthToken()
+        })
         
         // 2. Set up delegate (optional)
         ReelsIOSSDK.shared.delegate = self
         
         return true
+    }
+    
+    private func getUserAuthToken() -> String? {
+        // Return your user's authentication token
+        // Return nil if user is not authenticated
+        return "user_token_123"
     }
 }
 
@@ -238,38 +274,67 @@ class AppDelegate: UIApplicationDelegate {
 extension AppDelegate: ReelsDelegate {
     
     func onReelViewed(videoId: String) {
-        print("User viewed video: \(videoId)")
+        print("User completed viewing video: \(videoId)")
+        // Track analytics, update view count, etc.
     }
     
     func onReelLiked(videoId: String, isLiked: Bool) {
         print("Video \(videoId) liked: \(isLiked)")
+        // Sync like state with your backend
     }
     
     func onReelShared(videoId: String) {
         print("User shared video: \(videoId)")
+        // Track share analytics
+    }
+    
+    func onReelCommented(videoId: String) {
+        print("User commented on video: \(videoId)")
+    }
+    
+    func onProductClicked(productId: String, videoId: String) {
+        print("Product \(productId) clicked in video: \(videoId)")
+        // Navigate to product details
+    }
+    
+    func onReelsClosed() {
+        print("User closed reels screen")
+    }
+    
+    func onError(errorMessage: String) {
+        print("Reels error: \(errorMessage)")
+    }
+    
+    // Alternative way to provide access token
+    func getAccessToken() -> String? {
+        return getUserAuthToken()
     }
 }
 
 // Show reels from any view controller
 class ViewController: UIViewController {
     
+    @IBAction func showReelsButtonTapped(_ sender: UIButton) {
+        showReels()
+    }
+    
     func showReels() {
-        let videos = [
-            VideoInfo(
-                id: "1",
-                url: "https://example.com/video1.mp4",
-                title: "Amazing Video",
-                description: "Check this out!",
-                thumbnailUrl: "https://example.com/thumb1.jpg"
-            ),
-            VideoInfo(
-                id: "2",
-                url: "https://example.com/video2.mp4",
-                title: "Another Great Video"
-            )
-        ]
+        // Get the Flutter engine from the SDK
+        guard let flutterEngine = ReelsIOSSDK.shared.getFlutterEngine() else {
+            print("Flutter engine not initialized")
+            return
+        }
         
-        try? ReelsIOSSDK.shared.showReels(videos: videos)
+        // Create a FlutterViewController with the cached engine
+        let flutterViewController = FlutterViewController(
+            engine: flutterEngine,
+            nibName: nil,
+            bundle: nil
+        )
+        
+        // Present the reels screen
+        flutterViewController.modalPresentationStyle = .fullScreen
+        present(flutterViewController, animated: true)
     }
 }
 ```
@@ -280,27 +345,67 @@ CocoaPods handles all the Flutter integration automatically. No Flutter commands
 
 ---
 
-## 🔧 Configuration Options
+## 🔧 SDK Reference
 
-### ReelsConfig
+### Initialization Options
 
-| Property | Type | Default | Description |
-|----------|------|---------|-------------|
-| `autoPlay` | Boolean | `true` | Auto-play videos when visible |
-| `showControls` | Boolean | `true` | Show video controls |
-| `loopVideos` | Boolean | `true` | Loop videos when they end |
+**Android:**
+```kotlin
+ReelsAndroidSDK.initialize(
+    context: Context,
+    accessTokenProvider: (() -> String?)? = null
+)
+```
 
-### VideoInfo
+**iOS:**
+```swift
+ReelsIOSSDK.shared.initialize(
+    accessTokenProvider: (() -> String?)? = nil
+)
+```
 
-| Property | Type | Required | Description |
-|----------|------|----------|-------------|
-| `id` | String | ✅ Yes | Unique video identifier |
-| `url` | String | ✅ Yes | Video URL (HTTP/HTTPS) |
-| `title` | String | ❌ No | Video title |
-| `description` | String | ❌ No | Video description |
-| `thumbnailUrl` | String | ❌ No | Thumbnail image URL |
-| `userInfo` | UserInfo | ❌ No | Creator information |
-| `products` | List | ❌ No | Tagged products |
+### Event Listener Interface
+
+**Android: ReelsListener**
+```kotlin
+interface ReelsListener {
+    fun onReelViewed(videoId: String) {}
+    fun onReelLiked(videoId: String, isLiked: Boolean) {}
+    fun onReelShared(videoId: String) {}
+    fun onReelsClosed() {}
+    fun onError(errorMessage: String) {}
+    fun getAccessToken(): String? = null
+}
+```
+
+**iOS: ReelsDelegate**
+```swift
+@objc protocol ReelsDelegate: AnyObject {
+    @objc optional func onReelViewed(videoId: String)
+    @objc optional func onReelLiked(videoId: String, isLiked: Bool)
+    @objc optional func onReelShared(videoId: String)
+    @objc optional func onReelCommented(videoId: String)
+    @objc optional func onProductClicked(productId: String, videoId: String)
+    @objc optional func onReelsClosed()
+    @objc optional func onError(errorMessage: String)
+    @objc optional func getAccessToken() -> String?
+}
+```
+
+### Flutter Engine Access
+
+**Android:**
+```kotlin
+val engine = ReelsAndroidSDK.getFlutterEngine()
+val engineId = ReelsAndroidSDK.getEngineId() // Returns "reels_engine"
+```
+
+**iOS:**
+```swift
+let engine = ReelsIOSSDK.shared.getFlutterEngine()
+```
+
+Use these to show the reels UI using `FlutterActivity` (Android) or `FlutterViewController` (iOS).
 
 ---
 
@@ -373,6 +478,209 @@ pod install
 
 ---
 
+## 🔌 Advanced: Understanding the Pigeon API (Optional)
+
+**Note**: This section is for advanced users who want to understand or extend the SDK. Regular integration does not require Pigeon knowledge.
+
+### What is Pigeon?
+
+Pigeon is a code generator that creates type-safe communication channels between Flutter and native platforms. Flutter Reels uses Pigeon internally to enable bidirectional communication between the native SDKs and the Flutter module.
+
+### Current Pigeon API Structure
+
+The SDK uses the following APIs for platform communication:
+
+#### 1. ReelsFlutterTokenApi (Host API)
+**Direction**: Native → Flutter
+
+Provides authentication tokens to the Flutter module.
+
+```dart
+@HostApi()
+abstract class ReelsFlutterTokenApi {
+  String? getAccessToken();
+}
+```
+
+**Implementation**: Already handled by `ReelsAndroidSDK` and `ReelsIOSSDK`.
+
+#### 2. ReelsFlutterAnalyticsApi (Flutter API)
+**Direction**: Flutter → Native
+
+Sends analytics events from Flutter to native analytics platforms.
+
+```dart
+@FlutterApi()
+abstract class ReelsFlutterAnalyticsApi {
+  void trackEvent(AnalyticsEvent event);
+}
+```
+
+**Data Model**:
+```dart
+class AnalyticsEvent {
+  final String eventName;
+  final Map<String?, String?> eventProperties;
+}
+```
+
+#### 3. ReelsFlutterButtonEventsApi (Flutter API)
+**Direction**: Flutter → Native
+
+Notifies native code about button interactions.
+
+```dart
+@FlutterApi()
+abstract class ReelsFlutterButtonEventsApi {
+  void onBeforeLikeButtonClick(String videoId);
+  void onAfterLikeButtonClick(String videoId, bool isLiked, int likeCount);
+  void onShareButtonClick(ShareData shareData);
+}
+```
+
+**Data Model**:
+```dart
+class ShareData {
+  final String videoId;
+  final String videoUrl;
+  final String title;
+  final String description;
+  final String? thumbnailUrl;
+}
+```
+
+#### 4. ReelsFlutterStateApi (Flutter API)
+**Direction**: Flutter → Native
+
+Tracks screen and video state changes.
+
+```dart
+@FlutterApi()
+abstract class ReelsFlutterStateApi {
+  void onScreenStateChanged(ScreenStateData state);
+  void onVideoStateChanged(VideoStateData state);
+}
+```
+
+**Data Models**:
+```dart
+class ScreenStateData {
+  final String screenName;
+  final String state; // "appeared", "disappeared", "focused", "unfocused"
+  final int? timestamp;
+}
+
+class VideoStateData {
+  final String videoId;
+  final String state; // "playing", "paused", "stopped", "buffering", "completed"
+  final int? position; // in seconds
+  final int? duration; // in seconds
+  final int? timestamp;
+}
+```
+
+#### 5. ReelsFlutterNavigationApi (Flutter API)
+**Direction**: Flutter → Native
+
+Handles navigation gestures.
+
+```dart
+@FlutterApi()
+abstract class ReelsFlutterNavigationApi {
+  void onSwipeLeft();
+  void onSwipeRight();
+}
+```
+
+### Extending the SDK
+
+If you want to add custom functionality:
+
+**Android Example** - Custom Analytics Handler:
+```kotlin
+import com.eishon.reels_android.ReelsFlutterAnalyticsApi
+import com.eishon.reels_android.AnalyticsEvent
+
+// Extend ReelsAndroidSDK setup to add custom analytics handling
+class CustomReelsIntegration(context: Context) {
+    init {
+        ReelsAndroidSDK.initialize(context) { "user_token" }
+        
+        // Access the Flutter engine's binary messenger
+        val binaryMessenger = ReelsAndroidSDK.getFlutterEngine()?.dartExecutor?.binaryMessenger
+        
+        // Set up custom analytics handler
+        binaryMessenger?.let { messenger ->
+            ReelsFlutterAnalyticsApi.setUp(messenger, object : ReelsFlutterAnalyticsApi {
+                override fun trackEvent(event: AnalyticsEvent) {
+                    // Send to your analytics platform
+                    MyAnalytics.track(
+                        eventName = event.eventName,
+                        properties = event.eventProperties
+                    )
+                }
+            })
+        }
+    }
+}
+```
+
+**iOS Example** - Custom State Tracking:
+```swift
+import ReelsIOS
+
+class CustomReelsIntegration {
+    func setup() {
+        // Initialize SDK
+        ReelsIOSSDK.shared.initialize(accessTokenProvider: {
+            return "user_token"
+        })
+        
+        // The SDK already sets up Pigeon APIs internally
+        // But you can extend the delegate to add custom behavior
+        ReelsIOSSDK.shared.delegate = self
+    }
+}
+
+extension CustomReelsIntegration: ReelsDelegate {
+    func onReelViewed(videoId: String) {
+        // Custom tracking logic
+        MyAnalytics.trackVideoView(videoId: videoId)
+    }
+    
+    func onReelLiked(videoId: String, isLiked: Bool) {
+        // Custom like handling with backend sync
+        syncLikeToBackend(videoId: videoId, isLiked: isLiked)
+    }
+}
+```
+
+### Changes from Legacy Pigeon API
+
+For developers migrating from legacy implementations, here are the key changes:
+
+1. **Token API**: Changed from callback-based to synchronous return
+   - Old: `getAccessToken(TokenCallback callback)` with `onTokenReceived()`
+   - New: `String? getAccessToken()` (synchronous)
+
+2. **Analytics Event**: Simplified data structure
+   - Old: `AnalyticsEvent(type, data)` with `Map<String?, Object?>`
+   - New: `AnalyticsEvent(eventName, eventProperties)` with `Map<String?, String?>`
+
+3. **Button Events**: Streamlined like/share events
+   - Old: Separate `onBeforeLikeButtonClick(videoId, currentState)` and `onAfterLikeButtonClick(videoId, newState)`
+   - New: `onBeforeLikeButtonClick(videoId)` and `onAfterLikeButtonClick(videoId, isLiked, likeCount)`
+   - Old: Separate before/after share events
+   - New: Single `onShareButtonClick(shareData)` event
+
+4. **State Data**: Timestamp support added
+   - `ScreenStateData` and `VideoStateData` now include optional `timestamp` field
+   - Video position/duration changed from `double?` to `int?` (seconds)
+
+5. **Host API Removed**: Native video control methods removed
+   - Removed: `pauseVideos()` and `resumeVideos()` from HostApi
+   - Reason: Video control is now handled internally by the Flutter module
+
 ## ❓ FAQ
 
 ### Do I need to install Flutter?
@@ -384,6 +692,8 @@ pod install
 ### Do I need to learn Pigeon?
 
 **No!** Pigeon is only used internally for platform communication. The native SDKs provide clean, type-safe APIs that hide all Pigeon complexity.
+
+**However**, if you want to extend the SDK with custom functionality, understanding the Pigeon API can be helpful. See the "Advanced: Understanding the Pigeon API" section above.
 
 ### Can I customize the UI?
 
