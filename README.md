@@ -154,7 +154,7 @@ end
 
 ```
 
-**Choose your platform:**1. **reels_flutter**: Flutter module containing the core reels UI and logic- [**Pigeon API Documentation**](./flutter_reels/pigeon/README.md) (Platform communication APIs)
+**Choose your platform:**1. **reels_flutter**: Flutter module containing the core reels UI and logic- [**Pigeon API Documentation**](./reels_flutter/pigeons/README.md) (Platform communication APIs)
 
 ```swift
 
@@ -202,7 +202,9 @@ flutter-reels/**See [SETUP.md](./SETUP.md)** for complete build instructions and
 
 
 
-### What's What?- **Pigeon**: Type-safe platform channel communication between Flutter and native code- [GitHub Packages Setup](./GITHUB_PACKAGES_SETUP.md) (For Private Repository Access)
+### What's What?- **Pigeon**: Type-safe platform channel communication between Flutter and native code
+  - See [Pigeon API Documentation](./reels_flutter/pigeons/README.md) for complete reference
+  - Automatic code generation via GitHub Actions workflow- [GitHub Packages Setup](./GITHUB_PACKAGES_SETUP.md) (For Private Repository Access)
 
 
 
@@ -378,7 +380,7 @@ ReelsIOSSDK.shared.initialize(config: config)    autoPlay = true,
 
 
 
-// Set delegate    showControls = true,- [ ] Pigeon API definitions1. **GitHub Packages** (Recommended for Private Repos)
+// Set delegate    showControls = true,- [x] Pigeon API definitions - Complete type-safe communication layer1. **GitHub Packages** (Recommended for Private Repos)
 
 ReelsIOSSDK.shared.delegate = self
 
@@ -386,7 +388,7 @@ ReelsIOSSDK.shared.delegate = self
 
 // Show reels
 
-let videos = [))- [ ] Flutter module integration with native wrappers   - See [GitHub Packages Setup Guide](./GITHUB_PACKAGES_SETUP.md)
+let videos = [))- [x] Flutter module integration with native wrappers   - See [GitHub Packages Setup Guide](./GITHUB_PACKAGES_SETUP.md)
 
     VideoInfo(
 
@@ -394,7 +396,7 @@ let videos = [))- [ ] Flutter module integration with native wrappers   - See [G
 
         url: "https://example.com/video.mp4",
 
-        title: "My Video",// Set listener- [ ] Pigeon communication implementation   - Requires Personal Access Token (PAT)
+        title: "My Video",// Set listener- [x] Pigeon communication implementation - Complete with auto-formatting workflow   - Requires Personal Access Token (PAT)
 
         thumbnailUrl: "https://example.com/thumb.jpg"
 
@@ -498,7 +500,7 @@ See [SETUP.md](./SETUP.md) for detailed development setup.
 
 ---
 
-try? ReelsIOSSDK.shared.showReels(videos: videos)2. Implement Pigeon communication- **iOS**: One-line CocoaPods dependency
+try? ReelsIOSSDK.shared.showReels(videos: videos)2. ~~Implement Pigeon communication~~ ✅ Complete- **iOS**: One-line CocoaPods dependency
 
 ## 📦 Example Apps
 
@@ -566,7 +568,7 @@ open Runner.xcworkspace**No Pigeon. No Flutter. Just clean native code.** ✨1. 
 
 | **iOS SDK** | ✅ Ready | Swift wrapper, CocoaPods support |
 
-| **Flutter Module** | ✅ Ready | UI implementation, Pigeon communication ||----------|--------|--------|
+| **Flutter Module** | ✅ Ready | UI implementation, Pigeon communication (5 APIs) ||----------|--------|--------|
 
 | **Example Apps** | ✅ Working | Both Android and iOS |
 
@@ -995,7 +997,7 @@ flutter build ios-framework --release
 
 ### Integration Guides
 - [**Native Integration Guide**](./NATIVE_INTEGRATION.md) - Complete guide for Android/iOS integration
-- [**Pigeon API Documentation**](./flutter_reels/pigeon/README.md) - Platform communication APIs
+- [**Pigeon API Documentation**](./reels_flutter/pigeons/README.md) - Platform communication APIs
 - [Module Integration Guide](./flutter_reels/README.md) - Flutter module setup
 - [Gradle Integration](./GRADLE_INTEGRATION.md) - Android dependency management
 - [CocoaPods Integration](./COCOAPODS_INTEGRATION.md) - iOS dependency management
@@ -1004,15 +1006,15 @@ flutter build ios-framework --release
 ### Platform Communication
 The Flutter Reels module uses Pigeon for type-safe communication with native platforms:
 
-- **6 Complete APIs** for bidirectional communication
-- **Analytics tracking** - Monitor user behavior
-- **Token management** - Handle authentication
-- **Button events** - React to user interactions
-- **State tracking** - Screen and video lifecycle
-- **Navigation** - Gesture-based navigation
-- **Native callbacks** - Asynchronous token retrieval
+- **5 Complete APIs** for bidirectional communication
+- **Analytics tracking** - Monitor user behavior (ReelsFlutterAnalyticsApi)
+- **Token management** - Handle authentication (ReelsFlutterTokenApi)
+- **Button events** - React to user interactions (ReelsFlutterButtonEventsApi)
+- **State tracking** - Screen and video lifecycle (ReelsFlutterStateApi)
+- **Navigation** - Gesture-based navigation (ReelsFlutterNavigationApi)
+- **Auto-formatting workflow** - Automatic code generation and formatting
 
-See [Pigeon README](./flutter_reels/pigeon/README.md) for complete API documentation.
+See [Pigeon API Documentation](./reels_flutter/pigeons/README.md) for complete API reference, usage examples, and integration guides.
 
 ### External Resources
 - [Flutter Add-to-App Official Documentation](https://docs.flutter.dev/add-to-app)

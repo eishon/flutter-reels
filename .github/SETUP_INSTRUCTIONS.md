@@ -16,15 +16,29 @@ This pull request adds branch protection configuration to prevent direct pushes 
    - Step-by-step workflow for contributing
    - Troubleshooting section
    - Administrator instructions
+   - CI/CD integration details including Pigeon auto-format workflow
 
-3. **Updated Contributing Guidelines** (`CONTRIBUTING.md`)
-   - Added branch protection notice
-   - Updated workflow to reference `main` branch instead of `master`
-   - Added requirements for approvals and CI checks
+3. **Contributing Guidelines** (`CONTRIBUTING.md`)
+   - Comprehensive guide for contributors
+   - Branch protection and PR workflow
+   - **Pigeon development guidelines** - How to work with type-safe platform communication
+   - Testing requirements
+   - Coding standards for Flutter, Kotlin, and Swift
+   - Documentation requirements
 
-4. **Updated README** (`README.md`)
-   - Added note about branch protection in the Contributing section
-   - Links to the branch protection documentation
+4. **Pigeon API Documentation** (`reels_flutter/pigeons/README.md`)
+   - Complete guide to Pigeon-based platform communication
+   - API reference for all Flutter ↔ Native interfaces
+   - Code generation instructions
+   - Usage examples for Flutter, Android (Kotlin), and iOS (Swift)
+   - Data models documentation
+   - Best practices and troubleshooting
+   - CI/CD integration details
+
+5. **Updated README** (`README.md`)
+   - Updated to reflect current pigeon structure
+   - References to pigeon documentation
+   - Accurate project structure information
 
 ## How to Apply Branch Protection
 
