@@ -457,6 +457,32 @@ buildscript {
 }
 ```
 
+**Problem**: "Unresolved reference: ReelsFlutterTokenApi" or other Pigeon classes
+
+**Solution**: The Pigeon-generated code is already included in the `reels_android` module. Make sure you:
+1. Have the correct dependency: `implementation project(':reels_android')`
+2. Synced Gradle after adding the dependency
+3. Are using the correct package: `import com.eishon.reels_android.*`
+
+**Problem**: Token not being requested by Flutter
+
+**Solution**: Ensure you provided the `accessTokenProvider` during initialization:
+
+```kotlin
+ReelsAndroidSDK.initialize(
+    context = this,
+    accessTokenProvider = { getUserToken() }
+)
+```
+
+Or implement it in your `ReelsListener`:
+
+```kotlin
+override fun getAccessToken(): String? {
+    return getUserToken()
+}
+```
+
 ### iOS Issues
 
 **Problem**: "Framework not found Flutter"
@@ -475,6 +501,94 @@ pod deintegrate
 pod cache clean --all
 pod install
 ```
+
+**Problem**: "Cannot find 'ReelsFlutterTokenApi' in scope" or other Pigeon types
+
+**Solution**: The Pigeon-generated code is already included in the `ReelsIOS` pod. Make sure you:
+1. Ran `pod install` successfully
+2. Are importing the module: `import ReelsIOS`
+3. Are building the workspace (not the project)
+
+**Problem**: Token not being requested by Flutter
+
+**Solution**: Ensure you provided the `accessTokenProvider` during initialization:
+
+```swift
+ReelsIOSSDK.shared.initialize(accessTokenProvider: {
+    return self.getUserToken()
+})
+```
+
+Or implement it in your `ReelsDelegate`:
+
+```swift
+func getAccessToken() -> String? {
+    return getUserToken()
+}
+```
+
+### Common Integration Issues
+
+**Problem**: Events not being received in listener/delegate
+
+**Solution**: Make sure you:
+1. Set the listener/delegate **after** initializing the SDK
+2. Keep a strong reference to your listener/delegate object
+3. Implemented the callback methods correctly
+
+**Android:**
+```kotlin
+ReelsAndroidSDK.initialize(context = this, accessTokenProvider = { token })
+ReelsAndroidSDK.setListener(this) // 'this' must implement ReelsListener
+```
+
+**iOS:**
+```swift
+ReelsIOSSDK.shared.initialize(accessTokenProvider: { token })
+ReelsIOSSDK.shared.delegate = self // 'self' must conform to ReelsDelegate
+```
+
+**Problem**: App crashes when showing reels
+
+**Solution**: 
+1. Verify SDK initialization completed successfully
+2. Check logs for detailed error messages
+3. Ensure Flutter engine is not null before showing reels
+
+**Android:**
+```kotlin
+val engine = ReelsAndroidSDK.getFlutterEngine()
+if (engine != null) {
+    // Safe to show reels
+} else {
+    Log.e(TAG, "Flutter engine not initialized")
+}
+```
+
+**iOS:**
+```swift
+guard let engine = ReelsIOSSDK.shared.getFlutterEngine() else {
+    print("Flutter engine not initialized")
+    return
+}
+// Safe to show reels
+```
+
+### Performance Issues
+
+**Problem**: Slow startup or high memory usage
+
+**Solution**: 
+1. Initialize the SDK early in your app lifecycle (e.g., in `Application.onCreate()` for Android or `application:didFinishLaunchingWithOptions:` for iOS)
+2. Reuse the same Flutter engine instance - the SDK handles this automatically
+3. Don't create multiple SDK instances
+
+**Problem**: Video playback stuttering
+
+**Solution**:
+1. Test on a real device (emulators have limited performance)
+2. Ensure videos are properly encoded (H.264/H.265 recommended)
+3. Use appropriate video resolutions (1080p recommended, 4K may cause issues on older devices)
 
 ---
 
@@ -655,31 +769,215 @@ extension CustomReelsIntegration: ReelsDelegate {
 }
 ```
 
-### Changes from Legacy Pigeon API
+### Migration from Legacy Pigeon API
 
-For developers migrating from legacy implementations, here are the key changes:
+If you're upgrading from a legacy version of Flutter Reels, here's what changed:
 
-1. **Token API**: Changed from callback-based to synchronous return
-   - Old: `getAccessToken(TokenCallback callback)` with `onTokenReceived()`
-   - New: `String? getAccessToken()` (synchronous)
+#### 1. Token API - Now Synchronous
 
-2. **Analytics Event**: Simplified data structure
-   - Old: `AnalyticsEvent(type, data)` with `Map<String?, Object?>`
-   - New: `AnalyticsEvent(eventName, eventProperties)` with `Map<String?, String?>`
+**Before (Legacy):**
+```kotlin
+// Android - Callback-based
+FlutterReelsTokenApi.setUp(binaryMessenger) { callback ->
+    callback.onTokenReceived("user_token")
+}
+```
 
-3. **Button Events**: Streamlined like/share events
-   - Old: Separate `onBeforeLikeButtonClick(videoId, currentState)` and `onAfterLikeButtonClick(videoId, newState)`
-   - New: `onBeforeLikeButtonClick(videoId)` and `onAfterLikeButtonClick(videoId, isLiked, likeCount)`
-   - Old: Separate before/after share events
-   - New: Single `onShareButtonClick(shareData)` event
+**After (Current):**
+```kotlin
+// Android - Synchronous
+ReelsFlutterTokenApi.setUp(binaryMessenger, object : ReelsFlutterTokenApi {
+    override fun getAccessToken(): String? {
+        return "user_token"
+    }
+})
+```
 
-4. **State Data**: Timestamp support added
-   - `ScreenStateData` and `VideoStateData` now include optional `timestamp` field
-   - Video position/duration changed from `double?` to `int?` (seconds)
+**Note**: The native SDKs handle this automatically now. You just provide the token during initialization.
 
-5. **Host API Removed**: Native video control methods removed
-   - Removed: `pauseVideos()` and `resumeVideos()` from HostApi
-   - Reason: Video control is now handled internally by the Flutter module
+#### 2. Analytics Event Structure
+
+**Before (Legacy):**
+```dart
+class AnalyticsEvent {
+  final String type;  // "appear", "click", "page_view"
+  final Map<String?, Object?> data;  // Any type of data
+}
+```
+
+**After (Current):**
+```dart
+class AnalyticsEvent {
+  final String eventName;  // Free-form event name
+  final Map<String?, String?> eventProperties;  // String properties only
+}
+```
+
+**Migration**: Change `type` to `eventName` and ensure all event properties are strings.
+
+#### 3. Button Events - Simplified Interface
+
+**Before (Legacy):**
+```kotlin
+// Android
+override fun onBeforeLikeButtonClick(videoId: String, currentLikeState: Boolean) {
+    // currentLikeState was passed
+}
+
+override fun onAfterLikeButtonClick(videoId: String, newLikeState: Boolean) {
+    // Only new state, no like count
+}
+
+override fun onBeforeShareButtonClick(videoId: String, currentShareCount: Long) {
+    // Separate before event
+}
+
+override fun onAfterShareButtonClick(shareData: ShareData) {
+    // Separate after event
+}
+```
+
+**After (Current):**
+```kotlin
+// Android
+override fun onBeforeLikeButtonClick(videoId: String) {
+    // Simplified - no current state needed
+}
+
+override fun onAfterLikeButtonClick(videoId: String, isLiked: Boolean, likeCount: Int) {
+    // Now includes like count
+}
+
+override fun onShareButtonClick(shareData: ShareData) {
+    // Single share event (after user action)
+}
+```
+
+**Migration**: Remove dependencies on current state in before events. Use the like count from after events.
+
+#### 4. State Data - Integer Timestamps
+
+**Before (Legacy):**
+```dart
+class VideoStateData {
+  final String videoId;
+  final String state;
+  final double? position;  // Double for sub-second precision
+  final double? duration;
+}
+
+class ScreenStateData {
+  final String state;
+  final String screenName;
+  final Map<String?, Object?>? metadata;  // Generic metadata
+}
+```
+
+**After (Current):**
+```dart
+class VideoStateData {
+  final String videoId;
+  final String state;
+  final int? position;    // Integer seconds
+  final int? duration;    // Integer seconds
+  final int? timestamp;   // New: Unix timestamp
+}
+
+class ScreenStateData {
+  final String screenName;
+  final String state;
+  final int? timestamp;   // New: Unix timestamp
+  // metadata removed
+}
+```
+
+**Migration**: 
+- Round position/duration values to integers (seconds)
+- Remove metadata usage from screen state
+- Use timestamp field for tracking event timing
+
+#### 5. Host API Removed
+
+**Before (Legacy):**
+```kotlin
+// Android - Native could control video playback
+val hostApi = FlutterReelsHostApi(binaryMessenger)
+hostApi.pauseVideos()
+hostApi.resumeVideos()
+```
+
+**After (Current):**
+```kotlin
+// These methods no longer exist
+// Video control is now handled internally by Flutter module
+// Use ReelsListener events to react to playback state changes
+```
+
+**Migration**: Remove any calls to `pauseVideos()` or `resumeVideos()`. The Flutter module now manages video lifecycle automatically based on screen visibility and app lifecycle events.
+
+#### Complete Migration Example
+
+**Before (Legacy Android):**
+```kotlin
+class MainActivity : FlutterActivity() {
+    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+        super.configureFlutterEngine(flutterEngine)
+        
+        // Complex manual setup
+        FlutterReelsAnalyticsApi.setUp(flutterEngine.dartExecutor.binaryMessenger) { event ->
+            Analytics.track(event.type, event.data)
+        }
+        
+        FlutterReelsButtonEventsApi.setUp(flutterEngine.dartExecutor.binaryMessenger, 
+            object : FlutterReelsButtonEventsApi {
+            override fun onBeforeLikeButtonClick(videoId: String, currentLikeState: Boolean) {
+                // Handle before like
+            }
+            override fun onAfterLikeButtonClick(videoId: String, newLikeState: Boolean) {
+                // Handle after like
+            }
+        })
+        
+        val hostApi = FlutterReelsHostApi(flutterEngine.dartExecutor.binaryMessenger)
+        hostApi.pauseVideos()
+    }
+}
+```
+
+**After (Current Android):**
+```kotlin
+class MainActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        
+        // Simple SDK initialization
+        ReelsAndroidSDK.initialize(
+            context = this,
+            accessTokenProvider = { getUserToken() }
+        )
+        
+        // Clean listener interface
+        ReelsAndroidSDK.setListener(object : ReelsListener {
+            override fun onReelLiked(videoId: String, isLiked: Boolean) {
+                // Much simpler!
+            }
+        })
+        
+        // Show reels
+        val intent = FlutterActivity
+            .withCachedEngine(ReelsAndroidSDK.getEngineId())
+            .build(this)
+        startActivity(intent)
+    }
+}
+```
+
+**Key Benefits of Migration:**
+- ✅ 70% less boilerplate code
+- ✅ No direct Pigeon API handling required
+- ✅ Type-safe, idiomatic Kotlin/Swift APIs
+- ✅ Automatic Pigeon setup and lifecycle management
+- ✅ Better error handling and diagnostics
 
 ## ❓ FAQ
 
