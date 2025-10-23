@@ -152,6 +152,34 @@ dependencyResolutionManagement {
 
 > **Why PREFER_PROJECT?** This allows the Flutter Gradle Plugin to add its own Maven repositories for Flutter engine artifacts.
 
+### Advanced Android Integration
+
+For advanced use cases like custom analytics or authentication, you can use the Pigeon APIs directly. See the **Advanced: Pigeon API Integration** section below.
+
+Example - Providing authentication tokens:
+
+```kotlin
+import com.eishon.reels_android.*
+import io.flutter.embedding.engine.FlutterEngine
+
+class MainActivity : FlutterActivity() {
+    
+    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+        super.configureFlutterEngine(flutterEngine)
+        
+        // Provide authentication token to Flutter
+        ReelsFlutterTokenApi.setUp(
+            flutterEngine.dartExecutor.binaryMessenger,
+            object : ReelsFlutterTokenApi {
+                override fun getAccessToken(): String? {
+                    return AuthManager.getCurrentToken()
+                }
+            }
+        )
+    }
+}
+```
+
 ### That's It for Android! 🎉
 
 No Flutter commands to run, no AAR files to build. Just add the dependencies and start using the SDK!
@@ -270,6 +298,42 @@ class ViewController: UIViewController {
         ]
         
         try? ReelsIOSSDK.shared.showReels(videos: videos)
+    }
+}
+```
+
+### Advanced iOS Integration
+
+For advanced use cases like custom analytics or authentication, you can use the Pigeon APIs directly. See the **Advanced: Pigeon API Integration** section below.
+
+Example - Providing authentication tokens:
+
+```swift
+import ReelsIOS
+import Flutter
+
+class AppDelegate: FlutterAppDelegate {
+    
+    override func application(
+        _ application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+    ) -> Bool {
+        
+        let flutterEngine = (window?.rootViewController as! FlutterViewController).engine!
+        
+        // Provide authentication token to Flutter
+        ReelsFlutterTokenApiSetup.setUp(
+            binaryMessenger: flutterEngine.binaryMessenger,
+            api: TokenProvider()
+        )
+        
+        return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+    }
+}
+
+class TokenProvider: ReelsFlutterTokenApi {
+    func getAccessToken() throws -> String? {
+        return AuthManager.shared.currentToken
     }
 }
 ```
